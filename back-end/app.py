@@ -4,7 +4,7 @@ from flask_bcrypt import Bcrypt
 from flask_cors import CORS, cross_origin
 from flask_session import Session
 from config import ApplicationConfig
-from models import db, User, Produit
+from models import db, User
 
 app= Flask(__name__)
 app.config.from_object(ApplicationConfig)
@@ -23,8 +23,6 @@ with app.app_context():
 @app.route("/register", methods=["POST"])
 def register_user():
     email = request.json['email']
-    nom = request.json["nom"]
-    profil = request.json['profil']
     password = request.json["password"]
     confirmPassword = request.json["confirmPassword"]
 
@@ -36,7 +34,7 @@ def register_user():
         return jsonify({"error":"Veuillez entrer le mot de passe précedant!"}),409
     
     hashed_password = bcrypt.generate_password_hash(password)
-    new_user = User(email=email,nom=nom,profil=profil,password=hashed_password)
+    new_user = User(email=email,password=hashed_password)
     db.session.add(new_user)
     db.session.commit()
 
@@ -47,10 +45,10 @@ def register_user():
 
 @app.route('/login', methods=["POST"])
 def login_user():
-    nom= request.json["nom"]
+    email= request.json["email"]
     password=request.json["password"]
 
-    user = User.query.filter_by(nom=nom).first()
+    user = User.query.filter_by(email=email).first()
 
     if user is None:
         return jsonify({"error": "Echec de connexion! Cet utilisateur n\'existe pas."}), 401
