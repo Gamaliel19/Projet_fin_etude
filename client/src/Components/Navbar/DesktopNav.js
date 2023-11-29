@@ -14,15 +14,18 @@ import {
     Checkbox,
     useColorModeValue,
     Divider,
+    Tooltip,
 } from '@chakra-ui/react'
 import { FaShoppingCart, FaUserCircle } from "react-icons/fa"
 import AppLogo from '../AppLogo'
 import { Search } from '../Recherche/Recherche'
 import httpClient from '../../httpClient'
+import ColorModeToggle from '../ColorModeToggle'
 
 export default function DesktopNav() {
     const [email, setEmail] = useState([])
     const [password, setPassword] = useState([])
+
 
     const logInUser = async () => {
         console.log(email, password)
@@ -71,9 +74,10 @@ export default function DesktopNav() {
 
                 <Flex>
                     <Menu>
-                        <MenuButton as={Button} bg={'white'} leftIcon={<FaUserCircle fontSize={26} />}>
+                        <MenuButton as={Button} bg={'transparent'} fontSize={15} leftIcon={<FaUserCircle fontSize={26} />}>
                             Espace client
                         </MenuButton>
+
                         <MenuList>
                             <Stack
                                 spacing={8}
@@ -143,15 +147,15 @@ export default function DesktopNav() {
                         </MenuList>
                     </Menu>
                 </Flex>
-
                 <Flex>
                     <Link href='/panier'>
-                        <Button bg={'white'}>
+                        <Button bg={'transparent'}>
                             <FaShoppingCart fontSize={26} />
-                            <Text ml={2} >Mon panier</Text>
+                            <Text ml={2} fontSize={15} >Mon panier</Text>
                         </Button>
                     </Link>
                 </Flex>
+                <ColorModeToggle />
             </Stack>
         </Flex>
     )

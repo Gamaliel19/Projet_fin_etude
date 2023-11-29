@@ -14,7 +14,7 @@ export const Search = () => {
                 >
                     <Input
                         type="text"
-                        bg={'white'}
+                        bg={'transparent'}
                         placeholder="Rechercher..."
                         focusBorderColor="green.400"
                         borderWidth={'2px'}

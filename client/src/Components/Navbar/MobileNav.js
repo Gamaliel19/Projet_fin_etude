@@ -6,8 +6,6 @@ import {
     Menu,
     MenuButton,
     MenuList,
-    MenuItem,
-    IconButton,
     Button,
     FormControl,
     Input,
@@ -16,12 +14,13 @@ import {
     Divider,
     Text,
     useColorModeValue,
+    Tooltip,
 } from '@chakra-ui/react'
 import AppLogo from '../AppLogo'
 import { Search } from '../Recherche/Recherche'
-import { AddIcon, EditIcon, ExternalLinkIcon, HamburgerIcon, RepeatIcon } from '@chakra-ui/icons'
 import { FaShoppingCart, FaUserCircle } from 'react-icons/fa'
 import httpClient from '../../httpClient'
+import ColorModeToggle from '../ColorModeToggle'
 
 export default function MobileNav() {
     const [email, setEmail] = useState([])
@@ -54,37 +53,17 @@ export default function MobileNav() {
                 borderColor={'gray.200'}
                 display={{ base: "flex", lg: "none" }}
             >
-                <Box>
-                    <Menu>
-                        <MenuButton
-                            as={IconButton}
-                            aria-label='Options'
-                            icon={<HamburgerIcon />}
-                            variant='outline'
-                        />
-                        <MenuList>
-                            <MenuItem icon={<AddIcon />} >
-                                New Tab
-                            </MenuItem>
-                            <MenuItem icon={<ExternalLinkIcon />}>
-                                New Window
-                            </MenuItem>
-                            <MenuItem icon={<RepeatIcon />}>
-                                Open Closed Tab
-                            </MenuItem>
-                            <MenuItem icon={<EditIcon />}>
-                                Open File...
-                            </MenuItem>
-                        </MenuList>
-                    </Menu>
-                </Box>
+
                 <AppLogo />
                 <Stack direction={'row'} spacing={1}>
 
                     <Flex>
                         <Menu>
-                            <MenuButton as={Button} bg={'white'} leftIcon={<FaUserCircle fontSize={26} />}>
-                            </MenuButton>
+                            <Tooltip hasArrow label='Espace client' bg='gray.300' color='black'>
+                                <MenuButton as={Button} bg={'transparent'} leftIcon={<FaUserCircle fontSize={26} />}>
+
+                                </MenuButton>
+                            </Tooltip>
                             <MenuList>
                                 <Stack
                                     spacing={8}
@@ -154,14 +133,19 @@ export default function MobileNav() {
                             </MenuList>
                         </Menu>
                     </Flex>
-                    <Link href='/panier'>
-                        <Button bg={'white'}>
-                            <FaShoppingCart fontSize={26} />
-                        </Button>
-                    </Link>
-                </Stack>
+                    <Tooltip hasArrow label='Mon panier' bg='gray.300' color='black'>
+                        <Link href='/panier'>
+                            <Button bg={'transparent'}>
+                                <FaShoppingCart fontSize={26} />
+                            </Button>
+                        </Link>
+                    </Tooltip>
+                    <Box>
+                        <ColorModeToggle />
+                    </Box>
+                </Stack >
 
-            </Flex>
+            </Flex >
             <Box
                 px={'2rem'}
                 py={'0.5rem'}

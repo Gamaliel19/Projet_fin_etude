@@ -5,11 +5,10 @@ import MobileNav from './MobileNav'
 
 export default function Navbar() {
     return (
-        <Box className='navbar-wrapper' h={'120px'}>
+        <Box  h={'120px'}>
             <Box
                 position={'fixed'}
                 w={'100%'}
-                bgColor={'white'}
                 mb={'1rem'}
                 zIndex={10}
                 fontWeight={'bold'}
