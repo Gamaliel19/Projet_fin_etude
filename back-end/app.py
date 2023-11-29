@@ -1,12 +1,18 @@
-
+import os
 from flask import Flask,request,abort,jsonify,session
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS, cross_origin
 from flask_session import Session
 from config import ApplicationConfig
-from models import db, User, Produit
+from models import db, User, Utilisateur, Product, Client
+db = SQLAlchemy
 
+basedir = os.path.abspath(os.path.dirname(__file__))
 app= Flask(__name__)
+
+app.config['SQLALCHEMY_DATABASE_URI'] =\
+        'sqlite:///' + os.path.join(basedir, 'data.db')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config.from_object(ApplicationConfig)
 
 bcrypt=Bcrypt(app)
@@ -62,6 +68,10 @@ def login_user():
     return jsonify({
         "Message":"Connexion réussie!"
     })
+
+@app.route('/')
+def hello():
+    return "hello"
 
 
 if __name__=="__main__":
