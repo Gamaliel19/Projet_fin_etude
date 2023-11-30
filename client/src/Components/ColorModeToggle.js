@@ -1,11 +1,10 @@
-import { Button, Flex, Tooltip, useColorMode } from "@chakra-ui/react"
+import { Button, Flex, useColorMode } from "@chakra-ui/react"
 import { BsSun, BsMoonStarsFill } from 'react-icons/bs'
 
 export default function ColorModeToggle() {
     const { colorMode, toggleColorMode } = useColorMode()
     return (
-        <Flex justifyContent="center" alignItems="center">
-            <Tooltip hasArrow label='Blancer le theme' bg='gray.300' color='black'>
+        <Flex w={{ base: '100%', lg: '50%' }} justifyContent="center" alignItems="center">
                 <Button
                     bg={'transparent'}
                     aria-label="Toggle Color Mode"
@@ -13,7 +12,6 @@ export default function ColorModeToggle() {
                     _focus={{ boxShadow: 'none' }}>
                     {colorMode === 'light' ? <BsMoonStarsFill /> : <BsSun />}
                 </Button>
-            </Tooltip>
         </Flex>
     )
 }

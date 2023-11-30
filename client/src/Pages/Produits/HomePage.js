@@ -1,12 +1,17 @@
 import React from 'react'
-import HomePage from '../../ProdCompoHome/HomePage'
+import { Box, useColorModeValue } from '@chakra-ui/react'
+import SwiperListeProduits from '../../Components/ProdCompoHome/SwiperListeProduits'
+import { TopCategories } from '../../Components/ProdCompoHome/TopCat'
+import Home from '../../Components/ProdCompoHome/Home'
 
 
 function ClientHomePage() {
   return (
-    <div>
-        <HomePage/>
-    </div>
+    <Box bg={useColorModeValue('white', 'gray.700')}>
+      <Home />
+      <TopCategories/>
+      <SwiperListeProduits title={"Médicaments"} />
+    </Box>
   )
 }
 

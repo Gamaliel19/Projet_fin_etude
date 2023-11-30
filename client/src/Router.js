@@ -12,7 +12,7 @@ import ModifierCompte from './Pages/client/ModifierCompte'
 
 export default function Router() {
     return (
-        <BrowserRouter>
+        <BrowserRouter >
             <Routes>
                 <Route path='/' exact Component={ClientHomePage} />
                 <Route path='/compteClient' Component={CompteClient} />
