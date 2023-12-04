@@ -110,7 +110,7 @@ def update_password(self,id):
     return jsonify({'message': 'mot de passe modifie avec succes'})
         
 
-@app.route('/login', methods=["POST"])
+@app.route('/loginUser', methods=["POST"])
 def login_user():
     email= request.json["email"]
     password=request.json["password"]
