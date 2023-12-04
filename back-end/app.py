@@ -127,10 +127,6 @@ def login_user():
         "Message":"Connexion réussie!"
     })
 
-@app.route('/')
-def hello():
-    return "hello"
-
 
 if __name__=="__main__":
     app.run(debug=True)
