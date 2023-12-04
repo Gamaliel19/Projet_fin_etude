@@ -6,18 +6,20 @@ db = SQLAlchemy()
 class User(db.Model):
     __tablename__='users'
     id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String, unique=True)
     nom = db.Column(db.String(100), nullable=True)
     prenom = db.Column(db.String(50))
-    motPasse = db.Column(db.String(50), nullable=True)
+    password = db.Column(db.String(50), nullable=True)
     profil= db.Column(db.String(30))
 
     utilisateur=db.relationship('Vente', backref='user', lazy=False)
     utilisateur=db.relationship('Commande', backref='user',lazy=False)
     utilisateur=db.relationship('Livraison', backref='user', lazy=False)
-    def __init__(self, nom, prenom, motPasse, profil):
+    def __init__(self, email, nom, prenom, password, profil):
+        self.email = email
         self.nom = nom
         self.prenom = prenom
-        self.motPasse = motPasse
+        self.password = password
         self.profil = profil
     def json(self):
         return {"nom":self.nom, "prenom":self.prenom, "motPasse":self.motPasse, "profil":self.profil}
@@ -93,4 +95,3 @@ class Client(db.Model):
     prenom=db.Column(db.String)
     email=db.Column(db.String)
     password=db.Column(db.String, nullable=False)
-    confirmed_password=db.Column(db.String, nullable=False)

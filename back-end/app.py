@@ -25,9 +25,12 @@ with app.app_context():
 
 
 
-@app.route("/register", methods=["POST"])
+@app.route("/registerUser", methods=["POST"])
 def register_user():
     email = request.json['email']
+    nom = request.json['nom']
+    prenom = request.json['prenom']
+    profil = request.json['profil']
     password = request.json["password"]
     confirmPassword = request.json["confirmPassword"]
 
@@ -39,7 +42,7 @@ def register_user():
         return jsonify({"error":"Veuillez entrer le mot de passe précedant!"}),409
     
     hashed_password = bcrypt.generate_password_hash(password)
-    new_user = User(email=email,password=hashed_password)
+    new_user = User(email=email, nom=nom, prenom=prenom, profil=profil, password=hashed_password,)
     db.session.add(new_user)
     db.session.commit()
 
@@ -54,7 +57,7 @@ def list(self):
     liste=[]
     for user in users:
         data={}
-        data['id'] = user.id
+        data['email']
         data['nom'] = user.nom
         data['prenom'] = user.prenom
         data['password'] = user.password
@@ -127,6 +130,14 @@ def login_user():
         "Message":"Connexion réussie!"
     })
 
+@app.route('/register_product', methods=["POST"])
+def register_product():
+    data = request.get_json()
+    new_product = Produit(data['dosage'], data['nom_com'], data['description'], data['prix'], data['date_fab'], data['date_per'], data['qte_stock'], data['num_lot'])
+    db.session.add(new_product)
+    db.session.commit()
+    db.session.flush()
+    return new_product.json(),201
 
 if __name__=="__main__":
     app.run(debug=True)
