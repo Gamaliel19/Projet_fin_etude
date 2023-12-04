@@ -3,6 +3,12 @@ import { Box, Button, Divider, Flex, Heading, Link, Stack, Text, useColorModeVal
 import { FaAccessibleIcon, FaShoppingCart, FaStar, FaUserEdit, } from 'react-icons/fa'
 
 function CompteClient() {
+  const suivre = () => {
+    window.location.href = "suivreCommandesClient"
+  }
+  const gerer = () =>{
+    window.location.href= "gererProduitsFavorisClient"
+  }
   return (
     <Box
       bg={useColorModeValue('white', 'gray.700')}
@@ -41,13 +47,13 @@ function CompteClient() {
               <Text fontWeight={'bold'}>Modifier vos coordonnées</Text>
             </Stack>
             <Stack ml={5} p={'1rem'}>
-              <Link>Adresse mail, nom</Link>
+              <Link href='/editInfoClient'>Adresse mail, nom</Link>
               <Divider />
-              <Link>Mot de passe</Link>
+              <Link href='/editPasswordClient'>Mot de passe</Link>
               <Divider />
-              <Link>Adresse de livraison</Link>
+              <Link href='/editAdresseLivClient'>Adresse de livraison</Link>
               <Divider />
-              <Link>Adresse de facturation</Link>
+              <Link href='/editAdresseFactClient'>Adresse de facturation</Link>
               <Divider />
             </Stack>
           </Box>
@@ -64,7 +70,7 @@ function CompteClient() {
             mx={'2'}
             p={'0.5rem'}
           >
-            <Button bg={useColorModeValue('white', 'gray.700')} align={'center'} direction={'row'}>
+            <Button onClick={() => suivre()} bg={useColorModeValue('white', 'gray.700')} align={'center'} direction={'row'}>
               <FaShoppingCart fontSize={26} />
               <Text fontWeight={'bold'} mx={2}>Suivre vos commandes</Text>
             </Button>
@@ -77,7 +83,7 @@ function CompteClient() {
             mx={'2'}
             p={'0.5rem'}
           >
-            <Button bg={useColorModeValue('white', 'gray.700')} align={'center'} direction={'row'}>
+            <Button onClick={()=>gerer()} bg={useColorModeValue('white', 'gray.700')} align={'center'} direction={'row'}>
               <FaStar fontSize={26} />
               <Text fontWeight={'bold'} mx={2}>Gérer vos produits favoris</Text>
             </Button>
