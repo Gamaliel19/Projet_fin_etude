@@ -1,15 +1,16 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin, LoginManager, login_required, logout_user, current_user, login_user
 
 db = SQLAlchemy()
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     __tablename__='users'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String, unique=True)
-    nom = db.Column(db.String(100), nullable=True)
+    nom = db.Column(db.String(100), nullable=False)
     prenom = db.Column(db.String(50))
-    password = db.Column(db.String(50), nullable=True)
+    password = db.Column(db.String(50), nullable=False)
     profil= db.Column(db.String(30))
 
     utilisateur=db.relationship('Vente', backref='user', lazy=False)
@@ -22,7 +23,7 @@ class User(db.Model):
         self.password = password
         self.profil = profil
     def json(self):
-        return {"nom":self.nom, "prenom":self.prenom, "motPasse":self.motPasse, "profil":self.profil}
+        return {"email":self.email, "nom":self.nom, "prenom":self.prenom, "motPasse":self.motPasse, "profil":self.profil}
 class Produit(db.Model):
     __tablename__='produits'
     id = db.Column(db.Integer, primary_key=True)
