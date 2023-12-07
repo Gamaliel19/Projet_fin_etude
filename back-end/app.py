@@ -217,10 +217,11 @@ def update_product(self,id):
     return jsonify ({'message':'produit mis a jour avec succes'})
 
 
-app.route('/listPrduct', methods = ['GET'])
+@app.route('/listPrduct', methods = ['GET'])
 def list_product():
     products = Product.query.all()
     return {'Products':list(x.json() for x in products)}
+
 
 if __name__=="__main__":
     app.run(debug=True)

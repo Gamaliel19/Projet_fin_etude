@@ -24,7 +24,7 @@ class User(UserMixin, db.Model):
         self.profil = profil
     def json(self):
         return {"email":self.email, "nom":self.nom, "prenom":self.prenom, "motPasse":self.motPasse, "profil":self.profil}
-class Produit(db.Model):
+class Product(db.Model):
     __tablename__='produits'
     id = db.Column(db.Integer, primary_key=True)
     dosage = db.Column(db.String(80))
