@@ -1,19 +1,20 @@
 import {
     Box, Button, Link, Flex, FormControl, FormLabel, Heading,
-    Input, Stack, useColorMode, useColorModeValue
+    Input, Stack, useColorMode, useColorModeValue, Text, Select
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { BsSun, BsMoonStarsFill } from 'react-icons/bs'
 import httpClient from '../../../httpClient'
+import { useDropzone } from 'react-dropzone'
 
-export default function RegisterAdmin() {
+function RegisterAdmin() {
     return (
         <Flex
+            justify={'center'}
+            align={'center'}
             minHeight={'100vh'}
             p={{ base: "1rem", lg: "4rem" }}
             mx={'auto'}
-            align={'center'}
-            justifyContent={'center'}
             bg={useColorModeValue('white', 'gray.700')}
         >
             <Box
@@ -34,7 +35,9 @@ export default function RegisterAdmin() {
     )
 }
 
+export default RegisterAdmin
 
+//Toogle color
 function ColorModeToggle() {
     const { colorMode, toggleColorMode } = useColorMode()
     return (
@@ -50,25 +53,31 @@ function ColorModeToggle() {
     )
 }
 
+//l'en-tête de la page d'authentification
 const RegisterHeader = () => {
     return (
         <Box textAlign={'center'}>
-            <Heading>Créez un nouveau compte</Heading>
+            <Heading>Créer un nouveau compte</Heading>
+            <Text>Remplissez correctement les champs ci-dessous!</Text>
         </Box>
     )
 }
 
+//le formulaire d'authentification
 const RegisterForm = () => {
     const [email, setEmail] = useState([])
+    const [nom, setNom] = useState([])
+    const [prenom, setPrenom] = useState([])
+    const [profil, setProfil] = useState([])
+    const [confirmPassword, setConfirmPassword] = useState([])
     const [password, setPassword] = useState([])
 
     const regisInAdmin = async () => {
         try {
             const resp = await httpClient.post("http://127.0.0.1:5000/registerAdmin", {
-                email,
-                password
+                email,nom,prenom,profil,password
             })
-            window.location.href = "/adminDashboard"
+            window.location.href = "/admin"
         } catch (error) {
             if (error.response.status === 409) {
                 alert("La connexion a échouée. Réessayez plus tard!")
@@ -87,13 +96,51 @@ const RegisterForm = () => {
                         placeholder='Entrez votre email svp!'
                     />
                 </FormControl>
-                <FormControl mt={4}>
+                <FormControl mt={3}>
+                    <FormLabel>Nom</FormLabel>
+                    <Input
+                        value={nom}
+                        onChange={(e) => setNom(e.target.value)}
+                        type='text'
+                        placeholder='Entrez votre nom svp!'
+                    />
+                </FormControl>
+                <FormControl mt={3}>
+                    <FormLabel>Prenom</FormLabel>
+                    <Input
+                        value={prenom}
+                        onChange={(e) => setPrenom(e.target.value)}
+                        type='text'
+                        placeholder='Entrez votre prenom svp!'
+                    />
+                </FormControl>
+                <FormControl mt={3}>
+                    <FormLabel>Profil</FormLabel>
+                    <Select
+                        placeholder='Choisir votre profil'
+                        value={profil}
+                        onChange={(e) => setProfil(e.target.value)}
+                    >
+                        <option value={'admin'}>Admin</option>
+                        <option value={'gerant'}>Gérant</option>
+                    </Select>
+                </FormControl>
+                <FormControl mt={3}>
                     <FormLabel>Mot de passe</FormLabel>
                     <Input
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         type='password'
                         placeholder='Entrez votre mot de passe svp!'
+                    />
+                </FormControl>
+                <FormControl mt={3}>
+                    <FormLabel>Confirmation du mot de passe</FormLabel>
+                    <Input
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        type='password'
+                        placeholder='Confirmez votre mot de passe svp!'
                     />
                 </FormControl>
                 <Button
@@ -105,10 +152,27 @@ const RegisterForm = () => {
                     Connexion
                 </Button>
                 <Stack color='blue.400' mt={4} textAlign={'center'}>
-                    <Link href="/registerAdmin" color='teal'>Vous n'avez pas de compte? Créez en!</Link>
+                    <Text>Vous avez déjà un compte? <Link href="/loginAdmin" color='teal'>Connectez-vous ici!</Link></Text>
                 </Stack>
 
             </form>
         </Box>
+    )
+}
+
+
+function CustomFileUpload(props) {
+    const { getRootProps, getInputProps } = useDropzone({
+        accept: 'image/*',
+        onDrop: (acceptedFiles) => {
+            // Do something with the files
+        }
+    })
+
+    return (
+        <FormControl {...getRootProps()}>
+            <Input {...getInputProps()} />
+            <Text>Glissez et déposez des fichiers ici ou cliquez pour sélectionner des fichiers</Text>
+        </FormControl>
     )
 }

@@ -56,8 +56,8 @@ function CompteClient() {
               <Link href='/editAdresseFactClient'>Adresse de facturation</Link>
               <Divider />
             </Stack>
-          </Box>
 
+          </Box>
         </Box>
 
 

@@ -3,15 +3,15 @@ import {
     Box,
     Button,
     Flex,
+    Heading,
     Link,
+    Spacer,
     Stack,
     Text,
 } from '@chakra-ui/react'
-import { FaShoppingCart} from "react-icons/fa"
-import AppLogo from '../AppLogo'
+import { FaBell } from "react-icons/fa"
 import { Search } from '../Recherche/Recherche'
 import ColorModeToggle from '../../ColorModeToggle'
-import NavbarUserEspace from './NavbarUserEspace'
 
 export default function DesktopNav() {
 
@@ -20,11 +20,19 @@ export default function DesktopNav() {
             justify={'space-between'}
             align={'center'}
             px={'2rem'}
-            py={'0.5rem'}
+            py={'1rem'}
             borderBottomWidth={'1px'}
             borderColor={'gray.200'}
             display={{ base: "none", lg: "flex" }}
         >
+            <Stack justify={'center'} align={'center'} direction={'row'}>
+                <Text color={'dark'} fontSize={25} fontWeight={'bold'}>
+                    Pharmacie
+                    <Text as={'span'} color={'green'}>Edene</Text>
+                </Text>
+
+            </Stack>
+            <Spacer />
             <Stack
                 direction={'row'}
                 gap={6}
@@ -32,27 +40,22 @@ export default function DesktopNav() {
                 alignItems={'center'}
                 justify={'center'}
             >
-                <Box><AppLogo /></Box>
-                <Box
-                    justifyContent={'center'}
-                >
+                <Box>
                     <Search />
                 </Box>
             </Stack>
+            <Spacer />
             <Stack
                 direction={'row'}
             >
 
                 <Flex w={{ base: '100%', lg: '50%' }}>
-                   <NavbarUserEspace/>
-                </Flex>
-                <Flex w={{ base: '100%', lg: '50%' }}>
-                    <Link href='/panierClient'>
+                    <Link href='../admin/notifications'>
                         <Button bg={'transparent'}>
-                            <FaShoppingCart fontSize={26} />
-                            <Text ml={2} fontSize={15} >Panier</Text>
+                            <FaBell fontSize={20} />
                         </Button>
                     </Link>
+
                 </Flex>
                 <ColorModeToggle />
             </Stack>

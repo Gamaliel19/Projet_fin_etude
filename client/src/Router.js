@@ -14,6 +14,13 @@ import GererProduitsFavorisClient from './Pages/client/GererProduitsFavorisClien
 import AdminLayoutRoot from './Layouts/AdminLayoutRoot';
 import LoginAdmin from './Pages/admin/loginAdmin/LoginAdmin';
 import RegisterAdmin from './Pages/admin/registerAdmin/RegisterAdmin';
+import Produit from './Pages/admin/Produit'
+import Inventaires from './Pages/admin/Inventaires'
+import Rapports from './Pages/admin/Rapports'
+import ServiceClient from './Pages/admin/ServiceClient'
+import Settings from './Pages/admin/Settings'
+import Cat from './Pages/admin/Cat'
+import Notifications from './Pages/admin/Notificatioons'
 
 export default function Router() {
     return (
@@ -32,9 +39,16 @@ export default function Router() {
                     <Route path='/suivreCommandesClient' element={<SuivreCommandesClient />} />
                     <Route path='/gererProduitsFavorisClient' element={<GererProduitsFavorisClient />} />
                 </Route>
+                <Route path='/loginAdmin' Component={LoginAdmin} />
+                <Route path='/registerAdmin' Component={RegisterAdmin} />
                 <Route path='/admin' element={<AdminLayoutRoot />}>
-                    <Route index element={<LoginAdmin/>} />
-                    <Route path='./registerAdmin' element={<RegisterAdmin/>} />
+                    <Route index element={<Produit />} />
+                    <Route path='categories' element={<Cat />} />
+                    <Route path='servicesClient' element={<ServiceClient />} />
+                    <Route path='inventaires' element={<Inventaires />} />
+                    <Route path='notifications' element={<Notifications />} />
+                    <Route path='rapports' element={<Rapports />} />
+                    <Route path='settings' element={<Settings />} />
                 </Route>
             </Routes>
         </BrowserRouter>
