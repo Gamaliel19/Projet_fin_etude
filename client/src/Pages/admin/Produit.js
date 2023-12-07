@@ -1,13 +1,19 @@
 import {
   Box,
+  Button,
   Flex,
+  FormControl,
+  FormLabel,
   Heading,
+  Input,
+  Link,
   Stack,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
+  Text,
   useColorModeValue
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
@@ -22,16 +28,6 @@ function Produit() {
   const handleTabsChange = (index) => {
     setTabIndex(index)
   }
-
-  /*
-        align={'center'}
-      justify={'center'}
-      flexDirection={"column"}
-      bg={useColorModeValue('white', 'gray.700')}
-      w={{ base: "100%", lg: "100%" }}
-      p={{ base: '2rem', lg: "4rem" }}
-      mt={{ base: '3rem', lg: '0.001rem' }}
-  */
 
   return (
     <Flex
@@ -65,16 +61,20 @@ function Produit() {
               <Tab>Liste des médicaments</Tab>
               <Tab>Historique des ajouts</Tab>
             </TabList>
+
             <TabPanels>
               <TabPanel>
-                <p>Ajouter des produits au stock</p>
+                <ProdForm />
               </TabPanel>
+
               <TabPanel>
                 <p>Yeah yeah. Ici c'est la liste des médicaments?</p>
               </TabPanel>
+
               <TabPanel>
                 <p>Oh, hello there.</p>
               </TabPanel>
+              
             </TabPanels>
           </Tabs>
         </Box>
@@ -85,3 +85,44 @@ function Produit() {
 }
 
 export default Produit
+
+
+
+const ProdForm = () => {
+  return (
+    <Flex align={'center'} justify={'center'} my={8} textAlign={'left'}>
+      <form>
+        <FormControl>
+          <FormLabel>Adresse Email</FormLabel>
+          <Input
+            value={''}
+            onChange={() => { }}
+            type=''
+            placeholder=''
+          />
+        </FormControl>
+        <FormControl mt={4}>
+          <FormLabel>Mot de passe</FormLabel>
+          <Input
+            value={''}
+            onChange={() => { }}
+            type=''
+            placeholder=''
+          />
+        </FormControl>
+        <Button
+          onClick={() => { }}
+          variant={'solid'}
+          colorScheme='teal'
+          width={'full'}
+          mt={4}>
+          Connexion
+        </Button>
+        <Stack color='blue.400' mt={4} textAlign={'center'}>
+          <Text>Vous n'avez pas de compte? <Link href="" color='teal'>Créez ici!</Link></Text>
+        </Stack>
+
+      </form>
+    </Flex>
+  )
+}
