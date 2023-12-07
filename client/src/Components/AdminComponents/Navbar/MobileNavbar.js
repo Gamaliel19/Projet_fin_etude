@@ -7,12 +7,11 @@ import {
     Link,
     Text,
     useColorModeValue,
-    Tooltip,
+    Tooltip
 } from '@chakra-ui/react'
 import { Search } from '../Recherche/Recherche'
-import { FaShoppingCart } from 'react-icons/fa'
+import { FaBell } from 'react-icons/fa'
 import MobileNavMenu from './MobileNavMenu'
-import NavbarUserEspace from './NavbarUserEspace'
 import ColorModeToggle from '../../ColorModeToggle'
 
 export default function MobileNav() {
@@ -31,20 +30,14 @@ export default function MobileNav() {
                 <Box>
                     <MobileNavMenu />
                 </Box>
-                <Link href="/">
-                    <Text color={'dark'} fontSize={25} fontWeight={'bold'}>Ph
-                        <Text as={'span'} color={'green'}>Edene</Text>
-                    </Text>
-                </Link>
+                <Text color={'dark'} fontSize={25} fontWeight={'bold'}>Ph
+                    <Text as={'span'} color={'green'}>Edene</Text>
+                </Text>
                 <Stack direction={'row'} spacing={1}>
-
-                    <Flex>
-                        <NavbarUserEspace />
-                    </Flex>
                     <Tooltip hasArrow label='Mon panier' bg='gray.300' color='black'>
-                        <Link href='/panierClient'>
+                        <Link href='../admin/notifications'>
                             <Button bg={useColorModeValue('white', 'gray.700')}>
-                                <FaShoppingCart fontSize={26} />
+                                <FaBell fontSize={22} />
                             </Button>
                         </Link>
                     </Tooltip>

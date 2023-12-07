@@ -1,10 +1,14 @@
 import React from 'react'
-import LoginAdmin from '../Pages/admin/loginAdmin/LoginAdmin'
+import { Outlet } from 'react-router-dom';
+import Navbar from '../Components/AdminComponents/Navbar/Navbar';
+import Sidebar from '../Components/AdminComponents/Dashboard/Sidebar';
 
 function AdminLayoutRoot() {
   return (
     <div>
-      <LoginAdmin/>
+      <Navbar />
+      <Sidebar/>
+      <Outlet />
     </div>
   )
 }

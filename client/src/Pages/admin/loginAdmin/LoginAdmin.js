@@ -1,19 +1,21 @@
 import {
     Box, Button, Link, Flex, FormControl, FormLabel, Heading,
-    Input, Stack, useColorMode, useColorModeValue
+    Input, Stack, useColorMode, useColorModeValue, Text
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { BsSun, BsMoonStarsFill } from 'react-icons/bs'
 import httpClient from '../../../httpClient'
+import { useDropzone } from 'react-dropzone'
+
 
 function LoginAdmin() {
     return (
         <Flex
+            justify={'center'}
+            align={'center'}
             minHeight={'100vh'}
             p={{ base: "1rem", lg: "4rem" }}
             mx={'auto'}
-            align={'center'}
-            justifyContent={'center'}
             bg={useColorModeValue('white', 'gray.700')}
         >
             <Box
@@ -36,7 +38,7 @@ function LoginAdmin() {
 
 export default LoginAdmin
 
-
+//Toogle color
 function ColorModeToggle() {
     const { colorMode, toggleColorMode } = useColorMode()
     return (
@@ -52,14 +54,15 @@ function ColorModeToggle() {
     )
 }
 
+//l'en-tête de la page d'authentification
 const LoginHeader = () => {
     return (
         <Box textAlign={'center'}>
-            <Heading>Connectez vous à votre compte</Heading>
+            <Heading>Authentification</Heading>
         </Box>
     )
 }
-
+//le formulaire d'authentification
 const LoginForm = () => {
     const [email, setEmail] = useState([])
     const [password, setPassword] = useState([])
@@ -107,10 +110,26 @@ const LoginForm = () => {
                     Connexion
                 </Button>
                 <Stack color='blue.400' mt={4} textAlign={'center'}>
-                    <Link href="/registerAdmin" color='teal'>Vous n'avez pas de compte? Créez en un!</Link>
+                    <Text>Vous n'avez pas de compte? <Link href="/registerAdmin" color='teal'>Créez ici!</Link></Text>
                 </Stack>
 
             </form>
         </Box>
+    )
+}
+
+function CustomFileUpload(props) {
+    const { getRootProps, getInputProps } = useDropzone({
+        accept: 'image/*',
+        onDrop: (acceptedFiles) => {
+            // Do something with the files
+        }
+    })
+
+    return (
+        <FormControl {...getRootProps()}>
+            <Input {...getInputProps()} />
+            <Text>Glissez et déposez des fichiers ici ou cliquez pour sélectionner des fichiers</Text>
+        </FormControl>
     )
 }
