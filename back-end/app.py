@@ -16,12 +16,38 @@ bcrypt=Bcrypt(app)
 CORS(app, supports_credentials=True)
 server_session = Session(app)
 db.init_app(app)
-
+login_manager = LoginManager()
+login_manager.init_app(app)
 with app.app_context():
     db.create_all()
 
 
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+@app.route('/adminLogin', methods=['POST'])
+def adminLogin():
+    email = request.json["email"]
+    password=request.json["password"]
+    user = User.query.filter_by(email=email).first()
+    if user:
+        if bcrypt.check_password_hash(user.password, password):
+            
+            login_user()
+    
+            return 'vous etes connecte'
+        return ({"message":"mot de passe incorrect, reessayez"})
+    return ({"message":"ce utilisateur n\'existe pas, reessaye"})
+@app.route('/logout', methods=['POST'])
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('adminLogin'))
 
+@app.route('/home')
+@login_required
+def adminPage():
+    return 'l\'utilisateur actuel est' + current_user.nom
 
 @app.route("/registerUser", methods=["POST"])
 def register_user():
@@ -29,15 +55,15 @@ def register_user():
     nom = request.json['nom']
     prenom = request.json['prenom']
     profil = request.json['profil']
-    password = request.json["password"]
-    confirmPassword = request.json["confirmPassword"]
+    password = request.json['password']
+    confirmPassword = request.json['confirmPassword']
 
     user_exists=User.query.filter_by(email=email).first() is not None
 
     if user_exists:
-        return jsonify({"error":"Cet utilisateur existe déjà!"}),409
+        return ({"error":"Cet utilisateur existe déjà!"}),409
     if confirmPassword != password:
-        return jsonify({"error":"Veuillez entrer le mot de passe précedant!"}),409
+        return ({"error":"Veuillez entrer le mot de passe précedant!"}),409
     
     hashed_password = bcrypt.generate_password_hash(password)
     new_user = User(email=email, nom=nom, prenom=prenom, profil=profil, password=hashed_password,)
@@ -47,68 +73,6 @@ def register_user():
     return jsonify({
      "Message": "Utilisateur créé avec succès!"
     })
-
-#liste des utilisateurs
-@app.route('/list', methods=["GET"])
-def list(self):
-    users = User.query.all()
-    liste=[]
-    for user in users:
-        data={}
-        data['email']
-        data['nom'] = user.nom
-        data['prenom'] = user.prenom
-        data['password'] = user.password
-        data['profil'] = user.profil
-        liste.append(data)
-    return jsonify({'utilisateur':liste})
-
-#obtenir un seul tilisateur
-@app.route('/singleUser', methods= ['GET'])
-def singleUser(self,id):
-    user = User.query.filter_by(id=id).first()
-    if user:
-        return user.json()
-    return {'message': 'utilisateur non trouve'}
-#supprimer un utilisateur 
-@app.route('/delete_user/<string:id>', methods=['DELETE'])
-def delete_user(self,id):
-    user = User.query.filter_by(id=id).first()
-    if user:
-        db.session.delete(user)
-        db.session.commit()
-        return {'message': 'utilisateur supprime avec succes'}
-    else:
-        return {'message': 'utilisateur non trouve'}
-
-
-#mettre a jour un utilisateur
-@app.route('/update_user/<string:id>', methods=['PUT'])
-def update_user(self,id):
-    data = request.get_json()
-    user  = User.query.get(id)
-    if data['nom']:
-        user.nom = data['nom']
-    if data['prenom']:
-        user.prenom = data['prenom']
-    if data['email']:
-        user.email = data['email']
-    if data['profil']:
-        user.profil = data['profil']
-    db.session.add(user)
-    db.session.commit()
-    return jsonify({'message': 'utilisateur mis a jour avec succes avec succes', 'utilisateur':{'id':utilisateur.id, 'nom':utilisateur.nom, 'prenom':utilisateur.prenom} })
-
-@app.route('/update_password', methods=['PUT'])
-def update_password(self,id):
-    data = request.get_json()
-    user = User.query.get(id)
-    if data['password']:
-        password = request.json["password"]
-        if password != hashed_password:
-            return jsonify({'message': 'veuillez entrer votre mot de passe precedent'})
-    return jsonify({'message': 'mot de passe modifie avec succes'})
-        
 
 @app.route('/loginUser', methods=["POST"])
 def login_user():
@@ -128,14 +92,132 @@ def login_user():
         "Message":"Connexion réussie!"
     })
 
-@app.route('/register_product', methods=["POST"])
+#liste des utilisateurs
+@app.route('/listUser', methods=["GET"])
+def list():
+    users = User.query.all()
+    liste=[]
+    for user in users:
+        data={}
+        data['email'] = user.email
+        data['nom'] = user.nom
+        data['prenom'] = user.prenom
+        data['password'] = user.password.decode('utf-8')
+        data['profil'] = user.profil
+        liste.append(data)
+    return jsonify({'utilisateur':liste})
+
+#obtenir un seul tilisateur
+@app.route('/listSingleUser', methods= ['GET'])
+def singleUser(self,id):
+    user = User.query.filter_by(id=id).first()
+    if user:
+        return user.json()
+    return {'message': 'utilisateur non trouve'}
+#supprimer un utilisateur 
+@app.route('/deleteUser/<string:id>', methods=['DELETE'])
+def delete_user(self,id):
+    user = User.query.filter_by(id=id).first()
+    if user:
+        db.session.delete(user)
+        db.session.commit()
+        return {'message': 'utilisateur supprime avec succes'}
+    else:
+        return {'message': 'utilisateur non trouve'}
+
+
+#mettre a jour un utilisateur
+@app.route('/updateUser/<string:id>', methods=['PUT'])
+def update_user(self,id):
+    data = request.get_json()
+    user  = User.query.get(id)
+    if data['nom']:
+        user.nom = data['nom']
+    if data['prenom']:
+        user.prenom = data['prenom']
+    if data['email']:
+        user.email = data['email']
+    if data['profil']:
+        user.profil = data['profil']
+    db.session.add(user)
+    db.session.commit()
+    return jsonify({'message': 'utilisateur mis a jour avec succes avec succes', 'utilisateur':{'id':utilisateur.id, 'nom':utilisateur.nom, 'prenom':utilisateur.prenom} })
+
+@app.route('/updatePasswordUser/<string:id>', methods=['PUT'])
+def update_password(self,id):
+    password=request.json["password"]
+    newPassword= request.json["newPassword"]
+    confirmNewPassword= request.json['confirmNewPassword']
+
+    user = User.query.filter_by(password=password).first()
+    users = User.query.all()
+    for user in users:
+        data={}
+        data['email']
+        data['nom'] = user.nom
+        data['prenom'] = user.prenom
+        data['password'] = user.password
+        data['profil'] = user.profil
+    if password != password:
+        return jsonify({"error":"Veuillez entrer le mot de passe précedant!"}),409
+        
+    hashed_password = bcrypt.generate_password_hash(newPassword)
+    new_user = User(email=data['email'], nom=data['nom'], prenom=data['prenom'], profil=data['profil'], password=hashed_password,)
+    db.session.add(new_user)
+    db.session.commit()
+
+    
+    return jsonify({'message': 'mot de passe modifie avec succes'})
+
+@app.route('/registerProduct', methods=["POST"])
 def register_product():
     data = request.get_json()
-    new_product = Produit(data['dosage'], data['nom_com'], data['description'], data['prix'], data['date_fab'], data['date_per'], data['qte_stock'], data['num_lot'])
+    new_product = Produit(dosage=data['dosage'], nom_com=data['nom_com'], description=data['description'], prix=data['prix'], date_fab=data['date_fab'], date_per=data['date_per'], qte_stock=data['qte_stock'], num_lot=data['num_lot'])
     db.session.add(new_product)
     db.session.commit()
     db.session.flush()
     return new_product.json(),201
+
+
+@app.route('/deleteProduct', methods=['DELETE'])
+def delete_product(self,id):
+    product = Product.query.filter_by(id=id).first()
+    if product:
+        db.session.delete(product)
+        db.session.commit()
+        return ({'message': 'produit supprime avec succes'})
+    else:
+        return jsonify({'message': 'produit non trouve'})
+
+@app.route('/updateProduct/<string:id>', methods = ['PUT'])
+def update_product(self,id):
+    data = request.get_json()
+    product = Product.query.get(id)
+    if data['dosage']:
+        product.dosage = data['dosage']
+    if data['nom_com']:
+        product.nom_com = data['nom_com']
+    if data['description']:
+        product.description = data['description']
+    if data['prix']:
+        product.prix = data['prix']
+    if data['date_fab']:
+        product.date_fab = data['date_fab']
+    if data['date_per']:
+        product.date_per = data['date_per']
+    if data['qte_stock']:
+        product.qte_stock = data['qte_stock']
+    if data['lot']:
+        product.lot = data['lot']
+    db.session.add(product)
+    db.session.commit()
+    return jsonify ({'message':'produit mis a jour avec succes'})
+
+
+app.route('/listPrduct', methods = ['GET'])
+def list_product():
+    products = Product.query.all()
+    return {'Products':list(x.json() for x in products)}
 
 if __name__=="__main__":
     app.run(debug=True)
