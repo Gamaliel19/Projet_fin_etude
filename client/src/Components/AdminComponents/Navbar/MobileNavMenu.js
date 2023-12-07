@@ -16,7 +16,7 @@ import {
     Link
 } from '@chakra-ui/react'
 import { VscListFlat } from 'react-icons/vsc'
-import { BsBell, BsFillArchiveFill, BsFillGearFill, BsFillGrid3X3GapFill, BsListCheck,BsMenuButtonWideFill, BsPeopleFill } from 'react-icons/bs'
+import { BsBell, BsFillArchiveFill, BsFillGearFill, BsFillGrid3X3GapFill, BsListCheck, BsMenuButtonWideFill, BsPeopleFill } from 'react-icons/bs'
 import avatar from '../Dashboard/avatar.jpg'
 
 export default function MobileNavMenu({ navSize }) {
@@ -57,7 +57,20 @@ export default function MobileNavMenu({ navSize }) {
                     <Divider display={navSize === "small" ? "none" : "flex"} />
                     <DrawerCloseButton />
                     <DrawerBody>
-                        
+
+                        <Link href='../admin/servicesClient'>
+                            <Flex
+                                align={'center'}
+                                fontSize={22}
+                                flexDir={'row'}
+                                boxShadow={'lg'}
+                                p={'0.5rem'}
+                                _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
+                            >
+                                <BsPeopleFill />
+                                <Text ml={2}>Le service client</Text>
+                            </Flex>
+                        </Link>
                         <Link href='/admin'>
                             <Flex
                                 align={'center'}
@@ -82,19 +95,6 @@ export default function MobileNavMenu({ navSize }) {
                             >
                                 <BsFillGrid3X3GapFill />
                                 <Text ml={2}>Catégories</Text>
-                            </Flex>
-                        </Link>
-                        <Link href='../admin/servicesClient'>
-                            <Flex
-                                align={'center'}
-                                fontSize={22}
-                                flexDir={'row'}
-                                boxShadow={'lg'}
-                                p={'0.5rem'}
-                                _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
-                            >
-                                <BsPeopleFill />
-                                <Text ml={2}>Services client</Text>
                             </Flex>
                         </Link>
                         <Link href='../admin/inventaires'>

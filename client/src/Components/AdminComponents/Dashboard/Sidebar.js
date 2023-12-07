@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Avatar, Divider, Flex, Heading, Link,Spacer, Text, useColorModeValue } from '@chakra-ui/react'
+import { Avatar, Divider, Flex, Heading, Link, Spacer, Text, useColorModeValue } from '@chakra-ui/react'
 import avatar from '../Dashboard/avatar.jpg'
 import { BsBell, BsFillArchiveFill, BsFillGearFill, BsFillGrid3X3GapFill, BsListCheck, BsMenuButtonWideFill, BsPeopleFill } from 'react-icons/bs'
 
@@ -8,7 +8,7 @@ function Sidebar() {
   return (
     <Flex
       pos={"fixed"}
-      h={'90vh'}
+      h={'93vh'}
       bg={useColorModeValue('gray.700', 'gray.700')}
       boxShadow={"0 4px 12px 0 rgba(0,0,0,0.05)"}
       w={"250px"}
@@ -22,6 +22,26 @@ function Sidebar() {
         alignItems={navSize === "small" ? "center" : "flex-start"}
         as={"nav"}
       >
+        <Link
+          mt={4}
+          textColor={useColorModeValue('white')}
+          w={navSize === "large" && "100%"}
+          _hover={{ textDecor: "none", backgroundColor: "#AEC8CA" }}
+          href='/admin/servicesClient'
+          borderRadius={5}
+          active
+        >
+          <Flex
+            align={'center'}
+            flexDir={'row'}
+            boxShadow={'lg'}
+            p={'0.5rem'}
+
+          >
+            <BsPeopleFill />
+            <Text ml={6}>Le service client</Text>
+          </Flex>
+        </Link>
         <Link
           mt={3}
           textColor={useColorModeValue('white')}
@@ -62,27 +82,6 @@ function Sidebar() {
             <Text ml={6}>Catégories</Text>
           </Flex>
         </Link>
-        <Link
-          mt={4}
-          textColor={useColorModeValue('white')}
-          w={navSize === "large" && "100%"}
-          _hover={{ textDecor: "none", backgroundColor: "#AEC8CA" }}
-          href='/admin/servicesClient'
-          borderRadius={5}
-          active
-        >
-          <Flex
-            align={'center'}
-            flexDir={'row'}
-            boxShadow={'lg'}
-            p={'0.5rem'}
-
-          >
-            <BsPeopleFill />
-            <Text ml={6}>Services client</Text>
-          </Flex>
-        </Link>
-
         <Link
           mt={4}
           textColor={useColorModeValue('white')}
