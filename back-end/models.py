@@ -34,11 +34,11 @@ class Product(db.Model):
     date_fab = db.Column(db.Date)
     date_per=db.Column(db.Date)
     qte_stock=db.Column(db.Integer)
-    num_Lot = db.Column(db.Integer)
+    num_lot = db.Column(db.Integer)
     produit=db.relationship('Commande', backref='produit', lazy=False)
     produit=db.relationship('Inventaire', backref='produit', lazy=False)
 
-    def __init__(self, dosage, nom_com, description, prix, date_fab, date_per, qte_stock, num_Lot):
+    def __init__(self, dosage, nom_com, description, prix, date_fab, date_per, qte_stock, num_lot):
         self.dosage=dosage
         self.nom_com=nom_com
         self.description=description
@@ -46,10 +46,10 @@ class Product(db.Model):
         self.date_fab=date_fab
         self.date_per=date_per
         self.qte_stock=qte_stock
-        self.num_Lot=num_Lot
+        self.num_lot=num_lot
         
     def json(self):
-        return {"dosage":self.dosage, "nom_com":self.nom_com, "prix":self.prix, "date_fab":self.date_fab, "date_per":self.date_per, "qte_stock":self.qte_stock, "num_lot":self.num_Lot}
+        return {"dosage":self.dosage, "nom_com":self.nom_com, "prix":self.prix, "date_fab":self.date_fab, "date_per":self.date_per, "qte_stock":self.qte_stock, "num_lot":self.num_lot}
 
 
 class Vente(db.Model):

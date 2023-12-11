@@ -2,7 +2,7 @@ flask
 flask-sqlalchemy
 flask-bcrypt
 python-dotenv
-flask-session
+flask-session 
 redis
-flask-cors
 flask-login
+flask-cors

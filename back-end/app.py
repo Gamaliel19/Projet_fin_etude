@@ -5,7 +5,7 @@ from flask_cors import CORS, cross_origin
 from flask_session import Session
 from flask_login import UserMixin, LoginManager, login_required, logout_user, current_user, login_user
 from config import ApplicationConfig
-from models import db, User
+from models import db, User, Product
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 app= Flask(__name__)
@@ -213,8 +213,8 @@ def update_product(self,id):
         product.date_per = data['date_per']
     if data['qte_stock']:
         product.qte_stock = data['qte_stock']
-    if data['lot']:
-        product.lot = data['lot']
+    if data['num_lot']:
+        product.lot = data['num_lot']
     db.session.add(product)
     db.session.commit()
     return jsonify ({'message':'produit mis a jour avec succes'})
@@ -222,9 +222,21 @@ def update_product(self,id):
 
 @app.route('/listProduct', methods = ['GET'])
 def list_product():
+
     products = Product.query.all()
-    return {'Products':list(x.json() for x in products)}
+    liste=[]
+    for product in products:
+        data={}
+        data['dosage'] = product.dosage
+        data['nom_com'] = product.nom_com
+        data['description'] = product.description
+        data['prix'] = product.prix
+        data['date_fab'] = product.date_fab
+        data['date_per'] = product.date_per
+        data['qte_stock'] = product.qte_stock
+        data['num_lot'] = product.num_lot
 
-
+        liste.append(data)
+    return jsonify({'liste des produits':liste})
 if __name__=="__main__":
     app.run(debug=True)
