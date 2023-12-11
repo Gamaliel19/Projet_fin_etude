@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Avatar, Divider, Flex, Heading, Link, Spacer, Text, useColorModeValue } from '@chakra-ui/react'
 import avatar from '../Dashboard/avatar.jpg'
-import { BsBell, BsFillArchiveFill, BsFillGearFill, BsFillGrid3X3GapFill, BsListCheck, BsMenuButtonWideFill, BsPeopleFill } from 'react-icons/bs'
+import { BsBell, BsFillArchiveFill, BsFillGearFill, BsFillGrid3X3GapFill, BsListCheck, BsMenuButtonWideFill, BsPeopleFill, BsPerson } from 'react-icons/bs'
 
 function Sidebar() {
   const [navSize] = useState("large")
@@ -27,7 +27,7 @@ function Sidebar() {
           textColor={useColorModeValue('white')}
           w={navSize === "large" && "100%"}
           _hover={{ textDecor: "none", backgroundColor: "#AEC8CA" }}
-          href='/admin/servicesClient'
+          href='/admin'
           borderRadius={5}
           active
         >
@@ -47,7 +47,7 @@ function Sidebar() {
           textColor={useColorModeValue('white')}
           w={navSize === "large" && "100%"}
           _hover={{ textDecor: "none", backgroundColor: "#AEC8CA" }}
-          href='/admin'
+          href='/admin/produits'
           borderRadius={5}
           active
         >
@@ -140,6 +140,26 @@ function Sidebar() {
           >
             <BsMenuButtonWideFill />
             <Text ml={6}>Rapports</Text>
+          </Flex>
+        </Link>
+        <Link
+          mt={4}
+          textColor={useColorModeValue('white')}
+          w={navSize === "large" && "100%"}
+          _hover={{ textDecor: "none", backgroundColor: "#AEC8CA" }}
+          href='/admin/utilisateurs'
+          borderRadius={5}
+          active
+        >
+          <Flex
+            align={'center'}
+            flexDir={'row'}
+            boxShadow={'lg'}
+            p={'0.5rem'}
+
+          >
+            <BsPerson />
+            <Text ml={6}>Gestion des utilisateurs</Text>
           </Flex>
         </Link>
         <Link

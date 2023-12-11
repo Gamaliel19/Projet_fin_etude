@@ -69,15 +69,22 @@ const RegisterForm = () => {
     const [nom, setNom] = useState([])
     const [prenom, setPrenom] = useState([])
     const [profil, setProfil] = useState([])
-    const [confirmPassword, setConfirmPassword] = useState([])
     const [password, setPassword] = useState([])
+    const [confirmPassword, setConfirmPassword] = useState([])
 
     const regisInAdmin = async () => {
         try {
-            const resp = await httpClient.post("http://127.0.0.1:5000/registerAdmin", {
-                email,nom,prenom,profil,password
+            const resp = await httpClient.post("http://127.0.0.1:5000/registerUser", {
+                email, nom, prenom, profil, password
             })
-            window.location.href = "/admin"
+            console.log(resp.data.prenom)
+            if (profil === "admin"){
+                window.location.href = "/admin"
+            }else if(profil ==="gerant"){
+                window.location.href ="/gerant"
+            }else{
+                window.location.href="/"
+            }
         } catch (error) {
             if (error.response.status === 409) {
                 alert("La connexion a échouée. Réessayez plus tard!")
@@ -134,15 +141,6 @@ const RegisterForm = () => {
                         placeholder='Entrez votre mot de passe svp!'
                     />
                 </FormControl>
-                <FormControl mt={3}>
-                    <FormLabel>Confirmation du mot de passe</FormLabel>
-                    <Input
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        type='password'
-                        placeholder='Confirmez votre mot de passe svp!'
-                    />
-                </FormControl>
                 <Button
                     onClick={() => regisInAdmin()}
                     variant={'solid'}
@@ -152,7 +150,7 @@ const RegisterForm = () => {
                     Connexion
                 </Button>
                 <Stack color='blue.400' mt={4} textAlign={'center'}>
-                    <Text>Vous avez déjà un compte? <Link href="/loginAdmin" color='teal'>Connectez-vous ici!</Link></Text>
+                    <Text>Vous avez déjà un compte? <Link href="/login" color='teal'>Connectez-vous ici!</Link></Text>
                 </Stack>
 
             </form>
@@ -161,7 +159,7 @@ const RegisterForm = () => {
 }
 
 
-function CustomFileUpload(props) {
+/*function CustomFileUpload(props) {
     const { getRootProps, getInputProps } = useDropzone({
         accept: 'image/*',
         onDrop: (acceptedFiles) => {
@@ -176,3 +174,4 @@ function CustomFileUpload(props) {
         </FormControl>
     )
 }
+*/

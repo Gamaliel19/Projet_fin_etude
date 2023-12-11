@@ -5,7 +5,6 @@ import {
 import React, { useState } from 'react'
 import { BsSun, BsMoonStarsFill } from 'react-icons/bs'
 import httpClient from '../../../httpClient'
-import { useDropzone } from 'react-dropzone'
 
 
 function LoginAdmin() {
@@ -65,17 +64,19 @@ const LoginHeader = () => {
 //le formulaire d'authentification
 const LoginForm = () => {
     const [email, setEmail] = useState([])
+    const [profil, setProfil] = useState([])
     const [password, setPassword] = useState([])
 
     const logInAdmin = async () => {
         try {
-            const resp = await httpClient.post("http://127.0.0.1:5000/loginAdmin", {
+            const resp = await httpClient.post("http://127.0.0.1:5000/loginUser", {
                 email,
                 password
             })
-            window.location.href = "/adminDashboard"
+            console.log(resp.data.prenom)
+            window.location.href = "/admin"
         } catch (error) {
-            if (error.response.status === 409) {
+            if (error.response.status === 401) {
                 alert("La connexion a échouée. Réessayez plus tard!")
             }
         }
@@ -110,26 +111,10 @@ const LoginForm = () => {
                     Connexion
                 </Button>
                 <Stack color='blue.400' mt={4} textAlign={'center'}>
-                    <Text>Vous n'avez pas de compte? <Link href="/registerAdmin" color='teal'>Créez ici!</Link></Text>
+                    <Text>Vous n'avez pas de compte? <Link href="/register" color='teal'>Créez ici!</Link></Text>
                 </Stack>
 
             </form>
         </Box>
-    )
-}
-
-function CustomFileUpload(props) {
-    const { getRootProps, getInputProps } = useDropzone({
-        accept: 'image/*',
-        onDrop: (acceptedFiles) => {
-            // Do something with the files
-        }
-    })
-
-    return (
-        <FormControl {...getRootProps()}>
-            <Input {...getInputProps()} />
-            <Text>Glissez et déposez des fichiers ici ou cliquez pour sélectionner des fichiers</Text>
-        </FormControl>
     )
 }

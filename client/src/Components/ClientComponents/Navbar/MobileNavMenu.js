@@ -10,10 +10,12 @@ import {
     useDisclosure,
     Button,
     Link,
-    Box,
+    Flex,
+    Text,
 } from '@chakra-ui/react'
 import AppLogo from '../AppLogo'
 import { VscListFlat } from 'react-icons/vsc'
+import { BsFillGrid3X3GapFill, BsGrid1X2Fill, BsHouse } from 'react-icons/bs'
 
 export default function MobileNavMenu() {
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -37,32 +39,44 @@ export default function MobileNavMenu() {
                         <AppLogo />
                     </DrawerHeader>
                     <DrawerBody>
-                        <Link>
-                            <Box
+                        <Link href='/'>
+                            <Flex
+                                align={'center'}
+                                fontSize={22}
+                                flexDir={'row'}
                                 boxShadow={'lg'}
                                 p={'0.5rem'}
                                 _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
                             >
-                                Tous les médicaments
-                            </Box>
+                                <BsHouse />
+                                <Text ml={2}>Accueil</Text>
+                            </Flex>
                         </Link>
-                        <Link>
-                            <Box
+                        <Link href='/allProduitsClient'>
+                            <Flex
+                                align={'center'}
+                                fontSize={22}
+                                flexDir={'row'}
                                 boxShadow={'lg'}
                                 p={'0.5rem'}
                                 _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
                             >
-                                Produits cosmétiques
-                            </Box>
+                                <BsGrid1X2Fill />
+                                <Text ml={2}>Tous les médicaments</Text>
+                            </Flex>
                         </Link>
-                        <Link>
-                            <Box
+                        <Link href='/categoriesProduitsClient'>
+                            <Flex
+                                align={'center'}
+                                fontSize={22}
+                                flexDir={'row'}
                                 boxShadow={'lg'}
                                 p={'0.5rem'}
                                 _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
                             >
-                                Produits
-                            </Box>
+                                <BsFillGrid3X3GapFill />
+                                <Text ml={2}>Catégories</Text>
+                            </Flex>
                         </Link>
                     </DrawerBody>
                     <DrawerFooter>

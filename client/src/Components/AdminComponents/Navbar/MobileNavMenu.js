@@ -16,7 +16,7 @@ import {
     Link
 } from '@chakra-ui/react'
 import { VscListFlat } from 'react-icons/vsc'
-import { BsBell, BsFillArchiveFill, BsFillGearFill, BsFillGrid3X3GapFill, BsListCheck, BsMenuButtonWideFill, BsPeopleFill } from 'react-icons/bs'
+import { BsBell, BsFillArchiveFill, BsFillGearFill, BsFillGrid3X3GapFill, BsListCheck, BsMenuButtonWideFill, BsPeopleFill, BsPerson } from 'react-icons/bs'
 import avatar from '../Dashboard/avatar.jpg'
 
 export default function MobileNavMenu({ navSize }) {
@@ -58,7 +58,7 @@ export default function MobileNavMenu({ navSize }) {
                     <DrawerCloseButton />
                     <DrawerBody>
 
-                        <Link href='../admin/servicesClient'>
+                        <Link href='/admin'>
                             <Flex
                                 align={'center'}
                                 fontSize={22}
@@ -71,7 +71,7 @@ export default function MobileNavMenu({ navSize }) {
                                 <Text ml={2}>Le service client</Text>
                             </Flex>
                         </Link>
-                        <Link href='/admin'>
+                        <Link href='../admin/produits'>
                             <Flex
                                 align={'center'}
                                 fontSize={22}
@@ -134,6 +134,19 @@ export default function MobileNavMenu({ navSize }) {
                             >
                                 <BsMenuButtonWideFill />
                                 <Text ml={2}>Rapports</Text>
+                            </Flex>
+                        </Link>
+                        <Link href='../admin/utilisateurs'>
+                            <Flex
+                                align={'center'}
+                                fontSize={22}
+                                flexDir={'row'}
+                                boxShadow={'lg'}
+                                p={'0.5rem'}
+                                _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
+                            >
+                                <BsPerson />
+                                <Text ml={2}>Gestion des utilisateurs</Text>
                             </Flex>
                         </Link>
                         <Link href='../admin/settings'>

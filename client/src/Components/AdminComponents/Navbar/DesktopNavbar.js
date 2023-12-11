@@ -3,7 +3,6 @@ import {
     Box,
     Button,
     Flex,
-    Heading,
     Link,
     Spacer,
     Stack,
@@ -14,6 +13,10 @@ import { Search } from '../Recherche/Recherche'
 import ColorModeToggle from '../../ColorModeToggle'
 
 export default function DesktopNav() {
+
+    const logout = async () => {
+        window.location.href = "/loginAdmin"
+    }
 
     return (
         <Flex
@@ -58,6 +61,11 @@ export default function DesktopNav() {
 
                 </Flex>
                 <ColorModeToggle />
+                <Flex>
+                    <Button onClick={() => logout()} colorScheme='teal' variant='outline'>
+                        Logout
+                    </Button>
+                </Flex>
             </Stack>
         </Flex>
     )

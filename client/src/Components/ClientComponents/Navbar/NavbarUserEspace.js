@@ -23,6 +23,9 @@ import httpClient from '../../../httpClient';
 
 export default function NavbarUserEspace() {
     const [email, setEmail] = useState([])
+    const [nom, setNom] = useState([])
+    const [prenom, setPrenom] = useState([])
+    const [profil, setProfil] = useState([])
     const [password, setPassword] = useState([])
 
     const register = () => {
@@ -33,7 +36,7 @@ export default function NavbarUserEspace() {
         console.log(email, password)
 
         try {
-            const resp = await httpClient.post("http://127.0.0.1:5000/loginClient", {
+            const resp = await httpClient.post("http://127.0.0.1:5000/loginUser", {
                 email,
                 password,
             });

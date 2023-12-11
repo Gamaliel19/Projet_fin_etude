@@ -71,9 +71,6 @@ export default function Footer() {
                             <SocialButton label="Whatsapp" href={""}>
                                 <FaWhatsapp />
                             </SocialButton>
-                            <SocialButton label='Github' href={"https://github.com/Gamaliel19"}>
-                                <FaGithub />
-                            </SocialButton>
                         </Stack>
                     </Stack>
 

@@ -1,21 +1,23 @@
 import React, { useState } from 'react'
-import { Box, Button, Flex, FormControl, Heading, Input, Stack, Text, useColorModeValue } from '@chakra-ui/react'
+import { Box, Button, Flex, FormControl, FormLabel, Heading, Input, Select, Stack, Text, useColorModeValue } from '@chakra-ui/react'
 import httpClient from '../../httpClient'
 
 function CreationCompte() {
   const [email, setEmail] = useState([])
   const [nom, setNom] = useState([])
   const [prenom,setPrenom] = useState([])
+  const [profil,setProfil] = useState([])
   const [password, setPassword] = useState([])
   const [confirmPassword, setConfirmPassword] = useState([])
   
   const regisInUser = async () => {
 
     try {
-        const resp = await httpClient.post("http://127.0.0.1:5000/registerClient", {
+        const resp = await httpClient.post("http://127.0.0.1:5000/registerUser", {
             email,
             nom,
             prenom,
+            profil,
             password,
             confirmPassword
         });
@@ -59,6 +61,7 @@ function CreationCompte() {
           >
             <Stack spacing={4}>
               <FormControl id="email">
+              <FormLabel>Email</FormLabel>
                 <Input
                   type="email"
                   value={email}
@@ -67,6 +70,7 @@ function CreationCompte() {
                   placeholder='Entrez votre email svp!' />
               </FormControl>
               <FormControl id="nom">
+              <FormLabel>Nom</FormLabel>
                 <Input
                   type="text"
                   value={nom}
@@ -75,6 +79,7 @@ function CreationCompte() {
                   placeholder='Entrez votre nom svp! ' />
               </FormControl>
               <FormControl id="prenom">
+              <FormLabel>Prenom</FormLabel>
                 <Input
                   type="text"
                   value={prenom}
@@ -82,6 +87,16 @@ function CreationCompte() {
                   focusBorderColor="green.400"
                   placeholder='Entrez votre prenom svp! ' />
               </FormControl>
+              <FormControl id={'profil'}>
+                    <FormLabel>Profil</FormLabel>
+                    <Select
+                        placeholder='Choisir votre profil'
+                        value={profil}
+                        onChange={(e) => setProfil(e.target.value)}
+                    >
+                        <option value={'profil'}>Client</option>
+                    </Select>
+                </FormControl>
               <FormControl id="password">
                 <Input
                   type="password"
@@ -90,14 +105,6 @@ function CreationCompte() {
                   placeholder='Entrez votre mot de passe svp!'
                   focusBorderColor="green.400"
                 />
-              </FormControl>
-              <FormControl id="confirmPassword">
-                <Input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  focusBorderColor="green.400"
-                  placeholder='Confirmez votre mot de passe svp! ' />
               </FormControl>
               <Stack spacing={10}>
                 <Button

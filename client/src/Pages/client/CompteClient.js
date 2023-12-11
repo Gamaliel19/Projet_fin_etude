@@ -70,7 +70,7 @@ function CompteClient() {
             mx={'2'}
             p={'0.5rem'}
           >
-            <Button onClick={() => suivre()} bg={useColorModeValue('white', 'gray.700')} align={'center'} direction={'row'}>
+            <Button onClick={() => suivre()} bg={useColorModeValue('white', 'gray.700')} direction={'row'}>
               <FaShoppingCart fontSize={26} />
               <Text fontWeight={'bold'} mx={2}>Suivre vos commandes</Text>
             </Button>

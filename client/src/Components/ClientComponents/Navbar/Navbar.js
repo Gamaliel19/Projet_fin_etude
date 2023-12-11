@@ -8,7 +8,7 @@ export default function Navbar() {
         <Box  h={'120px'}>
             <Box
                 position={'fixed'}
-                bg={useColorModeValue('white', 'gray.700')}
+                bg={useColorModeValue('transparent', 'gray.700')}
                 w={'100%'}
                 mb={'1rem'}
                 zIndex={10}

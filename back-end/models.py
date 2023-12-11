@@ -10,20 +10,20 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String, unique=True)
     nom = db.Column(db.String(100), nullable=False)
     prenom = db.Column(db.String(50))
-    password = db.Column(db.String(50), nullable=False)
     profil= db.Column(db.String(30))
+    password = db.Column(db.String(50), nullable=False)
 
     utilisateur=db.relationship('Vente', backref='user', lazy=False)
     utilisateur=db.relationship('Commande', backref='user',lazy=False)
     utilisateur=db.relationship('Livraison', backref='user', lazy=False)
-    def __init__(self, email, nom, prenom, password, profil):
+    def __init__(self, email, nom, prenom, profil,password,):
         self.email = email
         self.nom = nom
         self.prenom = prenom
-        self.password = password
         self.profil = profil
+        self.password = password
     def json(self):
-        return {"email":self.email, "nom":self.nom, "prenom":self.prenom, "motPasse":self.motPasse, "profil":self.profil}
+        return {"email":self.email, "nom":self.nom, "prenom":self.prenom, "password":self.password, "profil":self.profil}
 class Product(db.Model):
     __tablename__='produits'
     id = db.Column(db.Integer, primary_key=True)

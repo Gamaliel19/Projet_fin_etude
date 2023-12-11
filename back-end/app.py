@@ -28,7 +28,7 @@ with app.app_context():
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-@app.route('/adminLogin', methods=['POST'])
+@app.route('/loginUser', methods=['POST'])
 def adminLogin():
     email = request.json["email"]
     password=request.json["password"]
@@ -36,11 +36,12 @@ def adminLogin():
     if user:
         if bcrypt.check_password_hash(user.password, password):
             
-            login_user()
+            login_user(user)
     
             return 'vous etes connecte'
-        return ({"message":"mot de passe incorrect, reessayez"})
-    return ({"message":"ce utilisateur n\'existe pas, reessaye"})
+        return ({"message":"mot de passe incorrect, reessayez"}),401
+    return ({"message":"ce utilisateur n\'existe pas, reessaye"}),401
+
 @app.route('/logout', methods=['POST'])
 @login_required
 def logout():
@@ -59,24 +60,25 @@ def register_user():
     prenom = request.json['prenom']
     profil = request.json['profil']
     password = request.json['password']
-    confirmPassword = request.json['confirmPassword']
 
     user_exists=User.query.filter_by(email=email).first() is not None
+    admin_exist=User.query.filter_by(profil='admin').first() is not None
 
     if user_exists:
         return ({"error":"Cet utilisateur existe déjà!"}),409
-    if confirmPassword != password:
-        return ({"error":"Veuillez entrer le mot de passe précedant!"}),409
+
+    """if confirmPassword != password:
+        return ({"error":"Veuillez entrer le mot de passe précedant!"}),409"""
     
     hashed_password = bcrypt.generate_password_hash(password)
-    new_user = User(email=email, nom=nom, prenom=prenom, profil=profil, password=hashed_password,)
+    new_user = User(email=email, nom=nom, prenom=prenom, profil=profil, password=hashed_password)
     db.session.add(new_user)
     db.session.commit()
 
     return jsonify({
      "Message": "Utilisateur créé avec succès!"
     })
-
+"""
 @app.route('/loginUser', methods=["POST"])
 def login_user():
     email= request.json["email"]
@@ -94,6 +96,7 @@ def login_user():
     return jsonify({
         "Message":"Connexion réussie!"
     })
+"""
 
 #liste des utilisateurs
 @app.route('/listUser', methods=["GET"])
@@ -175,7 +178,7 @@ def update_password(self,id):
 @app.route('/registerProduct', methods=["POST"])
 def register_product():
     data = request.get_json()
-    new_product = Produit(dosage=data['dosage'], nom_com=data['nom_com'], description=data['description'], prix=data['prix'], date_fab=data['date_fab'], date_per=data['date_per'], qte_stock=data['qte_stock'], num_lot=data['num_lot'])
+    new_product = Product(dosage=data['dosage'], nom_com=data['nom_com'], description=data['description'], prix=data['prix'], date_fab=data['date_fab'], date_per=data['date_per'], qte_stock=data['qte_stock'], num_lot=data['num_lot'])
     db.session.add(new_product)
     db.session.commit()
     db.session.flush()
@@ -217,7 +220,7 @@ def update_product(self,id):
     return jsonify ({'message':'produit mis a jour avec succes'})
 
 
-@app.route('/listPrduct', methods = ['GET'])
+@app.route('/listProduct', methods = ['GET'])
 def list_product():
     products = Product.query.all()
     return {'Products':list(x.json() for x in products)}

@@ -1,4 +1,5 @@
 import React from 'react'; import { BrowserRouter, Route, Routes } from 'react-router-dom'
+//Import routes for Client
 import ClientHomePage from './Pages/Produits/HomePage'
 import CreationCompte from './Pages/client/CreationCompte'
 import CompteClient from './Pages/client/CompteClient'
@@ -11,6 +12,8 @@ import EditAdresseFactClient from './Pages/client/EditAdresseFactClient'
 import EditAdresseLivClient from './Pages/client/EditAdresseLivClient'
 import SuivreCommandesClient from './Pages/client/SuivreCommandesClient'
 import GererProduitsFavorisClient from './Pages/client/GererProduitsFavorisClient'
+import AllProduits from './Pages/client/AllProduits'
+//Import routes for admin
 import AdminLayoutRoot from './Layouts/AdminLayoutRoot';
 import LoginAdmin from './Pages/admin/loginAdmin/LoginAdmin';
 import RegisterAdmin from './Pages/admin/registerAdmin/RegisterAdmin';
@@ -21,10 +24,12 @@ import ServiceClient from './Pages/admin/ServiceClient'
 import Settings from './Pages/admin/Settings'
 import Cat from './Pages/admin/Cat'
 import Notifications from './Pages/admin/Notificatioons'
+import Categories from './Pages/client/Categories';
+import GestionUsers from './Pages/admin/GestionUsers';
 
 export default function Router() {
     return (
-        <BrowserRouter >
+        <BrowserRouter bg>
             <Routes>
                 <Route path='/' element={<ClientLayoutRoot />}>
                     <Route index element={<ClientHomePage />} />
@@ -38,21 +43,61 @@ export default function Router() {
                     <Route path='/editAdresseFactClient' element={<EditAdresseFactClient />} />
                     <Route path='/suivreCommandesClient' element={<SuivreCommandesClient />} />
                     <Route path='/gererProduitsFavorisClient' element={<GererProduitsFavorisClient />} />
+                    <Route path='/allProduitsClient' element={<AllProduits />} />
+                    <Route path='/categoriesProduitsClient' element={<Categories />} />
                 </Route>
-                <Route path='/loginAdmin' Component={LoginAdmin} />
-                <Route path='/registerAdmin' Component={RegisterAdmin} />
+                <Route path='/login' Component={LoginAdmin} />
+                <Route path='/register' Component={RegisterAdmin} />
                 <Route path='/admin' element={<AdminLayoutRoot />}>
-                    <Route index element={<Produit />} />
+                    <Route index element={<ServiceClient />} />
                     <Route path='categories' element={<Cat />} />
-                    <Route path='servicesClient' element={<ServiceClient />} />
+                    <Route path='utilisateurs' element={<GestionUsers />} />
+                    <Route path='produits' element={<Produit />} />
                     <Route path='inventaires' element={<Inventaires />} />
                     <Route path='notifications' element={<Notifications />} />
                     <Route path='rapports' element={<Rapports />} />
                     <Route path='settings' element={<Settings />} />
                 </Route>
             </Routes>
-        </BrowserRouter>
+        </BrowserRouter >
     )
 }
 
+/*
+function PrivateRoute({ children, isAuthenticated, ...rest }) {
+    return (
+        <Route
+            index
+            {...rest}
+            render={({ location }) =>
+                isAuthenticated ? (
+                    children
+                ) : (
+                    <Navigate
+                        to={{
+                            pathname: '/loginAdmin',
+                            state: { from: location },
+                        }}
+                    />
+                )
+            }
+        />
+    );
+}
 
+function App() {
+    const isAuthenticated = false; // Replace with your authentication logic
+    return (
+        <Router>
+            <Switch>
+                <Route path="/login">
+                    <LoginAdmin />
+                </Route>
+                <PrivateRoute path="/">
+                    <ServiceClient />
+                </PrivateRoute>
+            </Switch>
+        </Router>
+    );
+}
+*/
