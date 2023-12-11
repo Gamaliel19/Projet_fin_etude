@@ -98,6 +98,15 @@ def login_user():
     })
 """
 
+
+#Liste test
+@app.route('/liste')
+def liste():
+    data = ['élément 1', 'élément 2', 'élément 3']
+    return jsonify(data)
+
+
+
 #liste des utilisateurs
 @app.route('/listUser', methods=["GET"])
 def list():

@@ -269,9 +269,10 @@ function CustomFileUpload(props) {
 */
 
 const ListeProduits = (props) => {
+  const [data, setData] = useState([]);
 
   function listeProduits(nom_com) {
-    return nom_com.map(item => {
+    return (nom_com.map(item => {
       return <Tr>
         <Td>{item.num_Lot}</Td>
         <Td>{item.nom_com}</Td>
@@ -283,11 +284,20 @@ const ListeProduits = (props) => {
         <Td>{item.date_per}</Td>
       </Tr>
     })
+    )
   }
 
+  fetch('/liste')
+    .then(response => response.json())
+    .then(data => {
+      // Utilisez les données de la liste pour générer dynamiquement les éléments de la liste
+    });
 
-  if (!ListeProduits) { return <div><CircularProgress isIndeterminate color='green.300' /></div> }
-  console.log(ListeProduits)
+  useEffect(() => {
+    fetch('/liste')
+      .then(response => response.json())
+      .then(data => setData(data));
+  }, []);
 
   return (
     <Flex flexDir={'column'} boxShadow={'lg'} align={'center'} justify={'center'} my={10} textAlign={'left'}>
@@ -309,7 +319,7 @@ const ListeProduits = (props) => {
             </Thead>
             <Tbody>
 
-
+              
             </Tbody>
           </Table>
         </TableContainer>
@@ -318,3 +328,4 @@ const ListeProduits = (props) => {
     </Flex>
   )
 }
+

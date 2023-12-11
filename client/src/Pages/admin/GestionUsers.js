@@ -1,9 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Box, CircularProgress, Flex, FormLabel, Stack, Tab, TabList,
     TabPanel, TabPanels, Table, TableContainer, Tabs, Tbody, Td, Th, Thead, Tr, useColorModeValue
 } from '@chakra-ui/react'
-import { Liste, ListeCl } from './test'
+import { Informatique } from "../data";
+import { Liste } from './test'
+import axios from 'axios';
+import InfoTimeline from './InfoTimeline';
 
 function GestionUsers() {
     const [tabIndex, setTabIndex] = useState(0)
@@ -103,20 +106,53 @@ function ListeUsers(props) {
 }
 
 function ListeClients(props) {
-    function listeClient(nom) {
-        return nom.map(item => {
-            return <Tr>
-                <Td>{item.email}</Td>
-                <Td>{item.nom}</Td>
-                <Td>{item.prenom}</Td>
-            </Tr>
-        })
+    /* const [data, setData] = useState([])
+ 
+     useEffect(() => {
+         fetch("/liste")
+             .then(response => response.json())
+             .then(data => setData(data));
+     }, []);
+     function listeEtudiant(filiere) {
+         return filiere.map(item => {
+             return <Tr>
+                 <Td>{item.nom} </Td>
+                 <Td>{item.prenom}</Td>
+                 <Td>{item.moyenneGenerale}</Td>
+             </Tr>
+         })
+     }
+      function listeClient(nom) {
+          return (nom.map(item => {
+              return <Tr>
+                  <Td>{item.email}</Td>
+                  <Td>{item.nom}</Td>
+                  <Td>{item.prenom}</Td>
+              </Tr>
+          })
+          )
+      }
+      */
+
+    const [info, getInfo] = useState('')
+    /*const [nom,getNom] = useState('')
+    const [prenom,getPrenom] = useState('')
+    const [profil,getProfil] = useState('')*/
+
+    const url = 'http://127.0.0.1:5000/listUser'
+
+    const getAllUsers = () => {
+        axios.get(`${url}`)
+            .then((response) => {
+                const allUsers = response.data.info.allUsers
+                getInfo(allUsers)
+            })
+            .catch(error => console.error(`Error: ${error}`))
     }
 
-    if (!ListeClients) {
-        return <div><CircularProgress isIndeterminate color='green.300' /></div>
-    }
-    console.log(ListeClients)
+    useEffect(() => {
+        getAllUsers();
+    }, [])
 
     return (
         <Flex flexDir={'column'} boxShadow={'lg'} align={'center'} justify={'center'} my={8} textAlign={'left'}>
@@ -133,7 +169,7 @@ function ListeClients(props) {
                         </Thead>
 
                         <Tbody>
-
+                            <InfoTimeline info={info} />
                         </Tbody>
 
                     </Table>
