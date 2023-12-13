@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
 import { Avatar, Divider, Flex, Heading, Link, Spacer, Text, useColorModeValue } from '@chakra-ui/react'
 import avatar from '../Dashboard/avatar.jpg'
-import { BsBell, BsFillArchiveFill, BsFillGearFill, BsFillGrid3X3GapFill, BsListCheck, BsMenuButtonWideFill, BsPeopleFill, BsPerson } from 'react-icons/bs'
+import {
+  BsBell, BsFillArchiveFill, BsFillGearFill, BsFillGrid3X3GapFill, BsListCheck,
+  BsMenuButtonWideFill, BsPeopleFill, BsPerson
+} from 'react-icons/bs'
 
 function Sidebar() {
   const [navSize] = useState("large")
@@ -29,7 +32,6 @@ function Sidebar() {
           _hover={{ textDecor: "none", backgroundColor: "#AEC8CA" }}
           href='/admin'
           borderRadius={5}
-          active
         >
           <Flex
             align={'center'}
@@ -49,7 +51,7 @@ function Sidebar() {
           _hover={{ textDecor: "none", backgroundColor: "#AEC8CA" }}
           href='/admin/produits'
           borderRadius={5}
-          active
+
         >
           <Flex
             align={'center'}
@@ -69,7 +71,7 @@ function Sidebar() {
           _hover={{ textDecor: "none", backgroundColor: "#AEC8CA" }}
           href='/admin/categories'
           borderRadius={5}
-          active
+
         >
           <Flex
             align={'center'}
@@ -89,7 +91,7 @@ function Sidebar() {
           _hover={{ textDecor: "none", backgroundColor: "#AEC8CA" }}
           href='/admin/inventaires'
           borderRadius={5}
-          active
+
         >
           <Flex
             align={'center'}
@@ -109,7 +111,7 @@ function Sidebar() {
           _hover={{ textDecor: "none", backgroundColor: "#AEC8CA" }}
           href='/admin/notifications'
           borderRadius={5}
-          active
+
         >
           <Flex
             align={'center'}
@@ -129,7 +131,7 @@ function Sidebar() {
           _hover={{ textDecor: "none", backgroundColor: "#AEC8CA" }}
           href='/admin/rapports'
           borderRadius={5}
-          active
+
         >
           <Flex
             align={'center'}
@@ -149,7 +151,6 @@ function Sidebar() {
           _hover={{ textDecor: "none", backgroundColor: "#AEC8CA" }}
           href='/admin/utilisateurs'
           borderRadius={5}
-          active
         >
           <Flex
             align={'center'}
@@ -169,7 +170,7 @@ function Sidebar() {
           _hover={{ textDecor: "none", backgroundColor: "#AEC8CA" }}
           href='/admin/settings'
           borderRadius={5}
-          active
+
         >
           <Flex
             align={'center'}

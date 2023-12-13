@@ -1,23 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import {
-    Box, CircularProgress, Flex, FormLabel, Stack, Tab, TabList,
+    Box, Flex, FormLabel, Stack, Tab, TabList,
     TabPanel, TabPanels, Table, TableContainer, Tabs, Tbody, Td, Th, Thead, Tr, useColorModeValue
 } from '@chakra-ui/react'
-import { Informatique } from "../data";
-import { Liste } from './test'
-import axios from 'axios';
-import InfoTimeline from './InfoTimeline';
+
 
 function GestionUsers() {
     const [tabIndex, setTabIndex] = useState(0)
-
     const handleSliderChange = (event) => {
         setTabIndex(parseInt(event.target.value, 10))
     }
-
     const handleTabsChange = (index) => {
         setTabIndex(index)
     }
+
     return (
         <Flex
             flexDir={'column'}
@@ -44,7 +40,7 @@ function GestionUsers() {
 
                         <TabPanels>
                             <TabPanel>
-                                <ListeUsers />
+
                             </TabPanel>
 
                             <TabPanel>
@@ -61,32 +57,26 @@ function GestionUsers() {
 }
 export default GestionUsers
 
-function ListeUsers(props) {
-    function listeUser(profil) {
-        return profil.map(item => {
-            return <Tr>
-                <Td>{item.email}</Td>
-                <Td>{item.nom}</Td>
-                <Td>{item.prenom}</Td>
-                <Td>{item.profil}</Td>
-            </Tr>
-        })
-    }
-
-    if (!ListeUsers) {
-        return <div><CircularProgress isIndeterminate color='green.300' /></div>
-    }
-    console.log(ListeUsers)
-
+function ListeUsers() {
+    // The API URL.
+    const APIurl = 'https://api.github.com/users';
+    // useState.
+    const [users, setUsers] = useState([]);
+    // useEffect.
+    useEffect(() => {
+        fetch(APIurl)
+            .then(res => res.json())
+            .then(data => setUsers(data));
+    }, [users]);
     return (
-        <Flex flexDir={'column'} boxShadow={'lg'} align={'center'} justify={'center'} my={8} textAlign={'left'}>
+        <Flex flexDir={'column'} boxShadow={'lg'} justify={'center'} align={'center'} my={8} textAlign={'left'}>
             <FormLabel textAlign={"center"} m='5px auto'> Liste des utilisateurs enregistrés</FormLabel>
             <Flex my={5}>
                 <TableContainer>
                     <Table variant='striped' colorScheme="blue">
                         <Thead>
                             <Tr>
-                                <Th>Email</Th>
+                                <Th>Messagerie Électronique</Th>
                                 <Th>Nom</Th>
                                 <Th>Prenom</Th>
                                 <Th>Profil</Th>
@@ -94,7 +84,14 @@ function ListeUsers(props) {
                         </Thead>
 
                         <Tbody>
-
+                            {users.map(user => (
+                                <Tr key={user.id}>
+                                    <Td>{user.id}</Td>
+                                    <Td>{user.login}</Td>
+                                    <Td>{user.node_id}</Td>
+                                    <Td>{user.avatar_url}</Td>
+                                </Tr>
+                            ))}
                         </Tbody>
 
                     </Table>
@@ -105,71 +102,44 @@ function ListeUsers(props) {
     )
 }
 
-function ListeClients(props) {
-    /* const [data, setData] = useState([])
- 
-     useEffect(() => {
-         fetch("/liste")
-             .then(response => response.json())
-             .then(data => setData(data));
-     }, []);
-     function listeEtudiant(filiere) {
-         return filiere.map(item => {
-             return <Tr>
-                 <Td>{item.nom} </Td>
-                 <Td>{item.prenom}</Td>
-                 <Td>{item.moyenneGenerale}</Td>
-             </Tr>
-         })
-     }
-      function listeClient(nom) {
-          return (nom.map(item => {
-              return <Tr>
-                  <Td>{item.email}</Td>
-                  <Td>{item.nom}</Td>
-                  <Td>{item.prenom}</Td>
-              </Tr>
-          })
-          )
-      }
-      */
-
-    const [info, getInfo] = useState('')
-    /*const [nom,getNom] = useState('')
-    const [prenom,getPrenom] = useState('')
-    const [profil,getProfil] = useState('')*/
-
-    const url = 'http://127.0.0.1:5000/listUser'
-
-    const getAllUsers = () => {
-        axios.get(`${url}`)
-            .then((response) => {
-                const allUsers = response.data.info.allUsers
-                getInfo(allUsers)
-            })
-            .catch(error => console.error(`Error: ${error}`))
-    }
-
+function ListeClients() {
+    // The API URL.
+    const APIurl = 'http://127.0.0.1:5000/listUser';
+    // useState.
+    const [users, setUsers] = useState([]);
+    // useEffect.
     useEffect(() => {
-        getAllUsers();
-    }, [])
+        fetch(APIurl)
+            .then(res => res.json())
+            .then(data => setUsers(data));
+        console.log(users)
+    }, { users });
 
     return (
-        <Flex flexDir={'column'} boxShadow={'lg'} align={'center'} justify={'center'} my={8} textAlign={'left'}>
+        <Flex flexDir={'column'} boxShadow={'lg'} align={'center'} my={8} textAlign={'left'}>
             <FormLabel textAlign={"center"} m='5px auto'> Liste des clients enregistrés</FormLabel>
             <Flex my={5}>
                 <TableContainer>
                     <Table variant='striped' colorScheme="blue">
                         <Thead>
-                            <Tr>
-                                <Th>Email</Th>
+                            <Tr alignContent={'space-between'}>
+                                <Th>Messagerie Électronique</Th>
                                 <Th>Nom</Th>
                                 <Th>Prenom</Th>
+                                <Th>Profil</Th>
                             </Tr>
                         </Thead>
 
                         <Tbody>
-                            <InfoTimeline info={info} />
+                            {users.map(user => (
+                                <Tr>
+                                    <Td>{user.email}</Td>
+                                    <Td>{user.nom}</Td>
+                                    <Td>{user.prenom}</Td>
+                                    <Td>{user.profil}</Td>
+                                </Tr>
+                            ))
+                            }
                         </Tbody>
 
                     </Table>

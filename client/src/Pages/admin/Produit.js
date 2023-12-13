@@ -1,10 +1,9 @@
 import {
-  Box, Button, CircularProgress, Flex, FormControl, FormLabel, Heading, Input, Stack, Tab, TabList,
-  TabPanel, TabPanels, Table, TableContainer, Tabs, Tbody, Td, Text, Textarea, Th, Thead, Tr, useColorModeValu, useColorModeValue
+  Box, Button,Flex, FormControl, FormLabel, Heading, Input, Stack, Tab, TabList,
+  TabPanel, TabPanels, Table, TableContainer, Tabs, Tbody, Textarea, Th, Thead, Tr,useColorModeValue
 } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import httpClient from '../../httpClient'
-import { useDropzone } from 'react-dropzone'
 
 function Produit() {
   const [tabIndex, setTabIndex] = useState(0)
@@ -39,16 +38,18 @@ function Produit() {
           <input
             type='range'
             min='0'
-            max='2'
+            max='4'
             value={tabIndex}
             onChange={handleSliderChange}
           />
 
           <Tabs index={tabIndex} onChange={handleTabsChange}>
             <TabList>
-              <Tab>Ajouter des médicaments</Tab>
-              <Tab>Liste des médicaments</Tab>
-              <Tab>Historique des ajouts</Tab>
+              <Tab>Opération d'entrée</Tab>
+              <Tab>Opération de sortie</Tab>
+              <Tab>État du stock</Tab>
+              <Tab>Historique des entrées</Tab>
+              <Tab>Historique des sorties</Tab>
             </TabList>
 
             <TabPanels>
@@ -57,7 +58,15 @@ function Produit() {
               </TabPanel>
 
               <TabPanel>
+                <p>Oh, hello there.</p>
+              </TabPanel>
+
+              <TabPanel>
                 <ListeProduits />
+              </TabPanel>
+
+              <TabPanel>
+                <p>Oh, hello there.</p>
               </TabPanel>
 
               <TabPanel>
@@ -94,12 +103,12 @@ const ProdForm = () => {
 
   useEffect(() => { }, [produit])
 
-  const { getRootProps, getInputProps } = useDropzone({
+  /*const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',
     onDrop: (acceptedFiles) => {
       // Do something with the files
     }
-  })
+  })*/
 
   const ajoutProd = async () => {
     try {
@@ -232,7 +241,7 @@ const ProdForm = () => {
   )
 }
 
-
+/*
 function CustomFileUpload(props) {
   const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',
@@ -250,7 +259,7 @@ function CustomFileUpload(props) {
 }
 
 
-/*
+
 <FormControl {...getRootProps()} ml={{ base: 0, lg: 2 }}>
   <FormLabel>Image</FormLabel>
     <InputGroup>
@@ -269,7 +278,9 @@ function CustomFileUpload(props) {
 */
 
 const ListeProduits = (props) => {
-  const [data, setData] = useState([]);
+
+
+  /*const [data, setData] = useState([]);
 
   function listeProduits(nom_com) {
     return (nom_com.map(item => {
@@ -287,17 +298,11 @@ const ListeProduits = (props) => {
     )
   }
 
-  fetch('/liste')
-    .then(response => response.json())
-    .then(data => {
-      // Utilisez les données de la liste pour générer dynamiquement les éléments de la liste
-    });
-
   useEffect(() => {
-    fetch('/liste')
+    fetch('http://127.0.0.1:5000/listUser')
       .then(response => response.json())
       .then(data => setData(data));
-  }, []);
+  }, []);*/
 
   return (
     <Flex flexDir={'column'} boxShadow={'lg'} align={'center'} justify={'center'} my={10} textAlign={'left'}>
@@ -318,8 +323,7 @@ const ListeProduits = (props) => {
               </Tr>
             </Thead>
             <Tbody>
-
-              
+              <liste />
             </Tbody>
           </Table>
         </TableContainer>

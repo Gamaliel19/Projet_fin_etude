@@ -1,18 +1,7 @@
 import React from 'react'
 import {
-    Box,
-    Container,
-    IconButton,
-    Input,
-    Link,
-    SimpleGrid,
-    Stack,
-    Text,
-    VisuallyHidden,
-    chakra,
-    useColorModeValue,
+    Box, Container, SimpleGrid, Stack, Text, VisuallyHidden, chakra, useColorModeValue,
 } from '@chakra-ui/react'
-import AppLogo from '../ClientComponents/AppLogo';
 import { FaFacebook, FaGithub, FaTwitter, FaWhatsapp } from 'react-icons/fa';
 
 const SocialButton = ({ children, label }) => {

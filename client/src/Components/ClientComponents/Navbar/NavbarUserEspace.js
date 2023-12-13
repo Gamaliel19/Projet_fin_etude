@@ -1,20 +1,6 @@
 import {
-    Drawer,
-    DrawerBody,
-    DrawerOverlay,
-    DrawerContent,
-    DrawerCloseButton,
-    Button,
-    Tooltip,
-    Link,
-    Stack,
-    Divider,
-    Input,
-    FormControl,
-    useColorModeValue,
-    Box,
-    useDisclosure,
-    Text,
+    Drawer, DrawerBody, DrawerOverlay, DrawerContent, DrawerCloseButton, Button, Tooltip, Link, Stack,
+    Divider, Input, FormControl, useColorModeValue, Box, useDisclosure, Text,
 } from '@chakra-ui/react'
 import React, { useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa'
@@ -42,7 +28,7 @@ export default function NavbarUserEspace() {
             });
             window.location.href = "/compteClient"
         } catch (e) {
-            if (e.response.status === 409) {
+            if (e.response.status === 401) {
                 alert("La connexion a échouée. Réessayez plus tard!")
             }
         }

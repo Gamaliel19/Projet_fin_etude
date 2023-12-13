@@ -6,6 +6,8 @@ from flask_session import Session
 from flask_login import UserMixin, LoginManager, login_required, logout_user, current_user, login_user
 from config import ApplicationConfig
 from models import db, User, Product
+from datetime import datetime
+from json_tricks import dumps, loads
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 app= Flask(__name__)
@@ -41,7 +43,6 @@ def adminLogin():
             return 'vous etes connecte'
         return ({"message":"mot de passe incorrect, reessayez"}),401
     return ({"message":"ce utilisateur n\'existe pas, reessaye"}),401
-
 @app.route('/logout', methods=['POST'])
 @login_required
 def logout():
@@ -62,50 +63,18 @@ def register_user():
     password = request.json['password']
 
     user_exists=User.query.filter_by(email=email).first() is not None
-    admin_exist=User.query.filter_by(profil='admin').first() is not None
 
     if user_exists:
         return ({"error":"Cet utilisateur existe déjà!"}),409
-
-    """if confirmPassword != password:
-        return ({"error":"Veuillez entrer le mot de passe précedant!"}),409"""
     
     hashed_password = bcrypt.generate_password_hash(password)
-    new_user = User(email=email, nom=nom, prenom=prenom, profil=profil, password=hashed_password)
+    new_user = User(email=email, nom=nom, prenom=prenom, profil=profil, password=hashed_password,)
     db.session.add(new_user)
     db.session.commit()
 
     return jsonify({
      "Message": "Utilisateur créé avec succès!"
     })
-"""
-@app.route('/loginUser', methods=["POST"])
-def login_user():
-    email= request.json["email"]
-    password=request.json["password"]
-
-    user = User.query.filter_by(email=email).first()
-
-    if user is None:
-        return jsonify({"error": "Echec de connexion! Cet utilisateur n\'existe pas."}), 401
-    
-    if not bcrypt.check_password_hash(user.password, password):
-        return jsonify({"error":  "Echec de connexion! Votre mot de passe est incorrect"}), 401
-    
-
-    return jsonify({
-        "Message":"Connexion réussie!"
-    })
-"""
-
-
-#Liste test
-@app.route('/liste')
-def liste():
-    data = ['élément 1', 'élément 2', 'élément 3']
-    return jsonify(data)
-
-
 
 #liste des utilisateurs
 @app.route('/listUser', methods=["GET"])
@@ -120,7 +89,7 @@ def list():
         data['password'] = user.password.decode('utf-8')
         data['profil'] = user.profil
         liste.append(data)
-    return jsonify({'utilisateur':liste})
+    return jsonify({'utilisateurs':liste})
 
 #obtenir un seul tilisateur
 @app.route('/listSingleUser', methods= ['GET'])
@@ -177,7 +146,7 @@ def update_password(self,id):
         return jsonify({"error":"Veuillez entrer le mot de passe précedant!"}),409
         
     hashed_password = bcrypt.generate_password_hash(newPassword)
-    new_user = User(email=data['email'], nom=data['nom'], prenom=data['prenom'], profil=data['profil'], password=hashed_password,)
+    new_user = User(email=data['email'], nom=data['nom'], prenom=data['prenom'], profil=data['profil'], password=hashed_password)
     db.session.add(new_user)
     db.session.commit()
 
@@ -187,7 +156,9 @@ def update_password(self,id):
 @app.route('/registerProduct', methods=["POST"])
 def register_product():
     data = request.get_json()
-    new_product = Product(dosage=data['dosage'], nom_com=data['nom_com'], description=data['description'], prix=data['prix'], date_fab=data['date_fab'], date_per=data['date_per'], qte_stock=data['qte_stock'], num_lot=data['num_lot'])
+    datetime = datetime.strftime(data['date_fab'],'%Y-%m-%dT%H:%M:%S.%f')
+    datetime = datetime.strftime(data['date_per'],'%Y-%m-%dT%H:%M:%S.%f')
+    new_product = Product(dosage=data['dosage'],nom_com=data['nom_com'], description=data['description'], prix=data['prix'] ,date_fab=datetime,date_per=datetime, qte_stock=data['qte_stock'],num_lot=data['num_lot'])
     db.session.add(new_product)
     db.session.commit()
     db.session.flush()

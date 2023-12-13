@@ -94,7 +94,7 @@ function CreationCompte() {
                         value={profil}
                         onChange={(e) => setProfil(e.target.value)}
                     >
-                        <option value={'profil'}>Client</option>
+                        <option value={'client'}>Client</option>
                     </Select>
                 </FormControl>
               <FormControl id="password">

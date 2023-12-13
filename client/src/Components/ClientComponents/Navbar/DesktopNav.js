@@ -1,13 +1,8 @@
 import React from 'react'
 import {
-    Box,
-    Button,
-    Flex,
-    Link,
-    Stack,
-    Text,
+    Box, Button, Flex, Link, Stack, Text,
 } from '@chakra-ui/react'
-import { FaShoppingCart} from "react-icons/fa"
+import { FaShoppingCart } from "react-icons/fa"
 import AppLogo from '../AppLogo'
 import { Search } from '../Recherche/Recherche'
 import ColorModeToggle from '../../ColorModeToggle'
@@ -44,7 +39,7 @@ export default function DesktopNav() {
             >
 
                 <Flex w={{ base: '100%', lg: '50%' }}>
-                   <NavbarUserEspace/>
+                    <NavbarUserEspace />
                 </Flex>
                 <Flex w={{ base: '100%', lg: '50%' }}>
                     <Link href='/panierClient'>

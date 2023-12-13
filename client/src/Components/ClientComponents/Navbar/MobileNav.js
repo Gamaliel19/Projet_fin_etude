@@ -1,13 +1,6 @@
 import React from 'react'
 import {
-    Box,
-    Flex,
-    Stack,
-    Button,
-    Link,
-    Text,
-    useColorModeValue,
-    Tooltip,
+    Box, Flex, Stack, Button, Link, Text, useColorModeValue, Tooltip,
 } from '@chakra-ui/react'
 import { Search } from '../Recherche/Recherche'
 import { FaShoppingCart } from 'react-icons/fa'

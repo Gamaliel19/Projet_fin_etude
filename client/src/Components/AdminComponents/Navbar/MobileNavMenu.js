@@ -1,22 +1,13 @@
 import React from 'react'
 import {
-    Drawer,
-    DrawerBody,
-    DrawerFooter,
-    DrawerOverlay,
-    DrawerContent,
-    DrawerCloseButton,
-    useDisclosure,
-    Button,
-    Text,
-    Flex,
-    Divider,
-    Avatar,
-    Heading,
-    Link
+    Drawer, DrawerBody, DrawerFooter, DrawerOverlay, DrawerContent, DrawerCloseButton, useDisclosure, Button,
+    Text, Flex, Divider, Avatar, Heading, Link
 } from '@chakra-ui/react'
 import { VscListFlat } from 'react-icons/vsc'
-import { BsBell, BsFillArchiveFill, BsFillGearFill, BsFillGrid3X3GapFill, BsListCheck, BsMenuButtonWideFill, BsPeopleFill, BsPerson } from 'react-icons/bs'
+import {
+    BsBell, BsFillArchiveFill, BsFillGearFill, BsFillGrid3X3GapFill,
+    BsListCheck, BsMenuButtonWideFill, BsPeopleFill, BsPerson
+} from 'react-icons/bs'
 import avatar from '../Dashboard/avatar.jpg'
 
 export default function MobileNavMenu({ navSize }) {
