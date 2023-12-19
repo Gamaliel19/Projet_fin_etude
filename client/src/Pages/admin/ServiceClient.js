@@ -24,19 +24,23 @@ function ServiceClient() {
           <input
             type='range'
             min='0'
-            max='2'
+            max='3'
             value={tabIndex}
             onChange={handleSliderChange}
           />
 
           <Tabs index={tabIndex} onChange={handleTabsChange}>
             <TabList>
+              <Tab>Opération de sortie</Tab>
               <Tab>Commandes en cours</Tab>
               <Tab>Commandes terminées</Tab>
-              <Tab>Historique des commandes</Tab>
+              <Tab>Rapport des ventes</Tab>
             </TabList>
 
             <TabPanels>
+            <TabPanel>
+                <p>Yeah yeah. Ici c'est l'op de sortie</p>
+              </TabPanel>
               <TabPanel>
                 <p>Yeah yeah. Ici c'est le paramètre1</p>
               </TabPanel>

@@ -6,7 +6,7 @@ import {
 import { VscListFlat } from 'react-icons/vsc'
 import {
     BsBell, BsFillArchiveFill, BsFillGearFill, BsFillGrid3X3GapFill,
-    BsListCheck, BsMenuButtonWideFill, BsPeopleFill, BsPerson
+    BsListCheck, BsMenuButtonWideFill, BsPeopleFill, BsShop
 } from 'react-icons/bs'
 import avatar from '../Dashboard/avatar.jpg'
 
@@ -58,8 +58,8 @@ export default function MobileNavMenu({ navSize }) {
                                 p={'0.5rem'}
                                 _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
                             >
-                                <BsPeopleFill />
-                                <Text ml={2}>Le service client</Text>
+                                <BsShop />
+                                <Text ml={2}>Ventes</Text>
                             </Flex>
                         </Link>
                         <Link href='../admin/produits'>
@@ -72,33 +72,7 @@ export default function MobileNavMenu({ navSize }) {
                                 _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
                             >
                                 <BsFillArchiveFill />
-                                <Text ml={2}>Produits</Text>
-                            </Flex>
-                        </Link>
-                        <Link href='../admin/categories'>
-                            <Flex
-                                align={'center'}
-                                fontSize={22}
-                                flexDir={'row'}
-                                boxShadow={'lg'}
-                                p={'0.5rem'}
-                                _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
-                            >
-                                <BsFillGrid3X3GapFill />
-                                <Text ml={2}>Catégories</Text>
-                            </Flex>
-                        </Link>
-                        <Link href='../admin/inventaires'>
-                            <Flex
-                                align={'center'}
-                                fontSize={22}
-                                flexDir={'row'}
-                                boxShadow={'lg'}
-                                p={'0.5rem'}
-                                _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
-                            >
-                                <BsListCheck />
-                                <Text ml={2}>Inventaires</Text>
+                                <Text ml={2}>Médicaments</Text>
                             </Flex>
                         </Link>
                         <Link href='../admin/notifications'>
@@ -114,19 +88,6 @@ export default function MobileNavMenu({ navSize }) {
                                 <Text ml={2}>Notifications</Text>
                             </Flex>
                         </Link>
-                        <Link href='../admin/rapports'>
-                            <Flex
-                                align={'center'}
-                                fontSize={22}
-                                flexDir={'row'}
-                                boxShadow={'lg'}
-                                p={'0.5rem'}
-                                _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
-                            >
-                                <BsMenuButtonWideFill />
-                                <Text ml={2}>Rapports</Text>
-                            </Flex>
-                        </Link>
                         <Link href='../admin/utilisateurs'>
                             <Flex
                                 align={'center'}
@@ -136,7 +97,7 @@ export default function MobileNavMenu({ navSize }) {
                                 p={'0.5rem'}
                                 _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
                             >
-                                <BsPerson />
+                                <BsPeopleFill />
                                 <Text ml={2}>Gestion des utilisateurs</Text>
                             </Flex>
                         </Link>

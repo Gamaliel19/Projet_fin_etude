@@ -1,14 +1,14 @@
 import 'swiper/swiper-bundle.css'
-import { CSSReset, ColorModeProvider, ThemeProvider, theme } from '@chakra-ui/react'
+import { CSSReset, ColorModeProvider, ThemeProvider } from '@chakra-ui/react'
 import Router from './Router';
+import theme2 from './Components/Theme';
 
 function App() {
-
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme2}>
       <ColorModeProvider>
         <CSSReset />
-        <Router/>
+        <Router />
       </ColorModeProvider>
     </ThemeProvider>
   );

@@ -38,7 +38,7 @@ function Sidebar() {
 
           >
             <BsShop />
-            <Text ml={6}>Le service client</Text>
+            <Text ml={6}>Ventes</Text>
           </Flex>
         </Link>
         <Link
@@ -57,47 +57,10 @@ function Sidebar() {
 
           >
             <BsFillArchiveFill />
-            <Text ml={6}>Produits</Text>
+            <Text ml={6}>Médicaments</Text>
           </Flex>
         </Link>
-        <Link
-          mt={4}
-          textColor={useColorModeValue('white')}
-          w={navSize === "large" && "100%"}
-          _hover={{ textDecor: "none", backgroundColor: "#AEC8CA" }}
-          href='/gerant/categories'
-          borderRadius={5}
-        >
-          <Flex
-            align={'center'}
-            flexDir={'row'}
-            boxShadow={'lg'}
-            p={'0.5rem'}
 
-          >
-            <BsFillGrid3X3GapFill />
-            <Text ml={6}>Catégories</Text>
-          </Flex>
-        </Link>
-        <Link
-          mt={4}
-          textColor={useColorModeValue('white')}
-          w={navSize === "large" && "100%"}
-          _hover={{ textDecor: "none", backgroundColor: "#AEC8CA" }}
-          href='/gerant/inventaires'
-          borderRadius={5}
-        >
-          <Flex
-            align={'center'}
-            flexDir={'row'}
-            boxShadow={'lg'}
-            p={'0.5rem'}
-
-          >
-            <BsListCheck />
-            <Text ml={6}>Inventaires</Text>
-          </Flex>
-        </Link>
         <Link
           mt={4}
           textColor={useColorModeValue('white')}
@@ -115,26 +78,6 @@ function Sidebar() {
           >
             <BsBell />
             <Text ml={6}>Notifications</Text>
-          </Flex>
-        </Link>
-        <Link
-          mt={4}
-          textColor={useColorModeValue('white')}
-          w={navSize === "large" && "100%"}
-          _hover={{ textDecor: "none", backgroundColor: "#AEC8CA" }}
-          href='/gerant/rapports'
-          borderRadius={5}
-          active
-        >
-          <Flex
-            align={'center'}
-            flexDir={'row'}
-            boxShadow={'lg'}
-            p={'0.5rem'}
-
-          >
-            <BsMenuButtonWideFill />
-            <Text ml={6}>Rapports</Text>
           </Flex>
         </Link>
         <Link

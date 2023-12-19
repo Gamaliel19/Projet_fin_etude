@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-    Box, Button, Flex, Link, Stack, Text,
+    Box, Button, Flex, Link, Stack, Text, useColorModeValue,
 } from '@chakra-ui/react'
 import { FaShoppingCart } from "react-icons/fa"
 import AppLogo from '../AppLogo'
@@ -38,7 +38,7 @@ export default function DesktopNav() {
                 direction={'row'}
             >
 
-                <Flex w={{ base: '100%', lg: '50%' }}>
+                <Flex w={{ base: '100%', lg: '50%' }} bg={useColorModeValue('transparent','gray.700')}>
                     <NavbarUserEspace />
                 </Flex>
                 <Flex w={{ base: '100%', lg: '50%' }}>

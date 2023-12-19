@@ -33,18 +33,18 @@ function GestionUsers() {
                     />
 
                     <Tabs index={tabIndex} onChange={handleTabsChange}>
-                        <TabList>
+                        <TabList >
                             <Tab>Gestion des utilisateurs</Tab>
                             <Tab>Gestion des clients</Tab>
                         </TabList>
 
                         <TabPanels>
                             <TabPanel>
-
+                                <ListeUsers />
                             </TabPanel>
 
                             <TabPanel>
-                                <ListeClients />
+
                             </TabPanel>
 
                         </TabPanels>
@@ -58,19 +58,41 @@ function GestionUsers() {
 export default GestionUsers
 
 function ListeUsers() {
-    // The API URL.
-    const APIurl = 'https://api.github.com/users';
-    // useState.
-    const [users, setUsers] = useState([]);
-    // useEffect.
+    /* // The API URL.
+     const APIurl = 'http://127.0.0.1:5000/listUser';
+     // useState.
+     const [users, setUsers] = useState([])
+     // useEffect.
+     useEffect(() => {
+         fetch(APIurl, {
+             'methods': 'GET',
+             headers: {
+                 'Content-Type': 'applications/json'
+             }
+         })
+             .then(resp => resp.json())
+             .then(resp => setUsers(resp))
+             .catch(error => console.log(error))
+     }, []);
+ */
+    //useState
+    const [datas, setData] = useState(null)
+    const [load, setLoad] = useState(false)
+
     useEffect(() => {
-        fetch(APIurl)
-            .then(res => res.json())
-            .then(data => setUsers(data));
-    }, [users]);
+        const fetchUser = async () => {
+            const resp = await fetch("http://127.0.0.1:5000/listUser")
+            const data = await resp.json()
+            setData(data)
+            setLoad(true)
+        }
+        fetchUser()
+    }, [])
+    console.log(datas)
+
+
     return (
-        <Flex flexDir={'column'} boxShadow={'lg'} justify={'center'} align={'center'} my={8} textAlign={'left'}>
-            <FormLabel textAlign={"center"} m='5px auto'> Liste des utilisateurs enregistrés</FormLabel>
+        <Flex flexDir={'column'} boxShadow={'lg'} justify={'center'} align={'center'} textAlign={'left'}>
             <Flex my={5}>
                 <TableContainer>
                     <Table variant='striped' colorScheme="blue">
@@ -82,16 +104,13 @@ function ListeUsers() {
                                 <Th>Profil</Th>
                             </Tr>
                         </Thead>
-
+                        {Object.values(datas).map(item => {
+                            console.log(item)
+                        }
+                        )
+                        }
                         <Tbody>
-                            {users.map(user => (
-                                <Tr key={user.id}>
-                                    <Td>{user.id}</Td>
-                                    <Td>{user.login}</Td>
-                                    <Td>{user.node_id}</Td>
-                                    <Td>{user.avatar_url}</Td>
-                                </Tr>
-                            ))}
+
                         </Tbody>
 
                     </Table>
@@ -104,7 +123,7 @@ function ListeUsers() {
 
 function ListeClients() {
     // The API URL.
-    const APIurl = 'http://127.0.0.1:5000/listUser';
+    const APIurl = 'https://api.github.com/users';
     // useState.
     const [users, setUsers] = useState([]);
     // useEffect.
@@ -112,8 +131,7 @@ function ListeClients() {
         fetch(APIurl)
             .then(res => res.json())
             .then(data => setUsers(data));
-        console.log(users)
-    }, { users });
+    }, []);
 
     return (
         <Flex flexDir={'column'} boxShadow={'lg'} align={'center'} my={8} textAlign={'left'}>
@@ -132,11 +150,11 @@ function ListeClients() {
 
                         <Tbody>
                             {users.map(user => (
-                                <Tr>
-                                    <Td>{user.email}</Td>
-                                    <Td>{user.nom}</Td>
-                                    <Td>{user.prenom}</Td>
-                                    <Td>{user.profil}</Td>
+                                <Tr key={user.id}>
+                                    <Td>{user.id}</Td>
+                                    <Td>{user.login}</Td>
+                                    <Td>{user.avatar_url}</Td>
+                                    <Td>{user.login}</Td>
                                 </Tr>
                             ))
                             }
@@ -149,3 +167,18 @@ function ListeClients() {
         </Flex>
     )
 }
+
+
+/*
+
+import { Button } from "@chakra-ui/react";
+
+function ButtonList() {
+  const buttonList = [];
+  for (let i = 0; i < 5; i++) {
+    buttonList.push(<Button key={i}>Button {i}</Button>);
+  }
+  return <>{buttonList}</>;
+}
+
+*/

@@ -3,7 +3,7 @@ import { Avatar, Divider, Flex, Heading, Link, Spacer, Text, useColorModeValue }
 import avatar from '../Dashboard/avatar.jpg'
 import {
   BsBell, BsFillArchiveFill, BsFillGearFill, BsFillGrid3X3GapFill, BsListCheck,
-  BsMenuButtonWideFill, BsPeopleFill, BsPerson
+  BsMenuButtonWideFill,BsPeopleFill,BsShop
 } from 'react-icons/bs'
 
 function Sidebar() {
@@ -40,8 +40,8 @@ function Sidebar() {
             p={'0.5rem'}
 
           >
-            <BsPeopleFill />
-            <Text ml={6}>Le service client</Text>
+            <BsShop />
+            <Text ml={6}>Ventes</Text>
           </Flex>
         </Link>
         <Link
@@ -61,49 +61,10 @@ function Sidebar() {
 
           >
             <BsFillArchiveFill />
-            <Text ml={6}>Produits</Text>
+            <Text ml={6}>Médicaments</Text>
           </Flex>
         </Link>
-        <Link
-          mt={4}
-          textColor={useColorModeValue('white')}
-          w={navSize === "large" && "100%"}
-          _hover={{ textDecor: "none", backgroundColor: "#AEC8CA" }}
-          href='/admin/categories'
-          borderRadius={5}
 
-        >
-          <Flex
-            align={'center'}
-            flexDir={'row'}
-            boxShadow={'lg'}
-            p={'0.5rem'}
-
-          >
-            <BsFillGrid3X3GapFill />
-            <Text ml={6}>Catégories</Text>
-          </Flex>
-        </Link>
-        <Link
-          mt={4}
-          textColor={useColorModeValue('white')}
-          w={navSize === "large" && "100%"}
-          _hover={{ textDecor: "none", backgroundColor: "#AEC8CA" }}
-          href='/admin/inventaires'
-          borderRadius={5}
-
-        >
-          <Flex
-            align={'center'}
-            flexDir={'row'}
-            boxShadow={'lg'}
-            p={'0.5rem'}
-
-          >
-            <BsListCheck />
-            <Text ml={6}>Inventaires</Text>
-          </Flex>
-        </Link>
         <Link
           mt={4}
           textColor={useColorModeValue('white')}
@@ -124,26 +85,7 @@ function Sidebar() {
             <Text ml={6}>Notifications</Text>
           </Flex>
         </Link>
-        <Link
-          mt={4}
-          textColor={useColorModeValue('white')}
-          w={navSize === "large" && "100%"}
-          _hover={{ textDecor: "none", backgroundColor: "#AEC8CA" }}
-          href='/admin/rapports'
-          borderRadius={5}
 
-        >
-          <Flex
-            align={'center'}
-            flexDir={'row'}
-            boxShadow={'lg'}
-            p={'0.5rem'}
-
-          >
-            <BsMenuButtonWideFill />
-            <Text ml={6}>Rapports</Text>
-          </Flex>
-        </Link>
         <Link
           mt={4}
           textColor={useColorModeValue('white')}
@@ -159,7 +101,7 @@ function Sidebar() {
             p={'0.5rem'}
 
           >
-            <BsPerson />
+            <BsPeopleFill/>
             <Text ml={6}>Gestion des utilisateurs</Text>
           </Flex>
         </Link>

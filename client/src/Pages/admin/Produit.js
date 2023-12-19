@@ -1,6 +1,6 @@
 import {
-  Box, Button,Flex, FormControl, FormLabel, Heading, Input, Stack, Tab, TabList,
-  TabPanel, TabPanels, Table, TableContainer, Tabs, Tbody, Textarea, Th, Thead, Tr,useColorModeValue
+  Box, Button, Flex, FormControl, FormLabel, Heading, Input, Stack, Tab, TabList,
+  TabPanel, TabPanels, Table, TableContainer, Tabs, Tbody, Td, Textarea, Th, Thead, Tr, useColorModeValue
 } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import httpClient from '../../httpClient'
@@ -34,22 +34,24 @@ function Produit() {
       </Stack>
 
       <Stack ml={5} mt={5} mr={'1rem'}>
-        <Box>
-          <input
-            type='range'
-            min='0'
-            max='4'
-            value={tabIndex}
-            onChange={handleSliderChange}
-          />
-
+        <Flex flexDir={'column'} w={'100%'}>
+          <Flex display={{ base: 'none', lg: 'flex' }}>
+            <input
+              type='range'
+              min='0'
+              max='4'
+              width={20}
+              value={tabIndex}
+              onChange={handleSliderChange}
+            />
+          </Flex>
           <Tabs index={tabIndex} onChange={handleTabsChange}>
-            <TabList>
+            <TabList justifyItems={'center'} alignItems={'center'} w={{ base: '100%', lg: '90%' }} flexDir={{ base: 'column', lg: 'row' }}>
               <Tab>Opération d'entrée</Tab>
-              <Tab>Opération de sortie</Tab>
-              <Tab>État du stock</Tab>
-              <Tab>Historique des entrées</Tab>
-              <Tab>Historique des sorties</Tab>
+              <Tab>Médicaments en stock</Tab>
+              <Tab>Catégories</Tab>
+              <Tab>Rapports des entrées</Tab>
+              <Tab>Inventaire</Tab>
             </TabList>
 
             <TabPanels>
@@ -57,25 +59,26 @@ function Produit() {
                 <ProdForm />
               </TabPanel>
 
+
               <TabPanel>
-                <p>Oh, hello there.</p>
+                <ListeMédicaments />
               </TabPanel>
 
               <TabPanel>
-                <ListeProduits />
+                <p>Oh, hello there. This is Catégorie</p>
               </TabPanel>
 
               <TabPanel>
-                <p>Oh, hello there.</p>
+                <p>Oh, hello there. This Rapports</p>
               </TabPanel>
 
               <TabPanel>
-                <p>Oh, hello there.</p>
+                <p>Hello! This is inventaire.</p>
               </TabPanel>
 
             </TabPanels>
           </Tabs>
-        </Box>
+        </Flex>
       </Stack>
 
     </Flex>
@@ -94,7 +97,7 @@ const ProdForm = () => {
     date_fab: "",
     date_per: "",
     qte_stock: "",
-    num_Lot: ""
+    num_lot: ""
   })
   const handleChange = (e) => {
     console.log(e.target.name, e.target.value)
@@ -122,7 +125,7 @@ const ProdForm = () => {
         date_fab: "",
         date_per: "",
         qte_stock: "",
-        num_Lot: ""
+        num_lot: ""
       })
     } catch (error) {
       if (error.response.status === 409) {
@@ -144,9 +147,9 @@ const ProdForm = () => {
               <FormLabel>Numero_Lot</FormLabel>
               <Input
                 value={produit.num_Lot}
-                name='num_Lot'
+                name='num_lot'
                 onChange={(e) => handleChange(e)}
-                type='text'
+                type='number'
                 placeholder='Entrez le N° de lot svp!'
               />
             </FormControl>
@@ -225,14 +228,16 @@ const ProdForm = () => {
               placeholder='Veuillez donner la description svp !'
             />
           </FormControl>
-          <Stack>
+          <Stack align={'center'} justify={'center'}>
             <Button
               onClick={() => ajoutProd()}
-              variant={'solid'}
-              colorScheme='teal'
-              width={'full'}
+              _hover={{ bg: 'green' }}
+              bg={'green.600'}
+              borderRadius={5}
+              color={'white'}
+              width={'30%'}
               mt={4}>
-              Ajouter
+              Enregistrer
             </Button>
           </Stack>
         </form>
@@ -277,41 +282,46 @@ function CustomFileUpload(props) {
 </FormControl>
 */
 
-const ListeProduits = (props) => {
-
-
-  /*const [data, setData] = useState([]);
-
-  function listeProduits(nom_com) {
-    return (nom_com.map(item => {
-      return <Tr>
-        <Td>{item.num_Lot}</Td>
-        <Td>{item.nom_com}</Td>
-        <Td>{item.dosage}</Td>
-        <Td>{item.description}</Td>
-        <Td>{item.prix}</Td>
-        <Td>{item.qte_stock}</Td>
-        <Td>{item.date_fab}</Td>
-        <Td>{item.date_per}</Td>
-      </Tr>
-    })
-    )
-  }
+const ListeMédicaments = () => {
+  const [medoc, setMedoc] = useState([])
 
   useEffect(() => {
-    fetch('http://127.0.0.1:5000/listUser')
-      .then(response => response.json())
-      .then(data => setData(data));
-  }, []);*/
+    fetch("http://127.0.0.1:5000/listProduct")
+      .then(resp => resp.json())
+      .then(data => setMedoc(data))
+    console.log(medoc)
+  }, [])
+
+  const listeMedoc = (items) => {
+    return Object.values(items).map(item => {
+      let n = item.lenght
+      for (let i = 0; i < n; i++) {
+        return <Tr>
+          <Td>{item[i].num_lot}</Td>
+          <Td>{item[i].nom_com}</Td>
+          <Td>{item[i].dosage}</Td>
+          <Td>{item[i].description}</Td>
+          <Td>{item[i].prix}</Td>
+          <Td>{item[i].qte_stock}</Td>
+          <Td>{item[i].date_fab}</Td>
+          <Td>{item[i].date_per}</Td>
+        </Tr>
+      }
+    })
+  }
+
 
   return (
-    <Flex flexDir={'column'} boxShadow={'lg'} align={'center'} justify={'center'} my={10} textAlign={'left'}>
-      <FormLabel textAlign={"center"} m='5px auto'> Liste des utilisateurs enregistrés</FormLabel>
-      <Flex my={5}>
+    <Flex flexDir={'column'} boxShadow={'lg'} my={2} justify={'center'} align={'center'}>
+      <Flex my={2} align={'center'} justify={'center'} w={'100%'}>
         <TableContainer>
           <Table variant='striped' colorScheme="blue">
             <Thead>
-              <Tr>
+              <Tr
+                alignItems={'center'}
+                justifyItems={'center'}
+                flexDirection={{ base: "column", lg: "row" }}
+              >
                 <Th>N° lot</Th>
                 <Th>Nom com</Th>
                 <Th>Dosage</Th>
@@ -322,8 +332,8 @@ const ListeProduits = (props) => {
                 <Th>Date Exp</Th>
               </Tr>
             </Thead>
-            <Tbody>
-              <liste />
+            <Tbody justifyContent={'center'}>
+              {listeMedoc(medoc)}
             </Tbody>
           </Table>
         </TableContainer>
@@ -332,4 +342,3 @@ const ListeProduits = (props) => {
     </Flex>
   )
 }
-

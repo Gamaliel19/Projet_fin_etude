@@ -40,7 +40,7 @@ export default function NavbarUserEspace() {
     return (
         <>
             <Tooltip hasArrow label='Espace client' bg='gray.300' color='black'>
-                <Button ref={btnRef} bg={useColorModeValue('white', 'gray.700')} onClick={onOpen}>
+                <Button ref={btnRef} bg={useColorModeValue('transparent', 'gray.700')} onClick={onOpen}>
                     <FaUserCircle fontSize={26} />
                 </Button>
             </Tooltip>

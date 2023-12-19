@@ -5,17 +5,19 @@ from flask_cors import CORS, cross_origin
 from flask_session import Session
 from flask_login import UserMixin, LoginManager, login_required, logout_user, current_user, login_user
 from config import ApplicationConfig
-from models import db, User, Product
+from models import db, User, Product,users_schema,user_schema
 from datetime import datetime
 from json_tricks import dumps, loads
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 app= Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] =\
-        'sqlite:///' + os.path.join(basedir, 'data.db')
+
+#app.config['SQLALCHEMY_DATABASE_URI'] =\
+#        'sqlite:///' + os.path.join(basedir, 'data.db')
+app.config['SQLALCHEMY_DATABASE_URI']='mysql://root:''@localhost/flaskdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config.from_object(ApplicationConfig)
+#app.config.from_object(ApplicationConfig)
 
 bcrypt=Bcrypt(app)
 CORS(app, supports_credentials=True)
@@ -86,7 +88,6 @@ def list():
         data['email'] = user.email
         data['nom'] = user.nom
         data['prenom'] = user.prenom
-        data['password'] = user.password.decode('utf-8')
         data['profil'] = user.profil
         liste.append(data)
     return jsonify({'utilisateurs':liste})

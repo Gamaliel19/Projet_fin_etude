@@ -55,13 +55,13 @@ export default function DesktopNav() {
 
                 <Flex w={{ base: '100%', lg: '50%' }}>
                     <Link href='../admin/notifications'>
-                        <Button bg={'transparent'}>
-                            <FaBell fontSize={20} />
+                        <Button bg={'transparent'} _after={{contain: '10'}}>
+                            <FaBell  fontSize={20} _after={{contain:'10'}} />
                         </Button>
                     </Link>
 
                 </Flex>
-                <ColorModeToggle />
+                <ColorModeToggle/>
                 <Flex>
                     <Button onClick={() => logout()} colorScheme='teal' variant='outline'>
                         Logout

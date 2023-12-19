@@ -6,3 +6,8 @@ flask-session
 redis
 flask-login
 flask-cors
+flask-marshmallow
+marshmallow-sqlalchemy
+flask-marshmallow
+marshmallow-sqlalchemy
+mysqlclient
