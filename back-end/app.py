@@ -203,7 +203,6 @@ def update_product(self,id):
 
 @app.route('/listProduct', methods = ['GET'])
 def list_product():
-
     products = Product.query.all()
     liste=[]
     for product in products:
@@ -218,6 +217,6 @@ def list_product():
         data['num_lot'] = product.num_lot
 
         liste.append(data)
-    return jsonify({'liste des produits':liste})
+    return jsonify(liste)
 if __name__=="__main__":
     app.run(debug=True)

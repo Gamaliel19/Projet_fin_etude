@@ -1,11 +1,10 @@
 import React from 'react'
 import {
-    Box, Flex, Stack, Button, Link, Text, useColorModeValue, Tooltip,
+    Box, Flex, Stack, Button, Link, Text, useColorModeValue, Tooltip, Heading,
 } from '@chakra-ui/react'
 import { Search } from '../Recherche/Recherche'
 import { FaShoppingCart } from 'react-icons/fa'
 import MobileNavMenu from './MobileNavMenu'
-import NavbarUserEspace from './NavbarUserEspace'
 import ColorModeToggle from '../../ColorModeToggle'
 
 export default function MobileNav() {
@@ -24,16 +23,16 @@ export default function MobileNav() {
                 <Box>
                     <MobileNavMenu />
                 </Box>
-                <Link href="/">
-                    <Text color={'dark'} fontSize={25} fontWeight={'bold'}>Ph
-                        <Text as={'span'} color={'green'}>Edene</Text>
-                    </Text>
-                </Link>
+                <Stack ml={5} align={'center'} justify={'center'} w={300} borderRadius={5}>
+                    <Link href='/' _hover={{ textDecor: 'none', transform: 'outline', _after: 'variant' }}>
+                        <Heading bg={'transparent'}>
+                            <Text color={'dark'} fontSize={25} fontWeight={'bold'}>Ph
+                                <Text as={'span'} color={'green'}>Edene</Text>
+                            </Text>
+                        </Heading>
+                    </Link>
+                </Stack>
                 <Stack direction={'row'} spacing={1}>
-
-                    <Flex>
-                        <NavbarUserEspace />
-                    </Flex>
                     <Tooltip hasArrow label='Mon panier' bg='gray.300' color='black'>
                         <Link href='/panierClient'>
                             <Button bg={useColorModeValue('white', 'gray.700')}>

@@ -5,10 +5,10 @@ import MobileNav from './MobileNav'
 
 export default function Navbar() {
     return (
-        <Box  h={'120px'}>
+        <Box h={'120px'}>
             <Box
                 position={'fixed'}
-                bg={useColorModeValue('transparent', 'gray.700')}
+                bg={useColorModeValue('white', 'gray.700')}
                 w={'100%'}
                 mb={'1rem'}
                 zIndex={10}

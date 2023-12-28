@@ -1,6 +1,6 @@
 import {
     Box, Button, Link, Flex, FormControl, FormLabel, Heading,
-    Input, Stack, useColorMode, useColorModeValue, Text
+    Input, Stack, useColorMode, useColorModeValue, Text, Checkbox, FormHelperText
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { BsSun, BsMoonStarsFill } from 'react-icons/bs'
@@ -64,8 +64,8 @@ const LoginHeader = () => {
 //le formulaire d'authentification
 const LoginForm = () => {
     const [email, setEmail] = useState([])
-    const [profil, setProfil] = useState([])
     const [password, setPassword] = useState([])
+    const isError = email === ''
 
     const logInAdmin = async () => {
         try {
@@ -73,18 +73,24 @@ const LoginForm = () => {
                 email,
                 password
             })
-            console.log(resp.data)
-            window.location.href = "/admin"
+            console.log(resp.data.email)
+            if (email === "yagalinaf@gmail.com") {
+                window.location.href = "/admin"
+            } else {
+                window.location.href = "/gerant"
+            }
+
         } catch (error) {
             if (error.response.status === 401) {
                 alert("La connexion a échouée. Réessayez plus tard!")
             }
         }
     }
+
     return (
         <Box my={8} textAlign={'left'}>
             <form>
-                <FormControl>
+                <FormControl isInvalid={isError} isRequired>
                     <FormLabel>Adresse Email</FormLabel>
                     <Input
                         value={email}
@@ -92,8 +98,13 @@ const LoginForm = () => {
                         type='email'
                         placeholder='Entrez votre email svp!'
                     />
+                    {!isError ? (
+                        <FormHelperText>Entrez correctement l'email!</FormHelperText>
+                    ) : (
+                        <FormHelperText>L'email est obligatoire!</FormHelperText>
+                    )}
                 </FormControl>
-                <FormControl mt={4}>
+                <FormControl mt={4} isRequired>
                     <FormLabel>Mot de passe</FormLabel>
                     <Input
                         value={password}
@@ -102,6 +113,9 @@ const LoginForm = () => {
                         placeholder='Entrez votre mot de passe svp!'
                     />
                 </FormControl>
+                <Stack mt={5}>
+                    <Checkbox borderColor={'gray'} borderRadius={'50%'}>Admin</Checkbox>
+                </Stack>
                 <Button
                     onClick={() => logInAdmin()}
                     variant={'solid'}

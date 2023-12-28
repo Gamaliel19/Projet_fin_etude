@@ -24,44 +24,51 @@ export default function MobileNavMenu() {
                 <DrawerOverlay />
                 <DrawerContent>
                     <DrawerCloseButton />
-                    <DrawerHeader>
-                        <AppLogo />
+                    <DrawerHeader >
+                        <Flex justify={'center'} align={'center'}>
+                            <AppLogo />
+                        </Flex>
                     </DrawerHeader>
                     <DrawerBody>
-                        <Link href='/'>
+                        <Link href='/' _hover={{ textDecor: 'none' }}>
                             <Flex
                                 align={'center'}
                                 fontSize={22}
                                 flexDir={'row'}
-                                boxShadow={'lg'}
+                                boxShadow={'md'}
+                                borderRadius={5}
                                 p={'0.5rem'}
-                                _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
+                                _hover={{ cursor: 'pointer', bgColor: 'transparent', textDecor: 'none' }}
                             >
                                 <BsHouse />
                                 <Text ml={2}>Accueil</Text>
                             </Flex>
                         </Link>
-                        <Link href='/allProduitsClient'>
+                        <Link href='/allProduitsClient' _hover={{ textDecor: 'none' }}>
                             <Flex
                                 align={'center'}
                                 fontSize={22}
                                 flexDir={'row'}
-                                boxShadow={'lg'}
+                                boxShadow={'md'}
+                                borderRadius={5}
+                                mt={4}
                                 p={'0.5rem'}
-                                _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
+                                _hover={{ cursor: 'pointer', bgColor: 'transparent', textDecor: 'none' }}
                             >
                                 <BsGrid1X2Fill />
                                 <Text ml={2}>Tous les médicaments</Text>
                             </Flex>
                         </Link>
-                        <Link href='/categoriesProduitsClient'>
+                        <Link href='/categoriesProduitsClient' _hover={{ textDecor: 'none' }}>
                             <Flex
                                 align={'center'}
                                 fontSize={22}
                                 flexDir={'row'}
-                                boxShadow={'lg'}
+                                boxShadow={'md'}
+                                borderRadius={5}
+                                mt={4}
                                 p={'0.5rem'}
-                                _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
+                                _hover={{ cursor: 'pointer', bgColor: 'transparent', textDecor: 'none' }}
                             >
                                 <BsFillGrid3X3GapFill />
                                 <Text ml={2}>Catégories</Text>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Box, Flex, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useColorModeValue } from '@chakra-ui/react'
+import { Box, Flex, Heading, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useColorModeValue } from '@chakra-ui/react'
+
 
 function Settings() {
   const [tabIndex, setTabIndex] = useState(0)
@@ -20,18 +21,29 @@ function Settings() {
       ml={{ base: 0, lg: '15.6rem' }}
       bg={useColorModeValue('white', 'gray.700')}
     >
-      <Stack ml={5} mt={5} mr={'1rem'}>
+      <Stack
+        align={'center'}
+        justify={'center'}
+      >
         <Box>
-          <input
-            type='range'
-            min='0'
-            max='2'
-            value={tabIndex}
-            onChange={handleSliderChange}
-          />
+          <Heading mt={5} fontSize={20}>Paramètres</Heading>
+        </Box>
+      </Stack>
 
+      <Stack ml={5} mt={5} mr={'1rem'}>
+        <Flex flexDir={'column'} w={'100%'}>
+          <Flex display={{ base: 'none', lg: 'flex' }}>
+            <input
+              type='range'
+              min='0'
+              max='2'
+              width={20}
+              value={tabIndex}
+              onChange={handleSliderChange}
+            />
+          </Flex>
           <Tabs index={tabIndex} onChange={handleTabsChange}>
-            <TabList>
+            <TabList justifyItems={'center'} alignItems={'center'} w={{ base: '100%', lg: '90%' }} flexDir={{ base: 'column', lg: 'row' }}>
               <Tab>Taille de police</Tab>
               <Tab>Langue</Tab>
               <Tab>À propos</Tab>
@@ -49,10 +61,9 @@ function Settings() {
               <TabPanel>
                 <p>Yeah yeah. Ici c'est le paramètre3.</p>
               </TabPanel>
-
             </TabPanels>
           </Tabs>
-        </Box>
+        </Flex>
       </Stack>
 
     </Flex>

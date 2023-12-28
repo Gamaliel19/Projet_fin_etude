@@ -9,16 +9,16 @@ export default function TopCategories() {
             <SectionHeading title="Famille" />
 
             <Grid templateColumns={{ base: 'repeat(1,fr)', md: 'repeat(2,1fr)', lg: 'repeat(4,1fr)' }}>
-                <GridItem>
+                <GridItem mr={{ base: 0, lg: 2 }} mt={{ base: 2, lg: 0 }}>
                     <TopCategoriesCard />
                 </GridItem>
-                <GridItem>
+                <GridItem mr={{ base: 0, lg: 2 }} mt={{ base: 2, lg: 0 }}>
                     <TopCategoriesCard />
                 </GridItem>
-                <GridItem>
+                <GridItem mr={{ base: 0, lg: 2 }} mt={{ base: 2, lg: 0 }}>
                     <TopCategoriesCard />
                 </GridItem>
-                <GridItem>
+                <GridItem mr={{ base: 0, lg: 2 }} mt={{ base: 2, lg: 0 }}>
                     <TopCategoriesCard />
                 </GridItem>
             </Grid>

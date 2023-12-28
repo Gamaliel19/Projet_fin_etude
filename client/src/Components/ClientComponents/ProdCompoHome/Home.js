@@ -1,6 +1,6 @@
 import { Box, Text, Flex, Heading } from "@chakra-ui/react";
 import React from "react";
-import Image from '../../../images/image1.png'
+import Image from '../../../images/image4.png'
 
 export default function Home() {
     return (
@@ -20,7 +20,7 @@ export default function Home() {
                     lineHeight={'4rem'}
                     color={'blue.400'}
                 >
-                    Votre pharmacie en ligne<br /><Text as={'span'} color={'teal'}>Edene</Text>
+                    Votre pharmacie en ligne <Text as={'span'} color={'teal'}>Edene</Text>
                 </Heading>
                 <Text
                 mx={'3rem'}
@@ -31,16 +31,16 @@ export default function Home() {
                     La santé pour tous!
                 </Text>
             </Box>
-            <Box w={{ base: '100%', lg: '50%' }}>
+            <Flex w={{ base: '100%', lg: '50%' }} justify={{base:'center'}} align={{base:'center'}}>
                 <Box
                     mx={'0.005rem'}
-                    w={{ base: '300px', lg: '600px' }}
-                    h={{ base: '300px', lg: '500px' }}
+                    w={{ base: '500px', lg: '600px' }}
+                    h={{ base: '300px', lg: '400px' }}
                     backgroundImage={Image}
                     backgroundSize={'cover'}
                     backgroundRepeat={'no-repeat'}
                 />
-            </Box>
+            </Flex>
         </Flex>
     )
 }

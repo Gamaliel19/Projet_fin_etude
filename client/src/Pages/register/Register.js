@@ -91,7 +91,7 @@ const RegisterForm = () => {
     return (
         <Box my={8} textAlign={'left'}>
             <form>
-                <FormControl>
+                <FormControl isRequired>
                     <FormLabel>Adresse Email</FormLabel>
                     <Input
                         value={email}
@@ -100,7 +100,7 @@ const RegisterForm = () => {
                         placeholder='Entrez votre email svp!'
                     />
                 </FormControl>
-                <FormControl mt={3}>
+                <FormControl mt={3} isRequired>
                     <FormLabel>Nom</FormLabel>
                     <Input
                         value={nom}
@@ -118,7 +118,7 @@ const RegisterForm = () => {
                         placeholder='Entrez votre prenom svp!'
                     />
                 </FormControl>
-                <FormControl mt={3}>
+                <FormControl mt={3} isRequired>
                     <FormLabel>Profil</FormLabel>
                     <Select
                         placeholder='Choisir votre profil'
@@ -129,7 +129,7 @@ const RegisterForm = () => {
                         <option value={'gerant'}>Gérant</option>
                     </Select>
                 </FormControl>
-                <FormControl mt={3}>
+                <FormControl mt={3} isRequired>
                     <FormLabel>Mot de passe</FormLabel>
                     <Input
                         value={password}

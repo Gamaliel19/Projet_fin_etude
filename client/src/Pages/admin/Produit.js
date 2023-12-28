@@ -1,8 +1,10 @@
 import {
-  Box, Button, Flex, FormControl, FormLabel, Heading, Input, Stack, Tab, TabList,
+  Box, Button, Flex, FormControl, FormLabel, Heading, Input, InputGroup, InputLeftElement, Stack, Tab, TabList,
   TabPanel, TabPanels, Table, TableContainer, Tabs, Tbody, Td, Textarea, Th, Thead, Tr, useColorModeValue
 } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
+import { useDropzone } from 'react-dropzone'
+import { FaFileImage } from 'react-icons/fa'
 import httpClient from '../../httpClient'
 
 function Produit() {
@@ -15,6 +17,15 @@ function Produit() {
   const handleTabsChange = (index) => {
     setTabIndex(index)
   }
+
+  //fetching data
+  const [medoc, setMedoc] = useState([])
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:5000/listProduct")
+      .then(resp => resp.json())
+      .then(data => setMedoc(data))
+  }, [])
 
   return (
     <Flex
@@ -59,9 +70,8 @@ function Produit() {
                 <ProdForm />
               </TabPanel>
 
-
               <TabPanel>
-                <ListeMédicaments />
+                <ListeMédicaments items={medoc} />
               </TabPanel>
 
               <TabPanel>
@@ -89,6 +99,7 @@ export default Produit
 
 
 const ProdForm = () => {
+
   const [produit, setProduit] = useState({
     dosage: "",
     nom_com: "",
@@ -97,21 +108,21 @@ const ProdForm = () => {
     date_fab: "",
     date_per: "",
     qte_stock: "",
-    num_lot: ""
+    num_lot: "",
+    image: ""
   })
+
   const handleChange = (e) => {
     console.log(e.target.name, e.target.value)
     setProduit({ ...produit, [e.target.name]: e.target.value })
   }
 
-  useEffect(() => { }, [produit])
-
-  /*const { getRootProps, getInputProps } = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',
     onDrop: (acceptedFiles) => {
       // Do something with the files
     }
-  })*/
+  })
 
   const ajoutProd = async () => {
     try {
@@ -125,8 +136,10 @@ const ProdForm = () => {
         date_fab: "",
         date_per: "",
         qte_stock: "",
-        num_lot: ""
+        num_lot: "",
+        image: ""
       })
+      console.log(resp.data)
     } catch (error) {
       if (error.response.status === 409) {
         alert("La connexion a échouée. Réessayez plus tard!")
@@ -134,9 +147,11 @@ const ProdForm = () => {
     }
   }
 
+  useEffect(() => { }, [produit])
+
   return (
-    <Flex boxShadow={'lg'} align={'center'} justify={'center'} my={8} textAlign={'left'}>
-      <Flex my={10} >
+    <Flex boxShadow={'lg'} align={'center'} h={{ lg: '60vh' }} justify={'center'} my={{ base: 2, lg: 0 }} textAlign={'left'}>
+      <Flex my={{ base: 10, lg: 0 }} >
         <form>
           <Flex
             align={'center'}
@@ -146,7 +161,7 @@ const ProdForm = () => {
             <FormControl>
               <FormLabel>Numero_Lot</FormLabel>
               <Input
-                value={produit.num_Lot}
+                value={produit.num_lot}
                 name='num_lot'
                 onChange={(e) => handleChange(e)}
                 type='number'
@@ -217,6 +232,25 @@ const ProdForm = () => {
                 placeholder='Entrez le prix svp!'
               />
             </FormControl>
+            <FormControl ml={{ base: 0, lg: 2 }} {...getRootProps()}>
+              <FormLabel>Image</FormLabel>
+              <InputGroup _hover={{ cursor: 'pointer' }}>
+                <InputLeftElement
+                  bg={'green.600'}
+                  borderLeftRadius={5}
+                  color={'white'}
+                  children={<FaFileImage />}
+                />
+                <Input {...getInputProps}
+                  value={produit.image}
+                  name='image'
+                  onChange={(e) => handleChange(e)}
+                  type='files'
+                  placeholder='Télécharger une image'
+                  _hover={{ cursor: 'pointer' }}
+                />
+              </InputGroup>
+            </FormControl>
           </Flex>
           <FormControl ml={{ base: 0, lg: 1 }}>
             <FormLabel>Description</FormLabel>
@@ -228,14 +262,14 @@ const ProdForm = () => {
               placeholder='Veuillez donner la description svp !'
             />
           </FormControl>
-          <Stack align={'center'} justify={'center'}>
+          <Stack align={'center'} justify={'center'} >
             <Button
               onClick={() => ajoutProd()}
-              _hover={{ bg: 'green' }}
+              _hover={{ bg: 'green.700' }}
               bg={'green.600'}
               borderRadius={5}
               color={'white'}
-              width={'30%'}
+              width={'50%'}
               mt={4}>
               Enregistrer
             </Button>
@@ -246,98 +280,42 @@ const ProdForm = () => {
   )
 }
 
-/*
-function CustomFileUpload(props) {
-  const { getRootProps, getInputProps } = useDropzone({
-    accept: 'image/*',
-    onDrop: (acceptedFiles) => {
-      // Do something with the files
-    }
-  })
-
+function ListeMédicaments({ items }) {
   return (
-    <FormControl {...getRootProps()}>
-      <Input {...getInputProps()} />
-      <Text>Télécharger un fichier image</Text>
-    </FormControl>
-  )
-}
-
-
-
-<FormControl {...getRootProps()} ml={{ base: 0, lg: 2 }}>
-  <FormLabel>Image</FormLabel>
-    <InputGroup>
-      <InputRightElement children={<FaFile />} />
-      <Input
-        {...getInputProps}
-        type='files'
-        accept='image/*'
-        value={image}
-        onChange={(e) => setImage(e.target.value)}
-        placeholder='Télécharger une image'
-        _hover={{ cursor: 'pointer' }}
-      />
-    </InputGroup>
-</FormControl>
-*/
-
-const ListeMédicaments = () => {
-  const [medoc, setMedoc] = useState([])
-
-  useEffect(() => {
-    fetch("http://127.0.0.1:5000/listProduct")
-      .then(resp => resp.json())
-      .then(data => setMedoc(data))
-    console.log(medoc)
-  }, [])
-
-  const listeMedoc = (items) => {
-    return Object.values(items).map(item => {
-      let n = item.lenght
-      for (let i = 0; i < n; i++) {
-        return <Tr>
-          <Td>{item[i].num_lot}</Td>
-          <Td>{item[i].nom_com}</Td>
-          <Td>{item[i].dosage}</Td>
-          <Td>{item[i].description}</Td>
-          <Td>{item[i].prix}</Td>
-          <Td>{item[i].qte_stock}</Td>
-          <Td>{item[i].date_fab}</Td>
-          <Td>{item[i].date_per}</Td>
-        </Tr>
-      }
-    })
-  }
-
-
-  return (
-    <Flex flexDir={'column'} boxShadow={'lg'} my={2} justify={'center'} align={'center'}>
+    <Flex boxShadow={'md'} my={2}>
       <Flex my={2} align={'center'} justify={'center'} w={'100%'}>
         <TableContainer>
           <Table variant='striped' colorScheme="blue">
             <Thead>
-              <Tr
-                alignItems={'center'}
-                justifyItems={'center'}
-                flexDirection={{ base: "column", lg: "row" }}
-              >
+              <Tr id='titre'>
                 <Th>N° lot</Th>
                 <Th>Nom com</Th>
                 <Th>Dosage</Th>
                 <Th>Description</Th>
-                <Th>Prix</Th>
+                <Th>Prix(FCFA)</Th>
                 <Th>Quantite</Th>
                 <Th>Date Fab</Th>
                 <Th>Date Exp</Th>
+                <Th>Action</Th>
               </Tr>
             </Thead>
-            <Tbody justifyContent={'center'}>
-              {listeMedoc(medoc)}
+            <Tbody>
+              {Object.values(items).map(item => {
+                return <Tr>
+                  <Td>{item.num_lot}</Td>
+                  <Td>{item.nom_com}</Td>
+                  <Td>{item.dosage}</Td>
+                  <Td>{item.description}</Td>
+                  <Td>{item.prix}</Td>
+                  <Td>{item.qte_stock}</Td>
+                  <Td>{item.date_fab}</Td>
+                  <Td>{item.date_per}</Td>
+                </Tr>
+              })
+              }
             </Tbody>
           </Table>
         </TableContainer>
-
       </Flex>
     </Flex>
   )

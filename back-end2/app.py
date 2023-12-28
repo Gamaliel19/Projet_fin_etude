@@ -92,10 +92,9 @@ def list():
         data['email'] = user.email
         data['nom'] = user.nom
         data['prenom'] = user.prenom
-        data['password'] = user.password.decode('utf-8')
         data['profil'] = user.profil
         liste.append(data)
-    return jsonify({'utilisateur':liste})
+    return jsonify(liste)
 
 #obtenir un seul tilisateur
 @app.route('/listSingleUser', methods= ['GET'])
@@ -222,7 +221,24 @@ def list_product():
         data['num_lot'] = product.num_lot
 
         liste.append(data)
-    return jsonify({'liste des produits':liste})
+    return jsonify(liste)
+
+
+@app.route('/searchProduct/<string:nom_com>', methods=['GET'])
+def searchProduct(nom_com):
+    product = Product.query.filter_by(nom_com=nom_com)
+    liste = []
+    if product:
+        for products in product:
+            data={}
+            data['nom_com']=products.nom_com
+            data['description']=products.description
+            data['prix']=products.prix
+            data['num_lot']=products.num_lot
+            liste.append(data)
+        return (liste)
+    return {'message':'Produit non trouvé!'}
+    
 if __name__=="__main__":
     
     app.run(debug=True)

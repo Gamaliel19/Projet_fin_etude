@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Box, Flex, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useColorModeValue } from '@chakra-ui/react'
+import { Box, Flex, Heading, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useColorModeValue } from '@chakra-ui/react'
+
 
 function Notificatioons() {
   const [tabIndex, setTabIndex] = useState(0)
@@ -15,22 +16,33 @@ function Notificatioons() {
     <Flex
       flexDir={'column'}
       mt={{ base: '5rem', lg: '1rem' }}
-      ml={{ base: 0, lg: '15.6rem' }}
       minHeight={'100vh'}
+      ml={{ base: 0, lg: '15.6rem' }}
       bg={useColorModeValue('white', 'gray.700')}
     >
-      <Stack ml={5} mt={5} mr={'1rem'}>
+      <Stack
+        align={'center'}
+        justify={'center'}
+      >
         <Box>
-          <input
-            type='range'
-            min='0'
-            max='3'
-            value={tabIndex}
-            onChange={handleSliderChange}
-          />
+          <Heading mt={5} fontSize={20}>Notifications</Heading>
+        </Box>
+      </Stack>
 
+      <Stack ml={5} mt={5} mr={'1rem'}>
+        <Flex flexDir={'column'} w={'100%'}>
+          <Flex display={{ base: 'none', lg: 'flex' }}>
+            <input
+              type='range'
+              min='0'
+              max='3'
+              width={20}
+              value={tabIndex}
+              onChange={handleSliderChange}
+            />
+          </Flex>
           <Tabs index={tabIndex} onChange={handleTabsChange}>
-            <TabList>
+            <TabList justifyItems={'center'} alignItems={'center'} w={{ base: '100%', lg: '90%' }} flexDir={{ base: 'column', lg: 'row' }}>
               <Tab>Produits en cours de rupture</Tab>
               <Tab>Produits en rupture</Tab>
               <Tab>Commandes en cours</Tab>
@@ -54,7 +66,7 @@ function Notificatioons() {
               </TabPanel>
             </TabPanels>
           </Tabs>
-        </Box>
+        </Flex>
       </Stack>
 
     </Flex>

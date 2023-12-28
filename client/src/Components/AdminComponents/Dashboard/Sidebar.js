@@ -1,9 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Avatar, Divider, Flex, Heading, Link, Spacer, Text, useColorModeValue } from '@chakra-ui/react'
-import avatar from '../Dashboard/avatar.jpg'
 import {
-  BsBell, BsFillArchiveFill, BsFillGearFill, BsFillGrid3X3GapFill, BsListCheck,
-  BsMenuButtonWideFill,BsPeopleFill,BsShop
+  BsBell, BsFillArchiveFill, BsFillGearFill, BsPeopleFill, BsShop
 } from 'react-icons/bs'
 
 function Sidebar() {
@@ -101,7 +99,7 @@ function Sidebar() {
             p={'0.5rem'}
 
           >
-            <BsPeopleFill/>
+            <BsPeopleFill />
             <Text ml={6}>Gestion des utilisateurs</Text>
           </Flex>
         </Link>
@@ -132,18 +130,18 @@ function Sidebar() {
         flexDir={"column"}
         w={"100%"}
         alignItems={navSize === "small" ? "center" : "flex-start"}
-        mb={4}
+        mb={8}
       >
         <Divider display={navSize === "small" ? "none" : "flex"} />
-        <Flex mt={4} align={"center"}>
-          <Avatar size={"sm"} src={avatar} />
-          <Flex flexDir={"column"} ml={4} display={navSize === "small" ? "none" : "flex"} >
-            <Heading as={"h3"} size={"sm"}>Nom de compte</Heading>
-            <Text color={"gray"}>Type de profil</Text>
+
+        <Flex mt={4} align={"center"} justify={'center'}>
+          <Avatar size={"sm"} src={'avatar'} />
+          <Flex flexDir={"column"} ml={4} display={navSize === "small" ? "none" : "flex"} justify={'center'} align={'flex-start'}>
+            <Heading as={"h3"} size={"sm"} color={'white'}>Yagali NAfou Gamaliel</Heading>
+            <Text color={"gray"}>Admin</Text>
           </Flex>
         </Flex>
       </Flex>
-
     </Flex>
   )
 }

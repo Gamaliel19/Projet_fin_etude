@@ -22,13 +22,14 @@ import AdminLayoutRoot from './Layouts/AdminLayoutRoot';
 import Produit from './Pages/admin/Produit'
 import Inventaires from './Pages/admin/Inventaires'
 import Rapports from './Pages/admin/Rapports'
-import ServiceClient from './Pages/admin/ServiceClient'
+import Vente from './Pages/admin/Vente'
 import Settings from './Pages/admin/Settings'
 import Cat from './Pages/admin/Cat'
 import Notifications from './Pages/admin/Notificatioons'
 import GestionUsers from './Pages/admin/GestionUsers';
 //import routes for gerant
 import GerantLayoutRoot from './Layouts/GerantLayoutRoot';
+import Test from './Pages/Test';
 
 export default function Router() {
     return (
@@ -50,9 +51,10 @@ export default function Router() {
                     <Route path='/categoriesProduitsClient' element={<Categories />} />
                 </Route>
                 <Route path='/login' Component={LoginAdmin} />
+                <Route path='/test' Component={Test} />
                 <Route path='/register' Component={RegisterAdmin} />
                 <Route path='/admin' element={<AdminLayoutRoot />}>
-                    <Route index element={<ServiceClient />} />
+                    <Route index element={<Vente />} />
                     <Route path='categories' element={<Cat />} />
                     <Route path='utilisateurs' element={<GestionUsers />} />
                     <Route path='produits' element={<Produit />} />
@@ -62,7 +64,7 @@ export default function Router() {
                     <Route path='settings' element={<Settings />} />
                 </Route>
                 <Route path='/gerant' element={<GerantLayoutRoot />}>
-                    <Route index element={<ServiceClient/>} />
+                    <Route index element={<Vente/>} />
                     <Route path='categories' element={<Cat />} />
                     <Route path='produits' element={<Produit />} />
                     <Route path='inventaires' element={<Inventaires />} />
