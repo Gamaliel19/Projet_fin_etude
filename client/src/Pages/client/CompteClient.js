@@ -6,8 +6,8 @@ function CompteClient() {
   const suivre = () => {
     window.location.href = "suivreCommandesClient"
   }
-  const gerer = () =>{
-    window.location.href= "gererProduitsFavorisClient"
+  const gerer = () => {
+    window.location.href = "gererProduitsFavorisClient"
   }
   return (
     <Box
@@ -83,7 +83,7 @@ function CompteClient() {
             mx={'2'}
             p={'0.5rem'}
           >
-            <Button onClick={()=>gerer()} bg={useColorModeValue('white', 'gray.700')} align={'center'} direction={'row'}>
+            <Button onClick={() => gerer()} bg={useColorModeValue('white', 'gray.700')} align={'center'} direction={'row'}>
               <FaStar fontSize={26} />
               <Text fontWeight={'bold'} mx={2}>Gérer vos produits favoris</Text>
             </Button>
