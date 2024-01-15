@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Box, Card, CardBody, Container, Flex, Grid, GridItem, Heading, Image, Stack, Text, useColorModeValue } from '@chakra-ui/react'
+import { Box, Card, CardBody, Flex, Grid, GridItem, Heading, Image, Stack, Text, useColorModeValue } from '@chakra-ui/react'
 import { AddToCardButton } from '../../Components/ClientComponents/ProdCompoHome/AddToCardButton '
 import image2 from '../../images/Comprime.jpg'
 
@@ -16,7 +16,7 @@ function AllProduits() {
     <Flex
       minHeight={'100vh'}
       bg={useColorModeValue('white', 'gray.700')}
-      mt={{ base: "15",lg: "-20" }}
+      mt={{ base: "15", lg: "-20" }}
       mx={'auto'}
       p={{ base: '2rem', lg: "4rem" }}
     >
@@ -48,7 +48,7 @@ function AllProduits() {
                       </Flex>
                     </Flex>
                     <Text>{item.description}</Text>
-                    <AddToCardButton />
+                    <AddToCardButton product={item} />
                   </Stack>
                 </CardBody>
               </Card>

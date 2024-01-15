@@ -1,55 +1,93 @@
 import React, { useState } from 'react'
-import { Box, Flex, Heading, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useColorModeValue } from '@chakra-ui/react'
+import { Box, Flex, FormControl, Heading, Input, InputGroup, InputLeftElement, Spacer, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useColorModeValue } from '@chakra-ui/react'
+import { FaSearch } from 'react-icons/fa'
 
 
 function Settings() {
-  const [tabIndex, setTabIndex] = useState(0)
-
-  const handleSliderChange = (event) => {
-    setTabIndex(parseInt(event.target.value, 10))
-  }
-
-  const handleTabsChange = (index) => {
-    setTabIndex(index)
-  }
 
   return (
     <Flex
       flexDir={'column'}
-      mt={{ base: '5rem', lg: '1rem' }}
+      mt={{ base: '3rem', lg: 8 }}
       minHeight={'100vh'}
       ml={{ base: 0, lg: '15.6rem' }}
-      bg={useColorModeValue('white', 'gray.700')}
+    //bg={useColorModeValue('white', 'gray.700')}
     >
-      <Stack
+      <Flex
         align={'center'}
         justify={'center'}
+        flexDir={'row'}
+        ml={90}
       >
-        <Box>
-          <Heading mt={5} fontSize={20}>Paramètres</Heading>
+        <Box
+          position={'fixed'}
+          right={{ base: '30%', lg: '63%' }}
+          mt={{ base: '6rem', lg: 0 }}
+        >
+          <Heading mt={5} fontSize={20}>
+            Gestion des produits
+          </Heading>
         </Box>
-      </Stack>
-
+        <Spacer />
+        <Box
+          mt={3}
+          //mr={50}
+          position={'fixed'}
+          left={{ base: '16%', lg: '63%' }}
+          p={'0.5rem 2rem'}
+        //bg={useColorModeValue('white', 'gray.700')}
+        >
+          <FormControl ml={{ base: 0, lg: 2 }}>
+            <InputGroup
+              size={'sm'}
+              w={{ base: '100%', lg: '20rem' }}
+              boxShadow={'lg'}
+              bg={useColorModeValue('white', 'gray.700')}
+              rounded={'lg'}
+              p={1}
+            >
+              <InputLeftElement
+                margin={1}
+                children={<FaSearch />}
+                _hover={{ cursor: 'pointer' }}
+                bg={useColorModeValue('gray.700', 'gray.400')}
+                borderLeftRadius={5}
+                color={'white'}
+                focusBorderColor="gray.700"
+              />
+              <Input
+                type="text"
+                value={''}
+                onChange={() => { }}
+                bg={'transparent'}
+                placeholder="Rechercher..."
+                focusBorderColor="green.400"
+                borderWidth={'2px'}
+                borderRadius={5}
+                borderColor={'gray.400'}
+              />
+            </InputGroup>
+          </FormControl>
+        </Box>
+      </Flex>
       <Stack ml={5} mt={5} mr={'1rem'}>
         <Flex flexDir={'column'} w={'100%'}>
-          <Flex display={{ base: 'none', lg: 'flex' }}>
-            <input
-              type='range'
-              min='0'
-              max='2'
-              width={20}
-              value={tabIndex}
-              onChange={handleSliderChange}
-            />
-          </Flex>
-          <Tabs index={tabIndex} onChange={handleTabsChange}>
-            <TabList justifyItems={'center'} alignItems={'center'} w={{ base: '100%', lg: '90%' }} flexDir={{ base: 'column', lg: 'row' }}>
+          <Tabs>
+            <TabList
+              position={'fixed'}
+              mt={{ base: '3rem', lg: '1.5rem' }}
+              ml={{ base: '-5', lg: '' }}
+              justifyItems={'center'}
+              alignItems={'center'}
+              w={{ base: '100%', lg: '90%' }}
+              flexDir={{ base: 'column', lg: 'row' }}
+            >
               <Tab>Taille de police</Tab>
               <Tab>Langue</Tab>
               <Tab>À propos</Tab>
             </TabList>
 
-            <TabPanels>
+            <TabPanels mt={{ base: '15rem', lg: '5rem' }}>
               <TabPanel>
                 <p>Yeah yeah. Ici c'est le paramètre1</p>
               </TabPanel>

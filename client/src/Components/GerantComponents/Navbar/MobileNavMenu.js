@@ -1,16 +1,15 @@
 import React from 'react'
 import {
     Drawer, DrawerBody, DrawerFooter, DrawerOverlay, DrawerContent, DrawerCloseButton, useDisclosure,
-    Button, Text, Flex, Divider, Avatar, Heading, Link
+    Button, Text, Flex, Divider, Avatar, Heading, Link, DrawerHeader
 } from '@chakra-ui/react'
 import { VscListFlat } from 'react-icons/vsc'
 import {
-    BsBell, BsFillArchiveFill, BsFillGearFill, BsFillGrid3X3GapFill, BsListCheck,
-    BsMenuButtonWideFill, BsShop
+    BsBell, BsFillArchiveFill, BsFillGearFill, BsShop
 } from 'react-icons/bs'
 import avatar from '../Dashboard/avatar.jpg'
 
-export default function MobileNavMenu({ navSize }) {
+export default function MobileNavMenu({ navSize, data }) {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const btnRef = React.useRef()
 
@@ -27,7 +26,7 @@ export default function MobileNavMenu({ navSize }) {
             >
                 <DrawerOverlay />
                 <DrawerContent>
-                    <DrawerFooter>
+                    <DrawerHeader>
                         <Flex
                             p={"5%"}
                             flexDir={"column"}
@@ -38,13 +37,13 @@ export default function MobileNavMenu({ navSize }) {
                             <Flex mt={4} align={"center"}>
                                 <Avatar size={"md"} src={avatar} />
                                 <Flex flexDir={"column"} ml={4} display={navSize === "small" ? "none" : "flex"} >
-                                    <Heading as={"h3"} size={"sm"}>Nom de compte</Heading>
-                                    <Text color={"gray"}>Type de profil</Text>
+                                    <Heading as={"h3"} size={"sm"}>{data.userNom}</Heading>
+                                    <Text color={"gray"}>{data.userProfil}</Text>
                                 </Flex>
                             </Flex>
                         </Flex>
 
-                    </DrawerFooter>
+                    </DrawerHeader>
                     <Divider display={navSize === "small" ? "none" : "flex"} />
                     <DrawerCloseButton />
                     <DrawerBody>
@@ -58,7 +57,7 @@ export default function MobileNavMenu({ navSize }) {
                                 _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
                             >
                                 <BsShop />
-                                <Text ml={2}>Le service client</Text>
+                                <Text ml={2}>Ventes</Text>
                             </Flex>
                         </Link>
                         <Link href='../gerant/produits'>
@@ -71,33 +70,7 @@ export default function MobileNavMenu({ navSize }) {
                                 _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
                             >
                                 <BsFillArchiveFill />
-                                <Text ml={2}>Produits</Text>
-                            </Flex>
-                        </Link>
-                        <Link href='../gerant/categories'>
-                            <Flex
-                                align={'center'}
-                                fontSize={22}
-                                flexDir={'row'}
-                                boxShadow={'lg'}
-                                p={'0.5rem'}
-                                _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
-                            >
-                                <BsFillGrid3X3GapFill />
-                                <Text ml={2}>Catégories</Text>
-                            </Flex>
-                        </Link>
-                        <Link href='../gerant/inventaires'>
-                            <Flex
-                                align={'center'}
-                                fontSize={22}
-                                flexDir={'row'}
-                                boxShadow={'lg'}
-                                p={'0.5rem'}
-                                _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
-                            >
-                                <BsListCheck />
-                                <Text ml={2}>Inventaires</Text>
+                                <Text ml={2}>Médicaments</Text>
                             </Flex>
                         </Link>
                         <Link href='../gerant/notifications'>
@@ -111,19 +84,6 @@ export default function MobileNavMenu({ navSize }) {
                             >
                                 <BsBell />
                                 <Text ml={2}>Notifications</Text>
-                            </Flex>
-                        </Link>
-                        <Link href='../gerant/rapports'>
-                            <Flex
-                                align={'center'}
-                                fontSize={22}
-                                flexDir={'row'}
-                                boxShadow={'lg'}
-                                p={'0.5rem'}
-                                _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
-                            >
-                                <BsMenuButtonWideFill />
-                                <Text ml={2}>Rapports</Text>
                             </Flex>
                         </Link>
                         <Link href='../gerant/settings'>
@@ -141,6 +101,17 @@ export default function MobileNavMenu({ navSize }) {
                         </Link>
 
                     </DrawerBody>
+                    <DrawerFooter>
+                        <Button
+                            onClick={data.logout}
+                            colorScheme='green'
+                            variant='outline'
+                            borderRadius={10}
+                            p={'0.5rem 2rem'}
+                        >
+                            Déconnexion
+                        </Button>
+                    </DrawerFooter>
                 </DrawerContent>
             </Drawer>
         </>

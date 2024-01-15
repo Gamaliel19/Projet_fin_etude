@@ -14,7 +14,7 @@ import { FaBell } from 'react-icons/fa'
 import MobileNavMenu from './MobileNavMenu'
 import ColorModeToggle from '../../ColorModeToggle'
 
-export default function MobileNav() {
+export default function MobileNav({data}) {
 
     return (
         <>
@@ -28,7 +28,7 @@ export default function MobileNav() {
                 display={{ base: "flex", lg: "none" }}
             >
                 <Box>
-                    <MobileNavMenu />
+                    <MobileNavMenu data={data}/>
                 </Box>
                 <Text color={'dark'} fontSize={25} fontWeight={'bold'}>Ph
                     <Text as={'span'} color={'green'}>Edene</Text>
@@ -44,14 +44,6 @@ export default function MobileNav() {
                     <ColorModeToggle />
                 </Stack >
             </Flex >
-            <Box
-                px={'2rem'}
-                py={'0.5rem'}
-                mb={'1rem'}
-                display={{ base: "block", lg: "none" }}
-            >
-                <Search />
-            </Box>
         </>
     )
 }

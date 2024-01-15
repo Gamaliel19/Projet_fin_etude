@@ -12,12 +12,7 @@ import { FaBell } from "react-icons/fa"
 import { Search } from '../Recherche/Recherche'
 import ColorModeToggle from '../../ColorModeToggle'
 
-export default function DesktopNav() {
-
-    const logout = async () => {
-
-         const res = fetch('http://127.0.0.1:5000/logout')
-    }
+export default function DesktopNav({ data}) {
 
     return (
         <Flex
@@ -39,32 +34,26 @@ export default function DesktopNav() {
             <Spacer />
             <Stack
                 direction={'row'}
-                gap={6}
-                flex={1}
-                alignItems={'center'}
-                justify={'center'}
-            >
-                <Box>
-                    <Search />
-                </Box>
-            </Stack>
-            <Spacer />
-            <Stack
-                direction={'row'}
             >
 
                 <Flex w={{ base: '100%', lg: '50%' }}>
                     <Link href='../admin/notifications'>
-                        <Button bg={'transparent'} _after={{contain: '10'}}>
-                            <FaBell  fontSize={20} _after={{contain:'10'}} />
+                        <Button bg={'transparent'} _after={{ contain: '10' }}>
+                            <FaBell fontSize={20} _after={{ contain: '10' }} />
                         </Button>
                     </Link>
 
                 </Flex>
-                <ColorModeToggle/>
+                <ColorModeToggle />
                 <Flex>
-                    <Button onClick={() => logout()} colorScheme='teal' variant='outline'>
-                        Logout
+                    <Button
+                        onClick={data.logout}
+                        colorScheme='green'
+                        variant='outline'
+                        borderRadius={10}
+                        p={'0.5rem 2rem'}
+                    >
+                        Déconnexion
                     </Button>
                 </Flex>
             </Stack>

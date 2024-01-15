@@ -1,23 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { InputGroup, Input, Box, Tooltip, useColorModeValue, FormControl, InputLeftElement } from '@chakra-ui/react'
-import httpClient from "../../../httpClient";
+import { InputGroup, Input, Box, useColorModeValue, FormControl, InputLeftElement } from '@chakra-ui/react'
 import { FaSearch } from "react-icons/fa";
 
 export const Search = () => {
 
     const [nom_com, setNom_com] = useState([])
 
-    const searchProduct = async () => {
-        try {
-            const resp = await httpClient.post("http://127.0.0.1:5000/searchProduct", {
-                nom_com
-            })
-
-        } catch (error) {
-        }
-    }
     useEffect(() => {
-        searchProduct()
     }, [])
     return (
         <Box
@@ -33,10 +22,9 @@ export const Search = () => {
                 >
                     <InputLeftElement
                         margin={1}
-                        onClick={() => searchProduct()}
                         children={<FaSearch />}
                         _hover={{ cursor: 'pointer' }}
-                        bg={'gray.700'}
+                        bg={useColorModeValue('gray.700', 'gray.400')}
                         borderLeftRadius={5}
                         color={'white'}
                         focusBorderColor="gray.700"

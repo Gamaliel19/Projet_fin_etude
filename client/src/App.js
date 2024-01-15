@@ -5,12 +5,12 @@ import theme2 from './Components/Theme';
 
 function App() {
   return (
-    <ThemeProvider theme={theme2}>
-      <ColorModeProvider>
-        <CSSReset />
-        <Router />
-      </ColorModeProvider>
-    </ThemeProvider>
+      <ThemeProvider theme={theme2}>
+        <ColorModeProvider>
+          <CSSReset />
+          <Router />
+        </ColorModeProvider>
+      </ThemeProvider>
   );
 }
 

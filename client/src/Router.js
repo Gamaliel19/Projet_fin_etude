@@ -1,4 +1,5 @@
-import React from 'react'; import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import React from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 //Import routes for Client
 import ClientHomePage from './Pages/Produits/HomePage'
 import CreationCompte from './Pages/client/CreationCompte'
@@ -14,9 +15,6 @@ import EditAdresseLivClient from './Pages/client/EditAdresseLivClient'
 import SuivreCommandesClient from './Pages/client/SuivreCommandesClient'
 import GererProduitsFavorisClient from './Pages/client/GererProduitsFavorisClient'
 import AllProduits from './Pages/client/AllProduits'
-//import routes for authentification
-import LoginAdmin from './Pages/login/Login';
-import RegisterAdmin from './Pages/register/Register';
 //Import routes for admin
 import AdminLayoutRoot from './Layouts/AdminLayoutRoot';
 import Produit from './Pages/admin/Produit'
@@ -29,11 +27,16 @@ import Notifications from './Pages/admin/Notificatioons'
 import GestionUsers from './Pages/admin/GestionUsers';
 //import routes for gerant
 import GerantLayoutRoot from './Layouts/GerantLayoutRoot';
-import Test from './Pages/Test';
+import EditProduct from './Pages/admin/EditProduct';
+import SingleProduct from './Pages/client/SingleProduct';
+import Login from './Pages/login/Login';
+import PrivateRoutes from './outils/PrivateRoutes';
+import EditUser from './Pages/admin/EditUser';
 
 export default function Router() {
     return (
-        <BrowserRouter bg>
+
+        <BrowserRouter>
             <Routes>
                 <Route path='/' element={<ClientLayoutRoot />}>
                     <Route index element={<ClientHomePage />} />
@@ -48,23 +51,28 @@ export default function Router() {
                     <Route path='/suivreCommandesClient' element={<SuivreCommandesClient />} />
                     <Route path='/gererProduitsFavorisClient' element={<GererProduitsFavorisClient />} />
                     <Route path='/allProduitsClient' element={<AllProduits />} />
+                    <Route path='/singleProduct/:id' element={<SingleProduct />} />
                     <Route path='/categoriesProduitsClient' element={<Categories />} />
                 </Route>
-                <Route path='/login' Component={LoginAdmin} />
-                <Route path='/test' Component={Test} />
-                <Route path='/register' Component={RegisterAdmin} />
-                <Route path='/admin' element={<AdminLayoutRoot />}>
-                    <Route index element={<Vente />} />
-                    <Route path='categories' element={<Cat />} />
-                    <Route path='utilisateurs' element={<GestionUsers />} />
-                    <Route path='produits' element={<Produit />} />
-                    <Route path='inventaires' element={<Inventaires />} />
-                    <Route path='notifications' element={<Notifications />} />
-                    <Route path='rapports' element={<Rapports />} />
-                    <Route path='settings' element={<Settings />} />
+
+                <Route path={'/login'} Component={Login} />
+
+                <Route element={<PrivateRoutes />}>
+                    <Route path='/admin' element={<AdminLayoutRoot />}>
+                        <Route index element={<Vente />} />
+                        <Route path='categories' element={<Cat />} />
+                        <Route path='utilisateurs' element={<GestionUsers />} />
+                        <Route path='produits' element={<Produit />} />
+                        <Route path='editProduct/:id' element={<EditProduct />} />
+                        <Route path='editUser/:id' element={<EditUser />} />
+                        <Route path='inventaires' element={<Inventaires />} />
+                        <Route path='notifications' element={<Notifications />} />
+                        <Route path='rapports' element={<Rapports />} />
+                        <Route path='settings' element={<Settings />} />
+                    </Route>
                 </Route>
                 <Route path='/gerant' element={<GerantLayoutRoot />}>
-                    <Route index element={<Vente/>} />
+                    <Route index element={<Vente />} />
                     <Route path='categories' element={<Cat />} />
                     <Route path='produits' element={<Produit />} />
                     <Route path='inventaires' element={<Inventaires />} />
@@ -76,42 +84,3 @@ export default function Router() {
         </BrowserRouter >
     )
 }
-
-/*
-function PrivateRoute({ children, isAuthenticated, ...rest }) {
-    return (
-        <Route
-            index
-            {...rest}
-            render={({ location }) =>
-                isAuthenticated ? (
-                    children
-                ) : (
-                    <Navigate
-                        to={{
-                            pathname: '/loginAdmin',
-                            state: { from: location },
-                        }}
-                    />
-                )
-            }
-        />
-    );
-}
-
-function App() {
-    const isAuthenticated = false; // Replace with your authentication logic
-    return (
-        <Router>
-            <Switch>
-                <Route path="/login">
-                    <LoginAdmin />
-                </Route>
-                <PrivateRoute path="/">
-                    <ServiceClient />
-                </PrivateRoute>
-            </Switch>
-        </Router>
-    );
-}
-*/

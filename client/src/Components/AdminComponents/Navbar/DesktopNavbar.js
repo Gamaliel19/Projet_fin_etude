@@ -1,23 +1,11 @@
 import React from 'react'
 import {
-    Box,
-    Button,
-    Flex,
-    Link,
-    Spacer,
-    Stack,
-    Text,
+    Button, Flex, Link, Spacer, Stack, Text,
 } from '@chakra-ui/react'
 import { FaBell } from "react-icons/fa"
-import { Search } from '../Recherche/Recherche'
 import ColorModeToggle from '../../ColorModeToggle'
 
-export default function DesktopNav() {
-
-    const logout = async () => {
-
-         const res = fetch('http://127.0.0.1:5000/logout')
-    }
+export default function DesktopNav({ data }) {
 
     return (
         <Flex
@@ -39,18 +27,6 @@ export default function DesktopNav() {
             <Spacer />
             <Stack
                 direction={'row'}
-                gap={6}
-                flex={1}
-                alignItems={'center'}
-                justify={'center'}
-            >
-                <Box>
-                    <Search />
-                </Box>
-            </Stack>
-            <Spacer />
-            <Stack
-                direction={'row'}
             >
 
                 <Flex w={{ base: '100%', lg: '50%' }}>
@@ -63,8 +39,14 @@ export default function DesktopNav() {
                 </Flex>
                 <ColorModeToggle />
                 <Flex>
-                    <Button onClick={() => logout()} colorScheme='green' variant='outline' borderRadius={10}>
-                        Logout
+                    <Button
+                        onClick={data.logout}
+                        colorScheme='green'
+                        variant='outline'
+                        borderRadius={10}
+                        p={'0.5rem 2rem'}
+                    >
+                        Déconnexion
                     </Button>
                 </Flex>
             </Stack>

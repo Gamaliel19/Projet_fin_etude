@@ -3,7 +3,7 @@ import { Box, useColorModeValue } from '@chakra-ui/react'
 import DesktopNav from './DesktopNav'
 import MobileNav from './MobileNav'
 
-export default function Navbar() {
+export default function Navbar({size}) {
     return (
         <Box h={'120px'}>
             <Box
@@ -14,8 +14,8 @@ export default function Navbar() {
                 zIndex={10}
                 fontWeight={'bold'}
             >
-                <DesktopNav />
-                <MobileNav />
+                <DesktopNav size={size}/>
+                <MobileNav size={size}/>
             </Box>
         </Box>
     )

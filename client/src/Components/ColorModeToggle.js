@@ -10,7 +10,7 @@ export default function ColorModeToggle() {
                     aria-label="Toggle Color Mode"
                     onClick={toggleColorMode}
                     _focus={{ boxShadow: 'none' }}>
-                    {colorMode === 'light' ? <BsMoonStarsFill /> : <BsSun />}
+                    {colorMode === 'light' ? <BsMoonStarsFill fontSize={20}/> : <BsSun fontSize={20}/>}
                 </Button>
         </Flex>
     )

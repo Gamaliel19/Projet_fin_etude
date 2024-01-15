@@ -1,13 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import { Avatar, Divider, Flex, Heading, Link, Spacer, Text, useColorModeValue } from '@chakra-ui/react'
+import React, { useState } from 'react'
+import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Avatar, Box, Divider, Flex, Heading, Link, Spacer, Text, useColorModeValue } from '@chakra-ui/react'
 import {
   BsBell, BsFillArchiveFill, BsFillGearFill, BsPeopleFill, BsShop
 } from 'react-icons/bs'
 
-function Sidebar() {
+
+function Sidebar({ infoUser }) {
+
   const [navSize] = useState("large")
+
   return (
     <Flex
+      overflowY="scroll"
       pos={"fixed"}
       h={'93vh'}
       bg={useColorModeValue('gray.700', 'gray.700')}
@@ -31,6 +35,7 @@ function Sidebar() {
           href='/admin'
           borderRadius={5}
         >
+          
           <Flex
             align={'center'}
             flexDir={'row'}
@@ -41,6 +46,7 @@ function Sidebar() {
             <BsShop />
             <Text ml={6}>Ventes</Text>
           </Flex>
+
         </Link>
         <Link
           mt={3}
@@ -137,8 +143,8 @@ function Sidebar() {
         <Flex mt={4} align={"center"} justify={'center'}>
           <Avatar size={"sm"} src={'avatar'} />
           <Flex flexDir={"column"} ml={4} display={navSize === "small" ? "none" : "flex"} justify={'center'} align={'flex-start'}>
-            <Heading as={"h3"} size={"sm"} color={'white'}>Yagali NAfou Gamaliel</Heading>
-            <Text color={"gray"}>Admin</Text>
+            <Heading as={"h3"} size={"sm"} color={'white'}>{infoUser.userNom}</Heading>
+            <Text color={"gray"}>{infoUser.userProfil}</Text>
           </Flex>
         </Flex>
       </Flex>

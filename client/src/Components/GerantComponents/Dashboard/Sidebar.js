@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { Avatar, Divider, Flex, Heading, Link, Spacer, Text, useColorModeValue } from '@chakra-ui/react'
-import avatar from '../Dashboard/avatar.jpg'
-import { BsBell, BsFillArchiveFill, BsFillGearFill, BsFillGrid3X3GapFill, BsListCheck, BsMenuButtonWideFill, BsShop } from 'react-icons/bs'
+import { BsBell, BsFillArchiveFill, BsFillGearFill, BsShop } from 'react-icons/bs'
 
-function Sidebar() {
+function Sidebar({ infoUser }) {
   const [navSize] = useState("large")
+
   return (
     <Flex
       pos={"fixed"}
@@ -110,10 +110,10 @@ function Sidebar() {
       >
         <Divider display={navSize === "small" ? "none" : "flex"} />
         <Flex mt={4} align={"center"}>
-          <Avatar size={"sm"} src={avatar} />
+          <Avatar size={"sm"} src={''} />
           <Flex flexDir={"column"} ml={4} display={navSize === "small" ? "none" : "flex"} >
-            <Heading as={"h3"} size={"sm"}>Nom de compte</Heading>
-            <Text color={"gray"}>Type de profil</Text>
+            <Heading as={"h3"} size={"sm"}>{infoUser.userNom}</Heading>
+            <Text color={"gray"}>{infoUser.userProfil}</Text>
           </Flex>
         </Flex>
       </Flex>

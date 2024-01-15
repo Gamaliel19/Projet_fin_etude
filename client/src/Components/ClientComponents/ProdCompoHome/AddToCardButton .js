@@ -1,7 +1,11 @@
 import { Button } from '@chakra-ui/react'
-import React from 'react'
+import React, { useContext } from 'react'
+import { PanierContext } from '../../../AppContext/PanierContext'
 
-export const AddToCardButton = () => {
+export const AddToCardButton = ({ product}) => {
+    //Ajout au panier
+    const { addItemToCart } = useContext(PanierContext)
+
     return (
         <Button
             variant={'outline'}
@@ -10,6 +14,7 @@ export const AddToCardButton = () => {
             rounded={'full'}
             size={'sm'}
             w={'150px'}
+            onClick={() => addItemToCart(product._id)}
         >
             Ajouter au panier
         </Button>

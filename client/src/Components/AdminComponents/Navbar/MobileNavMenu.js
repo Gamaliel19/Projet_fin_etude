@@ -1,16 +1,15 @@
 import React from 'react'
 import {
     Drawer, DrawerBody, DrawerFooter, DrawerOverlay, DrawerContent, DrawerCloseButton, useDisclosure, Button,
-    Text, Flex, Divider, Avatar, Heading, Link
+    Text, Flex, Divider, Avatar, Heading, Link, DrawerHeader
 } from '@chakra-ui/react'
 import { VscListFlat } from 'react-icons/vsc'
 import {
-    BsBell, BsFillArchiveFill, BsFillGearFill, BsFillGrid3X3GapFill,
-    BsListCheck, BsMenuButtonWideFill, BsPeopleFill, BsShop
+    BsBell, BsFillArchiveFill, BsFillGearFill, BsPeopleFill, BsShop
 } from 'react-icons/bs'
 import avatar from '../Dashboard/avatar.jpg'
 
-export default function MobileNavMenu({ navSize }) {
+export default function MobileNavMenu({ navSize, data }) {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const btnRef = React.useRef()
 
@@ -27,7 +26,7 @@ export default function MobileNavMenu({ navSize }) {
             >
                 <DrawerOverlay />
                 <DrawerContent>
-                    <DrawerFooter>
+                    <DrawerHeader>
                         <Flex
                             p={"5%"}
                             flexDir={"column"}
@@ -38,13 +37,13 @@ export default function MobileNavMenu({ navSize }) {
                             <Flex mt={4} align={"center"}>
                                 <Avatar size={"md"} src={avatar} />
                                 <Flex flexDir={"column"} ml={4} display={navSize === "small" ? "none" : "flex"} >
-                                    <Heading as={"h3"} size={"sm"}>Nom de compte</Heading>
-                                    <Text color={"gray"}>Type de profil</Text>
+                                    <Heading as={"h3"} size={"sm"}>{data.userNom}</Heading>
+                                    <Text color={"gray"}>{data.userProfil}</Text>
                                 </Flex>
                             </Flex>
                         </Flex>
 
-                    </DrawerFooter>
+                    </DrawerHeader>
                     <Divider display={navSize === "small" ? "none" : "flex"} />
                     <DrawerCloseButton />
                     <DrawerBody>
@@ -116,6 +115,17 @@ export default function MobileNavMenu({ navSize }) {
                         </Link>
 
                     </DrawerBody>
+                    <DrawerFooter>
+                        <Button
+                            onClick={data.logout}
+                            colorScheme='green'
+                            variant='outline'
+                            borderRadius={10}
+                            p={'0.5rem 2rem'}
+                        >
+                            Déconnexion
+                        </Button>
+                    </DrawerFooter>
                 </DrawerContent>
             </Drawer>
         </>

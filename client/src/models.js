@@ -1,0 +1,1 @@
+typeof ItemKey == 'cert' | 'favoris' | 'checkout'
