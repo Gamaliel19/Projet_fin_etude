@@ -1,20 +1,24 @@
-import React, { createContext, useState } from 'react'
+import React, {useContext, useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import Navbar from '../Components/ClientComponents/Navbar/Navbar'
 import Footer from '../Components/ClientComponents/Footer'
-import { PanierContextProvider } from '../AppContext/PanierContext'
+import AuthContext from '../store/authContext'
 
 
 
 function ClientLayoutRoot() {
     const [cart, setCart] = useState([])
 
+    const panierCtx = useContext(AuthContext)
+    const items = panierCtx.items
+    const show = panierCtx.show
+
     return (
-        <PanierContextProvider>
-            <Navbar size={cart.length} />
+        <>
+            <Navbar size={items.length} onClick={show}/>
             <Outlet />
             <Footer />
-        </PanierContextProvider>
+        </>
     )
 }
 

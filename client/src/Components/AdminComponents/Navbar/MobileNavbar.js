@@ -1,13 +1,19 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
-    Box, Flex, Stack, Button, Link, Text, useColorModeValue, Tooltip
+    Flex, Stack, Button, Link, Text, Spacer, Badge
 } from '@chakra-ui/react'
-import { Search } from '../Recherche/Recherche'
-import { FaBell } from 'react-icons/fa'
 import MobileNavMenu from './MobileNavMenu'
 import ColorModeToggle from '../../ColorModeToggle'
+import { BsBell } from 'react-icons/bs'
 
 export default function MobileNav({ data }) {
+    const [product, setProduct] = useState([])
+
+    useEffect(() => {
+        fetch("http://localhost:5000/expired_products")
+            .then(res => res.json())
+            .then(data => setProduct(data))
+    }, [product])
 
     return (
         <>
@@ -19,21 +25,46 @@ export default function MobileNav({ data }) {
                 borderBottomWidth={'1px'}
                 borderColor={'gray.200'}
                 display={{ base: "flex", lg: "none" }}
+                bg={'blue.400'}
             >
-                <Box>
+                <Stack>
                     <MobileNavMenu data={data} />
-                </Box>
-                <Text color={'dark'} fontSize={25} fontWeight={'bold'}>Ph
-                    <Text as={'span'} color={'green'}>Edene</Text>
-                </Text>
+                </Stack>
+                <Spacer />
+                <Stack
+                    justify={'center'}
+                    align={'center'}
+                    direction={'row'}
+                    ml={3}
+                >
+                    <Text color={'White'} fontSize={25} fontWeight={'gras'}>
+                        Logo
+                        <Text as={'span'} color={'green'}>Ph</Text>
+                    </Text>
+                </Stack>
+                <Spacer />
                 <Stack direction={'row'} spacing={1}>
-                    <Tooltip hasArrow label='Mon panier' bg='gray.300' color='black'>
-                        <Link href='../admin/notifications'>
-                            <Button bg={useColorModeValue('white', 'gray.700')}>
-                                <FaBell fontSize={22} />
-                            </Button>
-                        </Link>
-                    </Tooltip>
+                    <Link >
+                        <Button
+                            onChange={() => { }}
+                            borderRadius={'full'}
+                            bg={'transparent'}
+                            _hover={{ bg: 'blue.500' }}
+                        >
+                            <BsBell fontSize={30} color={'white'} />
+                            <Badge
+                                textAlign={'center'}
+                                bg={'red'}
+                                borderRadius="full"
+                                mb={4}
+                                fontSize={15}
+                                color={'white'}
+                                ml="-3"
+                            >
+                                {product.length}
+                            </Badge>
+                        </Button>
+                    </Link>
                     <ColorModeToggle />
                 </Stack >
             </Flex >

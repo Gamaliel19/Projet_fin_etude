@@ -7,12 +7,13 @@ import ErrorModal from './ErrorModal'
 import Wrapper from './Helpers/Wrapper'
 import AuthContext from '../../store/authContext'
 import { Navigate } from 'react-router-dom'
+import Arriere from '../../images/R1.jpeg'
 
 
 function Login() {
     const authCtx = useContext(AuthContext)
     const isLoggedIn = authCtx.isLoggedIn
-    console.log(authCtx)
+    //console.log(authCtx)
 
     if (isLoggedIn & authCtx.userProfil === 'admin') {
         return <Navigate to={'/admin'} />
@@ -21,13 +22,18 @@ function Login() {
     }
     return (
         <>
-            {!isLoggedIn && <Flex
+            {!isLoggedIn && 
+            <Flex
                 justify={'center'}
                 align={'center'}
                 minHeight={'100vh'}
                 p={{ base: "1rem", lg: "4rem" }}
                 mx={'auto'}
-            //bg={useColorModeValue('white', 'gray.700')}
+                bgImage={Arriere}
+                bgPosition={'center'}
+                backgroundRepeat={'no-repeat'}
+                backgroundSize={'cover'}
+                
             >
 
                 <Box
@@ -36,7 +42,8 @@ function Login() {
                     maxWidth={'500px'}
                     borderRadius={5}
                     textAlign={'center'}
-                    boxShadow={'6px 5px 8px 2px #086251'}
+                    boxShadow={'1px 2px 2px 3px #086251'}
+                    bg={'white.400'}
                 >
                     {/*<ColorModeToggle />*/}
 
@@ -45,7 +52,8 @@ function Login() {
                         <LoginForm />
                     </Box>
                 </Box>
-            </Flex>}
+            </Flex>
+            }
             {/*isLoggedIn ? <Navigate to={'/admin'}/> : <Navigate to={'/gerant'}/> */}
         </>
     )
@@ -55,7 +63,7 @@ export default Login
 const LoginHeader = () => {
     return (
         <Box textAlign={'center'}>
-            <Heading>Authentification</Heading>
+            <Heading color={'white'}>Authentification</Heading>
         </Box>
     )
 }
@@ -66,7 +74,7 @@ const LoginForm = () => {
 
     //utilisation du context
     const authCtx = useContext(AuthContext)
-    console.log(authCtx)
+    //console.log(authCtx)
 
     //gérer les erreurs
     const [error, setError] = useState(null)
@@ -136,7 +144,7 @@ const LoginForm = () => {
                 if (response.ok) {
                     setData(dataResponse)
                     console.log(dataResponse)
-                    authCtx.login(dataResponse.token, dataResponse.userId, dataResponse.userNom, dataResponse.userProfil)
+                    authCtx.login(dataResponse.token, dataResponse.userId, dataResponse.userEmail, dataResponse.userProfil)
                 } else {
                     setError({
                         title: "Echec d'authentification!",
@@ -180,24 +188,20 @@ const LoginForm = () => {
                         align={'center'}
                         justify={'center'}
                     >
-                        <FormControl>
+                        <FormControl color={'white'}>
                             <FormLabel fontWeight={'bold'}>Adresse Email</FormLabel >
                             <Input
-                                //value={user.email}
                                 ref={emailInputRef}
                                 name='email'
-                                //onChange={(e) => handleChange(e)}
                                 type='email'
                                 placeholder='Entrez votre email svp!'
                             />
                         </FormControl >
-                        <FormControl mt={4} >
+                        <FormControl mt={4} color={'white'} >
                             <FormLabel fontWeight={'bold'}>Mot de passe</FormLabel>
                             <Input
-                                //value={user.password}
                                 ref={passwordInputRef}
                                 name='password'
-                                //onChange={(e) => handleChange(e)}
                                 type='password'
                                 placeholder='Entrez votre mot de passe svp!'
                             />
@@ -206,7 +210,7 @@ const LoginForm = () => {
                     {!isLoading && <Flex align={'center'} justify={'center'}>
                         <Button
                             type='submit'
-                            border={'1px solide teal'}
+                            border={'3px solid teal'}
                             variant={'solid'}
                             colorScheme='teal'
                             p={'0.5rem 4rem'}

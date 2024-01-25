@@ -1,20 +1,16 @@
 import os
-from flask import Flask,request,abort,jsonify,session,make_response
+from flask import Flask,request,jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 from flask_session import Session
-from flask_login import UserMixin, LoginManager, login_required, logout_user, current_user, login_user
-from config import ApplicationConfig
+from flask_login import LoginManager, login_required, logout_user, current_user, login_user
 from models import db, User, Product,Vente, Categorie
 from datetime import datetime
-from datetime import date
-from json_tricks import dumps, loads
 import re
-import jwt
-from functools import wraps
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required
+from flask_jwt_extended import JWTManager, create_access_token,jwt_required
 from datetime import timedelta
+from sqlalchemy.sql import text
 
 
 
@@ -39,7 +35,7 @@ with app.app_context():
     db.create_all()
 
 
-
+#Commencent les routes pour le user
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -55,7 +51,7 @@ def userLogin():
             login_user(user)
             access_token = create_access_token(identity = user.id,expires_delta=timedelta(hours=1))
     
-            return jsonify({'token' : access_token, 'userId': user.id, 'userNom':user.nom + ' ' + user.prenom, 'userProfil':user.profil}),200
+            return jsonify({'token' : access_token, 'userId': user.id,'userNom':user.nom + ' ' + user.prenom ,'userEmail':user.email, 'userProfil':user.profil}),200
         return ({"error":"Le mot de passe est incorrect! Renseigner bien le champ puis réessayer!"}),400
     return ({"error":"ce utilisateur n'existe pas! Bien vouloir contacter l'administrateur pour créer un compte."}),401
 
@@ -71,6 +67,7 @@ def adminPage():
     return 'l\'utilisateur actuel est' + current_user.nom
 
 @app.route("/registerUser", methods=["POST"])
+@jwt_required()
 def register_user():
     email = request.json['email']
     nom = request.json['nom']
@@ -79,21 +76,30 @@ def register_user():
     password = request.json['password']
 
     user_exists=User.query.filter_by(email=email).first() is not None
+
+    if user_exists:
+        return ({"error" : "Cet utilisateur existe déjà!"}),408
+    
     #admin_exist=User.query.filter_by(profil='admin').first() is not None
     regex_email = r'[a-z-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Z|a-z]{2,}'
     expression_compile=re.compile(regex_email)
     if not re.match(expression_compile, email):
         return ({"error":"L'email incorrect. Veuillez entrer le format valide!"}),413
-    if user_exists:
-        return ({"error":"Cet utilisateur existe déjà!"}),408
+    
     if len(password)<8:
         return ({"error":"Le mot de passe est trop court. Veuillez entrer au moins 8 caractères!"}),409
+    
     elif not re.search("[0-9]",password):
         return ({"error":"Le mot de passe doit contenir au moins un chiffre!"}),410
+    
     elif not re.search("[@#¦¬|¢´~}{)(:;.*-/+ %&ç$£äö><°§ ]",password):
         return ({"error":"Le mot de passe doit contenir au moins un caractère spécial!"}),411
+    
     elif not re.search("[A-Z]",password):
-        return ({"error":"Le mot de passe doit contenir au moins une lettre majuscule!"}),412
+        return jsonify({"error":"Le mot de passe doit contenir au moins une lettre majuscule!"}),412
+    
+    elif not re.search("[a-z]",password):
+        return jsonify({"error":"Le mot de passe doit contenir au moins une lettre(minuscule)!"}),413
     
 
     hashed_password = bcrypt.generate_password_hash(password)
@@ -181,23 +187,32 @@ def update_password(id):
     
     return jsonify({'message': 'mot de passe modifie avec succes'})
 
+#Commencent les routes pour les produits
 @app.route('/registerProduct', methods=["POST"])
+@jwt_required()
 def register_product():
     data = request.get_json()
     dosage = request.json['dosage']
+    user = request.json['user']
     nom_com = request.json['nom_com']
+    categorie= request.json['categorie']
     description = request.json['description']
     prix =request.json['prix']
     date_fab = request.json['date_fab']
     date_per = request.json['date_per']
     qte_stock = request.json['qte_stock']
     num_lot = request.json['num_lot']
-    product = Product.query.filter_by(nom_com=nom_com, dosage=dosage, date_per=date_per).first()
+    image = data['image'].encode()
+    product = Product.query.filter_by(nom_com=nom_com ,categorie=categorie, dosage=dosage, date_per=date_per).first()
+    
+    if nom_com == "":
+        return jsonify({"error":"Le champ nom du médicament est vide. Veuillez le remplir svp!"}),405
+    
     if product:
-        product.qte_stock += qte_stock
+        product.qte_stock += int(qte_stock)
     else:
     #file=request.files['image']
-        product = Product(dosage=data['dosage'], nom_com=data['nom_com'], description=data['description'], prix=data['prix'], date_fab=datetime.strptime(data['date_fab'], '%Y-%m-%d').strftime('%Y/%m/%d'), date_per=datetime.strptime(data['date_per'], '%Y-%m-%d').strftime('%Y/%m/%d'), qte_stock=data['qte_stock'], num_lot=data['num_lot'])
+        product = Product(image=image,dosage=data['dosage'],categorie=data['categorie'],user=data['user'], nom_com=data['nom_com'], description=data['description'], prix=data['prix'], date_fab=datetime.strptime(data['date_fab'], '%Y-%m-%d').strftime('%Y/%m/%d'), date_per=datetime.strptime(data['date_per'], '%Y-%m-%d').strftime('%Y/%m/%d'), qte_stock=data['qte_stock'], num_lot=data['num_lot'])
     db.session.add(product)
     db.session.commit()
     db.session.flush()
@@ -248,9 +263,9 @@ def ProductNotification():
         data['nom_com'] = product.nom_com
         data['description'] = product.description
         data['prix'] = product.prix
-        data['date_ajout'] = product.date_ajout
-        data['date_fab'] = product.date_fab
-        data['date_per'] = product.date_per
+        data['date_ajout'] = product.date_ajout.strftime("%d-%m-%Y")
+        data['date_fab'] = product.date_fab.strftime("%d-%m-%Y")
+        data['date_per'] = product.date_per.strftime("%d-%m-%Y")
         data['qte_stock'] = product.qte_stock
         data['num_lot'] = product.num_lot
 
@@ -259,7 +274,7 @@ def ProductNotification():
 
 @app.route('/listProduct', methods = ['GET'])
 def list_product():
-    products = Product.query.all()
+    products = Product.query.order_by(Product.nom_com.asc()).all()
     liste=[]
     for product in products:
             data={}
@@ -269,9 +284,9 @@ def list_product():
                 data['nom_com'] = product.nom_com
                 data['description'] = product.description
                 data['prix'] = product.prix
-                data['date_ajout'] = product.date_ajout
-                data['date_fab'] = product.date_fab
-                data['date_per'] = product.date_per
+                data['date_ajout'] = product.date_ajout.strftime("%d-%m-%Y")
+                data['date_fab'] = product.date_fab.strftime("%d-%m-%Y")
+                data['date_per'] = product.date_per.strftime("%d-%m-%Y")
                 data['qte_stock'] = product.qte_stock
                 data['num_lot'] = product.num_lot
 
@@ -284,15 +299,15 @@ def productEnCoursRup():
     liste=[]
     for product in products:
             data={}
-            if (product.qte_stock<=15):
+            if (product.qte_stock>0 and product.qte_stock<=15):
                 data['_id'] = product._id
                 data['dosage'] = product.dosage
                 data['nom_com'] = product.nom_com
                 data['description'] = product.description
                 data['prix'] = product.prix
-                data['date_ajout'] = product.date_ajout
-                data['date_fab'] = product.date_fab
-                data['date_per'] = product.date_per
+                data['date_ajout'] = product.date_ajout.strftime("%d-%m-%Y")
+                data['date_fab'] = product.date_fab.strftime("%d-%m-%Y")
+                data['date_per'] = product.date_per.strftime("%d-%m-%Y")
                 data['qte_stock'] = product.qte_stock
                 data['num_lot'] = product.num_lot
 
@@ -311,15 +326,14 @@ def productEnRup():
                 data['nom_com'] = product.nom_com
                 data['description'] = product.description
                 data['prix'] = product.prix
-                data['date_ajout'] = product.date_ajout
-                data['date_fab'] = product.date_fab
-                data['date_per'] = product.date_per
+                data['date_ajout'] = product.date_ajout.strftime("%d-%m-%Y")
+                data['date_fab'] = product.date_fab.strftime("%d-%m-%Y")
+                data['date_per'] = product.date_per.strftime("%d-%m-%Y")
                 data['qte_stock'] = product.qte_stock
                 data['num_lot'] = product.num_lot
 
                 liste.append(data)
     return jsonify(liste)
-    
 
 @app.route('/listSingleProduct/<string:_id>', methods= ['GET'])
 def singleProduct(_id):
@@ -337,53 +351,119 @@ def searchProduct(nom_com):
             data={}
             data['nom_com']=products.nom_com
             data['description']=products.description
+            data['categorie'] = product.categorie
             data['prix']=products.prix
             data['num_lot']=products.num_lot
             liste.append(data)
         return (liste)
     return {'message':'Produit non trouvé!'}
 
-@app.route('/vente', methods = ['POST'])
-def create_sale():
-    designation = request.json['designation']
-    utilisateur_id = request.json['utilisateur_id']
-    product_id = request.json['product_id']
-    qte = request.json['qte']
-    product = Product.query.get(product_id)
-    prix_total=product.prix*qte
-    if product.qte_stock < qte:
-        return {"error": "La quantité que vous voulez est supérieure à celle en stock."},401
-    product.qte_stock -= qte
-    db.session.add(Vente(utilisateur_id=utilisateur_id, product_id=product_id, qte=qte,prix_total=prix_total,designation=designation))
+@app.route('/expired_products',methods=['GET'])
+def produits_expire():
+    date_du_jour = datetime.utcnow()
+    products = Product.query.filter(Product.date_per <= date_du_jour).all()
+    liste=[]
+    for product in products:
+        data={}
+        data['_id'] = product._id
+        data['dosage'] = product.dosage
+        data['nom_com'] = product.nom_com
+        data['description'] = product.description
+        data['prix'] = product.prix
+        data['date_ajout'] = product.date_ajout.strftime("%d-%m-%Y")
+        data['date_fab'] = product.date_fab.strftime("%d-%m-%Y")
+        data['date_per'] = product.date_per.strftime("%d-%m-%Y")
+        data['qte_stock'] = product.qte_stock
+        data['num_lot'] = product.num_lot
+
+        liste.append(data)
+    return jsonify(liste)
+
+#Commence les routes pour la vente
+@app.route('/vendre', methods=["POST"])
+@jwt_required()
+def vendre():
+    data = request.get_json()
+    produit = Product.query.filter_by(nom_com=data['designation'], dosage=data['dose']).first()
+
+    if produit is None:
+        return ({"error":"produit non trouve"}), 404
+    
+    if produit.qte_stock < int(data['qte']):
+        return ({"error":"Quantite insuffisante en stock."}),400
+        
+    if produit.qte_stock==0:
+        return ({"error":"Produit en rupture"}),405
+    
+    total = produit.prix * int(data['qte'])
+    vente = Vente(product_id = produit._id,idUser = data['idUser'] ,email = data['email'],designation=produit.nom_com,dose=produit.dosage,prix_unit=produit.prix,prix_total=total, qte = data['qte'])
+    produit.qte_stock -= int(data['qte'])
+    db.session.add(vente)
     db.session.commit()
-    return {'success': True}
+    return jsonify({"message": "Vente réussie","idProduit":produit._id,"idUser":data['idUser'],"email":data['email'], "designation":produit.nom_com, "dose":produit.dosage, "Quantité":data['qte'],"prix_unit":produit.prix, "total": total}), 200
 
-@app.route('/ventes/<int:utilisateur_id>', methods = ['GET'])
-def get_sales(utilisateur_id):
-    sales = Vente.query.filter_by(utilisateur_id).all()
-    total_prix = sum(vente.product.prix * vente.qte for vente in ventes)
-    return {"total_prix": total_prix}
+@app.route('/ventes', methods = ['GET'])
+def get_ventes():
+    ventes = Vente.query.order_by(Vente.date.desc(),Vente.designation.asc()).all()
+    liste=[]
+    for vente in ventes:
+        data={}
+        data['id'] = vente.id
+        data['designation'] = vente.designation
+        data['dose'] = vente.dose
+        data['prix_unit'] = vente.prix_unit
+        data['qte'] = vente.qte
+        data['prix_total'] = vente.prix_total
+        data['idUser'] = vente.idUser
+        data['date'] = vente.date.strftime("%d-%m-%Y")
 
+        liste.append(data)
+    return jsonify(liste)  
+
+@app.route('/listSingleVente/<string:id>', methods= ['GET'])
+def single_vente(id):
+    vente = Vente.query.filter_by(id=id).first()
+    if vente:
+        return vente.json()
+    return ({"error": "Vente non trouvé"})
+
+@app.route('/venteParUser/<string:id>', methods= ['GET'])
+def get_vente_par_user(id):
+    ventes = Vente.query.filter_by(idUser=id).order_by(Vente.date.desc()).all()
+    return jsonify([{'id':vente.id,'dose':vente.dose,'designation':vente.designation,'prix_unit':vente.prix_unit,'qte':vente.qte,'prix_total':vente.prix_total} for vente in ventes])
+
+@app.route('/deleteVente/<string:id>',methods=['DELETE'])
+def delete_vente(id):
+    vente = Vente.query.filter_by(id=id).first()
+    if vente is None:
+        return jsonify({"error":"Cette vente n'existe pas!"})
+    db.session.delete(vente)
+    db.session.commit()
+
+    return jsonify({"message": "Suppression réussie!"})
+
+#Commencent les routes pour la catégories
 @app.route("/registerCat", methods=["POST"])
+@jwt_required()
 def register_cat():
     nom= request.json['nom']
-
+    user= request.json['user']
     cat_exists = Categorie.query.filter_by(nom=nom).first() is not None
 
     if cat_exists:
         return ({"error":"Cette catégorie existe déjà!"}),408
+    if nom=="":
+        return ({"error":"Le champs est vide. Veuillez remplir avant d'enregistrer svp!"}),410
     
-    new_cat = Categorie(nom=nom)
+    new_cat = Categorie(nom=nom,user=user)
     db.session.add(new_cat)
     db.session.commit()
 
-    return jsonify({
-     "Message": "Catégorie créée avec succès!"
-    })
+    return jsonify({"message": "Catégorie créée avec succès!"})
 
 @app.route('/listCat', methods=['GET'])
 def list_cat():
-    cats = Categorie.query.all()
+    cats = Categorie.query.limit(4).all()
     liste = []
     for cat in cats:
         data = {}

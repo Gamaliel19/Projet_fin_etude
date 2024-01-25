@@ -1,15 +1,13 @@
 import React from 'react'
 import {
-    Box, Flex, Stack, Button, Link, Text, useColorModeValue, Heading,
+    Box, Flex, Stack, Button, Link, Text, Heading, Badge,
 } from '@chakra-ui/react'
 import { Search } from '../Recherche/Recherche'
-import { FaShoppingBag} from 'react-icons/fa'
+import { FaShoppingCart } from 'react-icons/fa'
 import MobileNavMenu from './MobileNavMenu'
 import ColorModeToggle from '../../ColorModeToggle'
-//import { PanierContext } from '../../../AppContext/PanierContext'
 
-export default function MobileNav({ size }) {
-   // const { items } = useContext(PanierContext)
+export default function MobileNav({ size, setShow }) {
 
     return (
         <>
@@ -35,30 +33,33 @@ export default function MobileNav({ size }) {
                     </Link>
                 </Stack>
                 <Stack direction={'row'} spacing={-3}>
-                    <Link href='/panierClient'>
-                        <Button bg={useColorModeValue('white', 'gray.700')}>
-                            <FaShoppingBag fontSize={30} color={useColorModeValue('black', 'white')} />
-                            <Flex
-                                bg={useColorModeValue
-                                    ('white', 'gray.700')}
-                                justify={'center'}
-                                align={'center'}
-                                m={2}
-                                borderRadius={'200%'}
-                                mb={5}
-                                ml={'-2'}
-                                color={'red'}
+                    <Link>
+                        <Button
+                            onChange={() => setShow(false)}
+                            borderRadius={'full'}
+                            bg={'transparent'}
+                            _hover={{ bg: 'gray.500', color: 'white' }}
+                        >
+                            <FaShoppingCart fontSize={25} />
+                            <Badge
+                                textAlign={'center'}
+                                bg={'red'}
+                                borderRadius="full"
+                                mb={4}
+                                fontSize={15}
+                                color={'white'}
+                                ml="-2.5"
                             >
                                 {size}
-                            </Flex>
+                            </Badge>
                         </Button>
                     </Link>
                     <ColorModeToggle />
                 </Stack >
             </Flex >
             <Box
-                px={'2rem'}
-                py={'0.5rem'}
+                px={'3rem'}
+                py={'0.1rem'}
                 mb={'1rem'}
                 display={{ base: "block", lg: "none" }}
             >

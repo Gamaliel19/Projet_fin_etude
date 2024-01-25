@@ -1,6 +1,7 @@
 import React from 'react'
 import {
-    Drawer, DrawerBody, DrawerFooter, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, useDisclosure, Button, Link, Flex, Text,
+    Drawer, DrawerBody, DrawerFooter, DrawerHeader, DrawerOverlay, DrawerContent,
+     DrawerCloseButton, useDisclosure, Button, Link, Flex, Text,
 } from '@chakra-ui/react'
 import AppLogo from '../AppLogo'
 import { VscListFlat } from 'react-icons/vsc'

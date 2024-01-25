@@ -18,13 +18,12 @@ import AllProduits from './Pages/client/AllProduits'
 //Import routes for admin
 import AdminLayoutRoot from './Layouts/AdminLayoutRoot';
 import Produit from './Pages/admin/Produit'
-import Inventaires from './Pages/admin/Inventaires'
-import Rapports from './Pages/admin/Rapports'
 import Vente from './Pages/admin/Vente'
 import Settings from './Pages/admin/Settings'
-import Cat from './Pages/admin/Cat'
 import Notifications from './Pages/admin/Notificatioons'
 import GestionUsers from './Pages/admin/GestionUsers';
+import { SingleAdminProduct } from './Pages/admin/Component/SingleAdminProduct';
+import { SingleVente } from './Pages/admin/Component/SingleVente';
 //import routes for gerant
 import GerantLayoutRoot from './Layouts/GerantLayoutRoot';
 import EditProduct from './Pages/admin/EditProduct';
@@ -32,6 +31,7 @@ import SingleProduct from './Pages/client/SingleProduct';
 import Login from './Pages/login/Login';
 import PrivateRoutes from './outils/PrivateRoutes';
 import EditUser from './Pages/admin/EditUser';
+import EditVente from './Pages/admin/EditVente';
 
 export default function Router() {
     return (
@@ -60,25 +60,26 @@ export default function Router() {
                 <Route element={<PrivateRoutes />}>
                     <Route path='/admin' element={<AdminLayoutRoot />}>
                         <Route index element={<Vente />} />
-                        <Route path='categories' element={<Cat />} />
                         <Route path='utilisateurs' element={<GestionUsers />} />
                         <Route path='produits' element={<Produit />} />
                         <Route path='editProduct/:id' element={<EditProduct />} />
                         <Route path='editUser/:id' element={<EditUser />} />
-                        <Route path='inventaires' element={<Inventaires />} />
+                        <Route path='editVente/:id' element={<EditVente />} />
                         <Route path='notifications' element={<Notifications />} />
-                        <Route path='rapports' element={<Rapports />} />
                         <Route path='settings' element={<Settings />} />
+                        <Route path='singleAdminProduct/:id' element={<SingleAdminProduct />} />
+                        <Route path='singleVente/:id' element={<SingleVente />} />
                     </Route>
                 </Route>
-                <Route path='/gerant' element={<GerantLayoutRoot />}>
-                    <Route index element={<Vente />} />
-                    <Route path='categories' element={<Cat />} />
-                    <Route path='produits' element={<Produit />} />
-                    <Route path='inventaires' element={<Inventaires />} />
-                    <Route path='notifications' element={<Notifications />} />
-                    <Route path='rapports' element={<Rapports />} />
-                    <Route path='settings' element={<Settings />} />
+                <Route element={<PrivateRoutes />}>
+                    <Route path='/gerant' element={<GerantLayoutRoot />}>
+                        <Route index element={<Vente />} />
+                        <Route path='produits' element={<Produit />} />
+                        <Route path='notifications' element={<Notifications />} />
+                        <Route path='settings' element={<Settings />} />
+                        <Route path='singleGerantProduct/:id' element={<SingleAdminProduct />} />
+                        <Route path='singleVente/:id' element={<SingleVente />} />
+                    </Route>
                 </Route>
             </Routes>
         </BrowserRouter >

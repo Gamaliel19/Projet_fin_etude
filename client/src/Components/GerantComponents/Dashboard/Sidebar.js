@@ -7,10 +7,12 @@ function Sidebar({ infoUser }) {
 
   return (
     <Flex
+      mt={-5}
+      overflowY="scroll"
       pos={"fixed"}
       h={'93vh'}
-      bg={useColorModeValue('gray.700', 'gray.700')}
-      boxShadow={"0 4px 12px 0 rgba(0,0,0,0.05)"}
+      bg={'blue.700'}
+      //boxShadow={"0 4px 12px 0 rgba(0,0,0,0.05)"}
       w={"250px"}
       flexDir={"column"}
       display={{ base: "none", lg: "flex" }}
@@ -26,7 +28,7 @@ function Sidebar({ infoUser }) {
           mt={3}
           textColor={useColorModeValue('white')}
           w={navSize === "large" && "100%"}
-          _hover={{ textDecor: "none", backgroundColor: "#AEC8CA" }}
+          _hover={{ textDecor: "none", textColor:'black', backgroundColor: "#AEC8CA" }}
           href='/gerant'
           borderRadius={5}
         >
@@ -45,7 +47,7 @@ function Sidebar({ infoUser }) {
           mt={3}
           textColor={useColorModeValue('white')}
           w={navSize === "large" && "100%"}
-          _hover={{ textDecor: "none", backgroundColor: "#AEC8CA" }}
+          _hover={{ textDecor: "none", textColor:'black', backgroundColor: "#AEC8CA" }}
           href='/gerant/produits'
           borderRadius={5}
         >
@@ -65,7 +67,7 @@ function Sidebar({ infoUser }) {
           mt={4}
           textColor={useColorModeValue('white')}
           w={navSize === "large" && "100%"}
-          _hover={{ textDecor: "none", backgroundColor: "#AEC8CA" }}
+          _hover={{ textDecor: "none", textColor:'black', backgroundColor: "#AEC8CA" }}
           href='/gerant/notifications'
           borderRadius={5}
         >
@@ -84,7 +86,7 @@ function Sidebar({ infoUser }) {
           mt={4}
           textColor={useColorModeValue('white')}
           w={navSize === "large" && "100%"}
-          _hover={{ textDecor: "none", backgroundColor: "#AEC8CA" }}
+          _hover={{ textDecor: "none", textColor:'black', backgroundColor: "#AEC8CA" }}
           href='/gerant/settings'
           borderRadius={5}
         >
@@ -112,7 +114,7 @@ function Sidebar({ infoUser }) {
         <Flex mt={4} align={"center"}>
           <Avatar size={"sm"} src={''} />
           <Flex flexDir={"column"} ml={4} display={navSize === "small" ? "none" : "flex"} >
-            <Heading as={"h3"} size={"sm"}>{infoUser.userNom}</Heading>
+            <Heading as={"h3"} size={"sm"} color={'white'}>{infoUser.userEmail}</Heading>
             <Text color={"gray"}>{infoUser.userProfil}</Text>
           </Flex>
         </Flex>

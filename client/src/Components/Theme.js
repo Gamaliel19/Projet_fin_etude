@@ -53,7 +53,15 @@ const overrides = {
                 },
             },
         },
-
+        Input: {
+            baseStyle: {
+              field: {
+                _placeholder: {
+                  color: "dark",
+                },
+              },
+            },
+          },
         Heading: {
             baseStyle: {
                 fontFamily: "Inter",

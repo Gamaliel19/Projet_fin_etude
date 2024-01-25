@@ -60,7 +60,7 @@ export default function Footer() {
                         <Box>
                             <AppLogo />
                         </Box>
-                        <Text fontSize={'sm'}>¢ 2023 Edene Pharmacie. Tous droits réservés.</Text>
+                        <Text fontSize={'sm'}>&copy; {1900 + new Date().getYear()},{" "} Edene Pharmacie. Tous droits réservés.</Text>
                         <Stack direction={'row'} spacing={6}>
                             <SocialButton label="Twitter" href={""}>
                                 <FaTwitter />

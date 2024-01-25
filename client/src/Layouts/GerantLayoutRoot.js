@@ -17,29 +17,6 @@ function GerantLayoutRoot() {
         <Sidebar  infoUser={authCtx}/>
         <Outlet />
       </Box>}
-      {!isLoggedIn && <Flex
-        mt={'50vh'}
-        align={'center'}
-        justify={'center '}
-        flexDir={'column'}
-      >
-        <Text
-          textAlign={'center'}
-          fontWeight={600}
-          fontSize={20}
-        >
-          Vous n'êtes pas connecté. Veuillez vous connecter!
-        </Text>
-        <Button
-          onClick={(() => window.location.href = '/login')}
-          mt={3}
-          border={'1px solid teal'}
-          colorScheme={'teal'}
-          bg={'teal'}
-          borderRadius={5}
-          p={'0.5rem 2rem'}
-        >Se connecter</Button>
-      </Flex>}
     </>
   )
 }

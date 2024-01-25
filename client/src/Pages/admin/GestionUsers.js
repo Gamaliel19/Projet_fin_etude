@@ -1,60 +1,92 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import {
     Box, Button, Flex, FormControl, FormLabel, Heading,
     IconButton, Input, InputGroup, InputLeftElement, Select,
-    Spacer, Stack, Tab, TabList, TabPanel, TabPanels, Table,
+    Spacer, Spinner, Stack, Tab, TabList, TabPanel, TabPanels, Table,
     TableContainer, Tabs, Tbody, Td, Th, Thead, Tr, useColorModeValue
 } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { FaEdit, FaSearch, FaTrash } from 'react-icons/fa'
 import axios from 'axios'
-import httpClient from '../../httpClient'
+import AuthContext from '../../store/authContext'
+import Wrapper from '../login/Helpers/Wrapper'
+import ErrorModal from '../login/ErrorModal'
 
 
 function GestionUsers() {
+    const userCtx = useContext(AuthContext)
     const [users, setUsers] = useState([])
+    //Pour rechercher un utilisateur
+    const [result, setResult] = useState([])
+    const [filterData, setFilterData] = useState([])
+
+    const handleChange = (value) => {
+        const res = filterData.filter(f => f.nom.toLowerCase().includes(value))
+        setResult(res)
+        if (value === "") {
+            setResult([])
+        }
+    }
 
     useEffect(() => {
-        fetch("http://127.0.0.1:5000/listUser")
+        fetch("http://127.0.0.1:5000/listUser", {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${userCtx.token}`
+            }
+        })
             .then(resp => resp.json())
             .then(data => setUsers(data))
+
+        fetch("http://127.0.0.1:5000/listUser")
+            .then(resp => resp.json())
+            .then(data => {
+                setFilterData(data)
+            })
     }, [])
+
+
     return (
-        <Flex
-            flexDir={'column'}
-            mt={{ base: '3rem', lg: 8 }}
-            minHeight={'100vh'}
-            ml={{ base: 0, lg: '15.6rem' }}
-        >
+        <>
             <Flex
-                display={{ base: 'none', lg: 'flex' }}
-                align={'center'}
-                justify={'center'}
-                flexDir={'row'}
-                zIndex={10}
+                mt={-4}
+                flexDir={'column'}
+                ml={{ base: 0, lg: '15.6rem' }}
             >
                 <Box
                     position={'fixed'}
-                    right={{ base: '40%', lg: '53%', xl: '63%' }}
-                    mt={0}
+                    w={'100%'}
+                    h={{ base: '17.5vh', lg: '16vh', xl: '15vh' }}
+                    bg={useColorModeValue('white', 'black')}
+                    zIndex={2}
+                ></Box>
+                <Flex
+                    mt={{ base: '1rem', lg: 5 }}
+                    display={{ base: 'none', lg: 'flex' }}
+                    align={'center'}
+                    justify={'center'}
+                    flexDir={'row'}
+                    zIndex={10}
                 >
-                    <Heading
-                        mt={5}
-                        fontSize={20}
+
+                    <Box
+                        position={'fixed'}
+                        right={{ base: '40%', lg: '48%', xl: '60%' }}
+                        mt={0}
                     >
-                        Gestion des utilisateurs
-                    </Heading>
-                </Box>
-                <Spacer />
-                <Box
-                    mt={3}
-                    //mr={50}
-                    position={'fixed'}
-                    left={{ base: '16%', lg: '63%' }}
-                    p={'0.5rem 2rem'}
-                //bg={useColorModeValue('white', 'gray.700')}
-                >
-                    <FormControl ml={{ base: 0, lg: 2 }}>
+                        <Heading mt={5} fontSize={20}>
+                            Gestionnaires des utilisateurs
+                        </Heading>
+                    </Box>
+                    <Spacer />
+
+                    <Box
+                        mt={3}
+                        position={'fixed'}
+                        left={{ base: '16%', lg: '63%' }}
+                        p={'0.5rem 2rem'}
+                    >
                         <InputGroup
                             size={'sm'}
                             w={{ base: '100%', lg: '20rem' }}
@@ -74,8 +106,7 @@ function GestionUsers() {
                             />
                             <Input
                                 type="text"
-                                value={''}
-                                onChange={() => { }}
+                                onChange={(e) => handleChange(e.target.value)}
                                 bg={'transparent'}
                                 placeholder="Rechercher..."
                                 focusBorderColor="green.400"
@@ -84,97 +115,136 @@ function GestionUsers() {
                                 borderColor={'gray.400'}
                             />
                         </InputGroup>
-                    </FormControl>
-                </Box>
-            </Flex>
-            <Stack
-                ml={5}
-                mt={{ base: -20, lg: 5 }}
-                mr={'1rem'}
-            >
-                <Flex flexDir={'column'} w={'100%'}>
-                    <Tabs >
-                        <TabList
-                            position={'fixed'}
-                            mt={{ base: '3rem', lg: '1.5rem' }}
-                            ml={{ base: '-5', lg: '' }}
-                            justifyItems={'center'}
-                            alignItems={'center'}
-                            w={{ base: '100%', lg: '90%' }}
-                            flexDir={{ base: 'column', lg: 'row' }}
+                        <Flex
+                            ml={2.5}
+                            w={{ base: '100%', lg: '20rem' }}
+                            justify={'center'}
+                            align={'center'}
+                            boxShadow={'md'}
+                            my={2}
+                            position={{ base: 'relative', lg: 'absolute' }}
+                            bg={useColorModeValue('white', 'gray.400')}
                         >
-                            <Tab>Liste des utilisateurs</Tab>
-                            <Tab>Créer un utilisateur</Tab>
-                        </TabList>
-                        <TabPanels mt={{ base: '10rem', lg: '5rem' }}>
-                            <TabPanel>
-                                <ListeUsers items={users} />
-                            </TabPanel>
+                            <TableContainer>
+                                <Table>
+                                    <Tbody>
+                                        {Object.values(result).map(item => {
+                                            return <Tr>
+                                                <Link to={`/singleProduct/${item.id}`}>
+                                                    <Td textAlign={'center'}>{item.nom}</Td>
+                                                    <Td textAlign={'center'}> {item.prenom}</Td>
+                                                    <Td textAlign={'center'}>{item.profil}</Td>
+                                                </Link>
+                                            </Tr>
+                                        })
+                                        }
+                                    </Tbody>
+                                </Table>
+                            </TableContainer>
+                        </Flex>
+                    </Box>
 
-                            <TabPanel>
-                                <UserForm />
-                            </TabPanel>
-
-                        </TabPanels>
-                    </Tabs>
                 </Flex>
-            </Stack>
 
-        </Flex>
+                <Stack
+                    ml={5}
+                    mt={{ base: -19.5, lg: '1rem' }}
+                    mr={'1rem'}
+                >
+                    <Flex flexDir={'column'} w={'100%'}>
+                        <Tabs colorScheme='blue' variant={'enclosed'}>
+                            <TabList
+                                position={'fixed'}
+                                mt={{ base: '3rem', lg: '1.5rem' }}
+                                ml={{ base: '-5', lg: '' }}
+                                justifyItems={'center'}
+                                alignItems={'center'}
+                                w={{ base: '100%', lg: '90%' }}
+                                flexDir={{ base: 'column', lg: 'row' }}
+                                zIndex={3}
+                            >
+                                <Tab _selected={{ color: 'dark', bg: 'blue.300' }}>Liste des utilisateurs</Tab>
+                                <Tab _selected={{ color: 'dark', bg: 'blue.300' }}>Créer un utilisateur</Tab>
+                            </TabList>
+                            <TabPanels mt={{ base: '10rem', lg: '5rem' }}>
+                                <TabPanel>
+                                    <ListeUsers items={users} />
+                                </TabPanel>
+
+                                <TabPanel>
+                                    <UserForm />
+                                </TabPanel>
+
+                            </TabPanels>
+                        </Tabs>
+                    </Flex>
+                </Stack>
+
+            </Flex>
+        </>
     )
 }
 export default GestionUsers
 
 function ListeUsers({ items }) {
     return (
-        <Flex my={2} flexDir={'column'} zIndex={'-10'}>
-            <Flex
-                my={2}
-                align={'center'}
-                mt={'3rem'}
-                justify={'center'}
+        <>
+            <Box
+                position={'fixed'}
+                w={'100%'}
+                h={'3vh'}
+                bg={useColorModeValue('white', 'black')}
+            >
+            </Box>
+            <Heading
+                pos={'fixed'}
+                fontSize={20}
+                left={{ base: '29%', lg: '50%' }}
+                zIndex={1}
                 w={'100%'}
             >
-                <TableContainer>
-                    <Table colorScheme="teal">
-                        <Thead>
-                            <Tr id='titre' bgColor={'gray.600'}>
-                                <Th borderRightWidth={'1px'} fontWeight={'bold'} fontSize={15} color={'white'} textAlign={'center'}>Messagerie Électronique</Th>
-                                <Th borderRightWidth={'1px'} fontWeight={'bold'} fontSize={15} color={'white'} textAlign={'center'} w={'20rem'}>Nom & Prenoms</Th>
-                                <Th borderRightWidth={'1px'} fontWeight={'bold'} fontSize={15} color={'white'} textAlign={'center'}>Profil</Th>
-                                <Th borderRightWidth={'1px'} fontWeight={'bold'} fontSize={15} color={'white'} textAlign={'center'}>Actions</Th>
-                            </Tr>
-                        </Thead>
+                Liste des utilisateurs
+            </Heading>
+            <TableContainer mt={'2rem'}>
+                <Table colorScheme="teal">
+                    <Thead boxShadow={'6px 2px 8px gray'} border={'1px solid white'}>
+                        <Tr id='titre' bgColor={'blue.200'}>
+                            <Th borderRightWidth={'1px'} fontWeight={'bold'} fontSize={15} color={'dark'} textAlign={'center'}>Id</Th>
+                            <Th borderRightWidth={'1px'} fontWeight={'bold'} fontSize={15} color={'dark'} textAlign={'center'}>Email</Th>
+                            <Th borderRightWidth={'1px'} fontWeight={'bold'} fontSize={15} color={'dark'} textAlign={'center'}>Nom & Prenoms</Th>
+                            <Th borderRightWidth={'1px'} fontWeight={'bold'} fontSize={15} color={'dark'} textAlign={'center'}>Profil</Th>
+                            <Th borderRightWidth={'1px'} fontWeight={'bold'} fontSize={15} color={'dark'} textAlign={'center'} w={2}>Actions</Th>
+                        </Tr>
+                    </Thead>
 
-                        <Tbody>
-                            {Object.values(items).map(item => {
-                                return <Tr>
-                                    <Td>{item.email}</Td>
-                                    <Td textAlign={'start'}>{item.nom} {item.prenom}</Td>
-                                    <Td>{item.profil}</Td>
-                                    <Td>
-                                        <Link to={`/admin/editUser/${item.id}`}>
-                                            <IconButton
-                                                icon={<FaEdit />}
-                                                color={'green'}
-                                            />
-                                        </Link>
+                    <Tbody>
+                        {Object.values(items).map(item => {
+                            return <Tr>
+                                <Td>{item.id}</Td>
+                                <Td>{item.email}</Td>
+                                <Td textAlign={'start'}>{item.nom} {item.prenom}</Td>
+                                <Td textAlign={'center'}>{item.profil}</Td>
+                                <Td textAlign={'center'}>
+                                    <Link to={`/admin/editUser/${item.id}`}>
                                         <IconButton
-                                            ml={2}
-                                            icon={<FaTrash color={'red'} />}
-                                            onClick={e => deleteUser(item.id)}
+                                            icon={<FaEdit />}
+                                            color={'green'}
                                         />
-                                    </Td>
-                                </Tr>
-                            })
-                            }
-                        </Tbody>
+                                    </Link>
+                                    <IconButton
+                                        ml={2}
+                                        icon={<FaTrash color={'red'} />}
+                                        onClick={e => deleteUser(item.id)}
+                                    />
+                                </Td>
+                            </Tr>
+                        })
+                        }
+                    </Tbody>
 
-                    </Table>
-                </TableContainer>
-
-            </Flex>
-        </Flex>
+                </Table>
+            </TableContainer>
+        </>
     )
     function deleteUser(id) {
         const conf = window.confirm(" Attention! Voulez-vous vraiment supprimer cet utilisateur?")
@@ -189,63 +259,120 @@ function ListeUsers({ items }) {
 }
 
 const UserForm = () => {
-    const [user, setUser] = useState({
-        email: "",
-        nom: "",
-        prenom: "",
-        profil: "",
-        password: ""
-    })
+    const emailInputRef = useRef()
+    const nomInputRef = useRef()
+    const prenomInputRef = useRef()
+    const profilInputRef = useRef()
+    const passwordInputRef = useRef()
 
-    const handleChange = (e) => {
-        console.log(e.target.name, e.target.value)
-        setUser({ ...user, [e.target.name]: e.target.value })
+    //utilisation du context
+    const userCtx = useContext(AuthContext)
+    console.log(userCtx)
+    //gérer les erreurs
+    const [error, setError] = useState(null)
+    //isLoading,un text qui prévient que c'est en cours de chargement
+    const [isLoading, setIsLoading] = useState(false)
+    const [data, setData] = useState()
+    //Controler s'il ya erreur ou non
+    if (error) {
+        //console.log("true")
+    } else {
+        //console.log("false")
     }
-    const addUser = async () => {
-        try {
-            const resp = await httpClient.post("http://127.0.0.1:5000/registerUser", { ...user })
-            window.location.href = "../admin/utilisateurs"
-            setUser({
-                email: "",
-                nom: "",
-                prenom: "",
-                profil: "",
-                password: ""
-            })
-            console.log(resp.data)
-        } catch (error) {
-            if (error.response.status === 408) {
-                alert("Cet utilisateur existe déjà. Veuillez vous connecter à votre compte utilisateur!")
-            } else if (error.response.status === 409) {
-                alert("Le mot de passe est trop court. Veuillez entrer au moins 8 caractères!")
-            } else if (error.response.status === 410) {
-                alert("Le mot de passe doit contenir au moins un chiffre!")
-            } else if (error.response.status === 411) {
-                alert("Le mot de passe doit contenir au moins un caractère spécial!")
-            } else if (error.response.status === 412) {
-                alert("Le mot de passe doit contenir au moins une lettre majuscule!")
-            } else if (error.response.status === 413) {
-                alert("Email incorrect. Veuillez entrer un format valide de l'email!")
+    const submitHandler = (e) => {
+        e.preventDefault()
+
+        const enteredEmail = emailInputRef.current.value
+        const enteredNom = nomInputRef.current.value
+        const enteredPrenom = prenomInputRef.current.value
+        const enteredProfil = profilInputRef.current.value
+        const enteredPassword = passwordInputRef.current.value
+
+        //Appel du api flask
+        const url = "http://localhost:5000/registerUser"
+        //la function asynchrone d'appel d'api
+        const fetchHandler = async () => {
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    body: JSON.stringify({
+                        email: enteredEmail,
+                        nom: enteredNom,
+                        prenom: enteredPrenom,
+                        profil: enteredProfil,
+                        password: enteredPassword
+                    }),
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${userCtx.token}`
+                    }
+                });
+
+                const dataResponse = await response.json()
+
+                //le server a repondu,le chargement terminé
+                setIsLoading(false)
+
+                if (response.ok) {
+                    setData(dataResponse)
+                    console.log(dataResponse)
+                    userCtx.addUser(dataResponse.email, dataResponse.nom, dataResponse.prenom, dataResponse.profil, dataResponse.password)
+                    //Rendre le formulaire vide
+                    emailInputRef.current.value = ""
+                    nomInputRef.current.value = ""
+                    prenomInputRef.current.value = ""
+                    profilInputRef.current.value = ""
+                    passwordInputRef.current.value = ""
+                } else {
+                    setError({
+                        title: " Attention! Echec de création.",
+                        message: dataResponse.error,
+                    })
+                }
+                console.log(response)
+
+                setData(dataResponse)
+
+            } catch (eror) {
+                console.log(eror)
             }
         }
-    }
 
-    useEffect(() => { }, [user])
+        //message qui previent le chargement
+        setIsLoading(true)
+        fetchHandler()
+
+    }
+    const errorHandler = () => {
+        setError(null)
+    }
+    console.log(data)
 
     return (
-        <Flex my={2} flexDir={'column'} zIndex={'-10'}>
-            <Flex
-                mt={{ base: '-3', lg: '-1rem' }}
-                mb={{ base: 8, lg: 0 }}
-                left={{ lg: '50%' }}
-                justify={'center'}
-                align={'center'}
+        <Wrapper>
+            {error &&
+                <ErrorModal
+                    title={error.title}
+                    message={error.message}
+                    onConfirm={errorHandler}
+                />
+            }
+            <Box
                 position={'fixed'}
+                w={'100%'}
+                h={'3vh'}
+                bg={useColorModeValue('white', 'black')}
             >
-                <Heading fontSize={22}>
-                    Création d'un utilisateur
-                </Heading>
-            </Flex>
+            </Box>
+            <Heading
+                pos={'fixed'}
+                fontSize={20}
+                left={{ base: '23%', lg: '50%' }}
+                zIndex={1}
+                w={'100%'}
+            >
+                Création d'un utilisateur
+            </Heading>
             <Flex
                 position={{ base: 'relative', lg: 'fixed' }}
                 my={2}
@@ -255,28 +382,26 @@ const UserForm = () => {
                 justify={'center'}
                 w={'100%'}
             >
-                <form>
+                <form onSubmit={submitHandler}>
                     <Flex
                         align={'center'}
                         flexDir={{ base: 'column', lg: 'row' }}
                         justify={'center'}
                     >
-                        <FormControl isRequired>
+                        <FormControl>
                             <FormLabel>Email</FormLabel>
                             <Input
-                                value={user.email}
+                                ref={emailInputRef}
                                 name='email'
-                                onChange={(e) => handleChange(e)}
                                 type='email'
                                 placeholder='Entrez votre email svp!'
                             />
                         </FormControl>
-                        <FormControl ml={{ base: 0, lg: 2 }} isRequired>
+                        <FormControl ml={{ base: 0, lg: 2 }}>
                             <FormLabel>Nom </FormLabel>
                             <Input
-                                value={user.nom}
+                                ref={nomInputRef}
                                 name='nom'
-                                onChange={(e) => handleChange(e)}
                                 type='text'
                                 placeholder='Entrez votre nom svp!'
                             />
@@ -284,9 +409,8 @@ const UserForm = () => {
                         <FormControl ml={{ base: 0, lg: 2 }}>
                             <FormLabel>Prenom</FormLabel>
                             <Input
-                                value={user.prenom}
+                                ref={prenomInputRef}
                                 name='prenom'
-                                onChange={(e) => handleChange(e)}
                                 type='text'
                                 placeholder='Entrez votre prenom svp!'
                             />
@@ -297,13 +421,12 @@ const UserForm = () => {
                         justify={'center'}
                         flexDir={{ base: 'column', lg: 'row' }}
                     >
-                        <FormControl isRequired>
+                        <FormControl>
                             <FormLabel>Profil</FormLabel>
                             <Select
+                                ref={profilInputRef}
                                 placeholder='Choisir votre profil'
-                                value={user.profil}
                                 name='profil'
-                                onChange={(e) => handleChange(e)}
                             >
                                 <option value={'admin'}>Admin</option>
                                 <option value={'gerant'}>Gérant</option>
@@ -311,33 +434,41 @@ const UserForm = () => {
                                 <option value={'livreur'}>Livreur</option>
                             </Select>
                         </FormControl>
-                        <FormControl ml={{ base: 0, lg: 2 }} isRequired>
+                        <FormControl ml={{ base: 0, lg: 2 }}>
                             <FormLabel>Mot de passe</FormLabel>
                             <Input
-                                value={user.password}
+                                ref={passwordInputRef}
                                 name='password'
-                                onChange={(e) => handleChange(e)}
                                 type='password'
                                 placeholder='Entrez votre mot de passe svp!'
                             />
                         </FormControl>
                     </Flex>
                     <Stack align={'center'} justify={'center'} >
-                        <Button
-                            onClick={() => addUser()}
-                            _hover={{ bg: 'green.700' }}
-                            bg={'green.600'}
-                            borderRadius={5}
-                            color={'white'}
-                            border={'2px solide black'}
-                            p={'0.5rem 2rem'}
-
-                            mt={4}>
-                            Créer utilisateur
-                        </Button>
+                        {!isLoading &&
+                            <Button
+                                type='submit'
+                                _hover={{ bg: 'green.700' }}
+                                bg={'green.600'}
+                                borderRadius={5}
+                                color={'white'}
+                                border={'2px solide black'}
+                                p={'0.5rem 2rem'}
+                                mt={4}>
+                                Créer utilisateur
+                            </Button>}
+                        {isLoading && <Flex mt={5} p={'0.5rem'} justify={'center'} align={'center'} >
+                            <Spinner
+                                thickness='4px'
+                                speed='0.65s'
+                                emptyColor='gray.200'
+                                color='blue.500'
+                                size='lg'
+                            />
+                        </Flex>}
                     </Stack>
                 </form>
             </Flex>
-        </Flex>
+        </Wrapper>
     )
 }

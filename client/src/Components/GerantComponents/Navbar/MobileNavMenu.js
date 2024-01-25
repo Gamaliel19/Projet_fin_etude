@@ -15,8 +15,8 @@ export default function MobileNavMenu({ navSize, data }) {
 
     return (
         <>
-            <Button ref={btnRef} onClick={onOpen}>
-                <VscListFlat />
+            <Button ref={btnRef} onClick={onOpen} bg={'blue.400'} color={'white'}>
+                <VscListFlat fontSize={25} />
             </Button>
             <Drawer
                 isOpen={isOpen}
@@ -26,33 +26,26 @@ export default function MobileNavMenu({ navSize, data }) {
             >
                 <DrawerOverlay />
                 <DrawerContent>
-                    <DrawerHeader>
-                        <Flex
-                            p={"5%"}
-                            flexDir={"column"}
-                            w={"100%"}
-                            alignItems={navSize === "small" ? "center" : "flex-start"}
-                            mb={4}
-                        >
-                            <Flex mt={4} align={"center"}>
-                                <Avatar size={"md"} src={avatar} />
-                                <Flex flexDir={"column"} ml={4} display={navSize === "small" ? "none" : "flex"} >
-                                    <Heading as={"h3"} size={"sm"}>{data.userNom}</Heading>
-                                    <Text color={"gray"}>{data.userProfil}</Text>
-                                </Flex>
+                    <DrawerHeader bg={'blue.400'}>
+                        <Flex mt={2} align={"center"} justify={'center'}>
+                            <Avatar size={"md"} src={avatar} />
+                            <Flex flexDir={"column"} ml={4} display={navSize === "small" ? "none" : "flex"} >
+                                <Heading as={"h3"} size={"sm"} textColor={'white'}>{data.userEmail}</Heading>
+                                <Text>{data.userProfil}</Text>
                             </Flex>
                         </Flex>
 
                     </DrawerHeader>
                     <Divider display={navSize === "small" ? "none" : "flex"} />
                     <DrawerCloseButton />
-                    <DrawerBody>
-                        <Link href='/gerant'>
+                    <DrawerBody bg={'gray.100'}>
+                        <Link href='/gerant' _hover={{textDecor:'none'}}>
                             <Flex
                                 align={'center'}
                                 fontSize={22}
                                 flexDir={'row'}
                                 boxShadow={'lg'}
+                                borderRadius={'0.5rem'}
                                 p={'0.5rem'}
                                 _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
                             >
@@ -60,12 +53,13 @@ export default function MobileNavMenu({ navSize, data }) {
                                 <Text ml={2}>Ventes</Text>
                             </Flex>
                         </Link>
-                        <Link href='../gerant/produits'>
+                        <Link href='../gerant/produits' _hover={{textDecor:'none'}}>
                             <Flex
                                 align={'center'}
                                 fontSize={22}
                                 flexDir={'row'}
                                 boxShadow={'lg'}
+                                borderRadius={'0.5rem'}
                                 p={'0.5rem'}
                                 _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
                             >
@@ -73,12 +67,13 @@ export default function MobileNavMenu({ navSize, data }) {
                                 <Text ml={2}>Médicaments</Text>
                             </Flex>
                         </Link>
-                        <Link href='../gerant/notifications'>
+                        <Link href='../gerant/notifications' _hover={{textDecor:'none'}}>
                             <Flex
                                 align={'center'}
                                 fontSize={22}
                                 flexDir={'row'}
                                 boxShadow={'lg'}
+                                borderRadius={'0.5rem'}
                                 p={'0.5rem'}
                                 _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
                             >
@@ -86,12 +81,13 @@ export default function MobileNavMenu({ navSize, data }) {
                                 <Text ml={2}>Notifications</Text>
                             </Flex>
                         </Link>
-                        <Link href='../gerant/settings'>
+                        <Link href='../gerant/settings' _hover={{textDecor:'none'}}>
                             <Flex
                                 align={'center'}
                                 fontSize={22}
                                 flexDir={'row'}
                                 boxShadow={'lg'}
+                                borderRadius={'0.5rem'}
                                 p={'0.5rem'}
                                 _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
                             >
@@ -101,10 +97,10 @@ export default function MobileNavMenu({ navSize, data }) {
                         </Link>
 
                     </DrawerBody>
-                    <DrawerFooter>
+                    <DrawerFooter bg={'gray.100'}>
                         <Button
                             onClick={data.logout}
-                            colorScheme='green'
+                            colorScheme='white'
                             variant='outline'
                             borderRadius={10}
                             p={'0.5rem 2rem'}

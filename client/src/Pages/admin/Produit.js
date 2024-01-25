@@ -1,19 +1,21 @@
 import {
   Box, Button, Flex, FormControl, FormLabel, Heading, IconButton,
-  Input, InputGroup, InputLeftElement, Link, Select, Spacer,
+  Input, InputGroup, InputLeftElement, Select, Spacer,
+  Spinner,
   Stack, Tab, TabList, TabPanel, TabPanels, Table, TableCaption,
   TableContainer, Tabs, Tbody, Td, Textarea, Th, Thead, Tr,
   useColorModeValue
 } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
-import { useDropzone } from 'react-dropzone'
-import { FaEdit, FaSearch, FaTrash } from 'react-icons/fa'
-import httpClient from '../../httpClient'
+import { Link } from 'react-router-dom'
+import React, { useContext, useEffect, useRef, useState } from 'react'
+import { FaEdit, FaFileImage, FaSearch, FaTrash } from 'react-icons/fa'
 import axios from 'axios'
 import ErrorModal from '../login/ErrorModal'
-
+import AuthContext from '../../store/authContext'
+import Wrapper from '../login/Helpers/Wrapper'
 
 function Produit() {
+  const productCtx = useContext(AuthContext)
   //fetching data
   const [medoc, setMedoc] = useState([])
   //pour filter les données pour la  la recherche
@@ -30,11 +32,23 @@ function Produit() {
 
   useEffect(() => {
     //récupération des produits
-    fetch("http://127.0.0.1:5000/listProduct")
+    fetch("http://127.0.0.1:5000/listProduct", {
+      method: "GET",
+      headers: {
+        "Context-Type": "application/json",
+        Authorization: `Bearer ${productCtx.token}`
+      }
+    })
       .then(resp => resp.json())
       .then(data => setMedoc(data))
 
-    fetch('http://127.0.0.1:5000/listProduct')
+    fetch('http://127.0.0.1:5000/listProduct', {
+      method: "GET",
+      headers: {
+        "Context-Type": "application/json",
+        Authorization: `Bearer ${productCtx.token}`
+      }
+    })
       .then(res => res.json())
       .then(data => {
         setFilterData(data)
@@ -42,230 +56,312 @@ function Produit() {
       .catch(err => console.log(err))
 
 
-  }, [])
-  console.log(data)
+  }, [medoc])
+  //console.log(data)
 
   return (
-    <Flex
-      flexDir={'column'}
-      mt={{ base: '3rem', lg: 8 }}
-      minHeight={'100vh'}
-      ml={{ base: 0, lg: '15.6rem' }}
-    >
+    <>
       <Flex
-        display={{ base: 'none', lg: 'flex' }}
-        align={'center'}
-        justify={'center'}
-        flexDir={'row'}
-        zIndex={10}
+        mt={-4}
+        flexDir={'column'}
+        ml={{ base: 0, lg: '15.6rem' }}
       >
         <Box
           position={'fixed'}
-          right={{ base: '40%', lg: '53%', xl: '63%' }}
-          mt={0}
+          w={'100%'}
+          h={{ base: '23vh', lg: '20vh', xl: '15vh' }}
+          bg={useColorModeValue('white', 'black')}
+          zIndex={2}
+        ></Box>
+
+        <Flex
+          mt={{ base: '1rem', lg: 5 }}
+          display={{ base: 'none', lg: 'flex' }}
+          align={'center'}
+          justify={'center'}
+          flexDir={'row'}
+          zIndex={10}
         >
-          <Heading mt={5} fontSize={20}>
-            Gestion des produits
-          </Heading>
-        </Box>
-        <Spacer />
-        <Box
-          mt={3}
-          position={'fixed'}
-          left={{ base: '16%', lg: '63%' }}
-          p={'0.5rem 2rem'}
-        >
-
-
-          <InputGroup
-            size={'sm'}
-            w={{ base: '100%', lg: '20rem' }}
-            boxShadow={'md'}
-            rounded={'lg'}
-            p={1}
+          <Box
+            position={'fixed'}
+            right={{ base: '40%', lg: '53%', xl: '63%' }}
+            mt={0}
           >
-            <InputLeftElement
-              margin={1}
-              children={<FaSearch />}
-              _hover={{ cursor: 'pointer' }}
-              bg={useColorModeValue('gray.700', 'gray.400')}
-              borderLeftRadius={5}
-              color={'white'}
-              focusBorderColor="gray.700"
-            />
-            <Input
-              type="text"
-              onChange={e => handleFilter(e.target.value)}
-              placeholder="Rechercher..."
-              bg={'transparent'}
-              focusBorderColor="green.400"
-              borderWidth={'2px'}
-              borderRadius={5}
-              borderColor={'gray.400'}
-            />
-          </InputGroup>
-          <Flex
-            flexDir={'column'}
-            justify={'center'}
-            align={'center'}
-            boxShadow={'md'} my={2}
-            position={{ base: 'relative', lg: 'absolute' }}
-            bg={useColorModeValue('white', 'gray.400')}
+            <Heading mt={5} fontSize={20}>
+              Gestion des produits
+            </Heading>
+          </Box>
+
+          <Spacer />
+
+          <Box
+            mt={3}
+            position={'fixed'}
+            left={{ base: '16%', lg: '63%' }}
+            p={'0.5rem 2rem'}
           >
-            <TableContainer>
-              <Table>
-                <Tbody>
-                  {Object.values(data).map(item => {
-                    return <Tr>
-                      <Link to={`/singleProduct/${item._id}`}>
-                        <Td>{item.nom_com}</Td>
-                        <Td>{item.dosage}</Td>
-                        <Td>{item.prix} FCFA</Td>
-                      </Link>
-                    </Tr>
-                  })
-                  }
-                </Tbody>
-              </Table>
-            </TableContainer>
-          </Flex>
-
-
-        </Box>
-      </Flex>
-      <Stack
-        ml={5}
-        mt={{ base: -20, lg: 5 }}
-        mr={'1rem'}
-      >
-        <Flex flexDir={'column'} w={'100%'}>
-          <Tabs>
-            <TabList
-              position={'fixed'}
-              mt={{ base: '3rem', lg: '1.5rem' }}
-              ml={{ base: '-5', lg: '' }}
-              justifyItems={'center'}
-              alignItems={'center'}
-              w={{ base: '100%', lg: '90%' }}
-              flexDir={{ base: 'column', lg: 'row' }}
+            <InputGroup
+              size={'sm'}
+              w={{ base: '100%', lg: '20rem' }}
+              boxShadow={'md'}
+              rounded={'lg'}
+              p={1}
             >
-              <Tab>Médicaments en stock</Tab>
-              <Tab>Opération d'entrée</Tab>
-              <Tab>Catégories</Tab>
-              <Tab>Inventaire</Tab>
-            </TabList>
+              <InputLeftElement
+                margin={1}
+                children={<FaSearch />}
+                _hover={{ cursor: 'pointer' }}
+                bg={useColorModeValue('gray.700', 'gray.400')}
+                borderLeftRadius={5}
+                color={'white'}
+                focusBorderColor="gray.700"
+              />
+              <Input
+                type="text"
+                onChange={e => handleFilter(e.target.value)}
+                placeholder="Rechercher..."
+                bg={'transparent'}
+                focusBorderColor="green.400"
+                borderWidth={'2px'}
+                borderRadius={5}
+                borderColor={'gray.400'}
+              />
+            </InputGroup>
 
-            <TabPanels mt={{ base: '15rem', lg: '5rem' }}>
+            <Flex
+              w={{ base: '100%', lg: '20rem' }}
+              justify={'center'}
+              align={'center'}
+              boxShadow={'md'}
+              my={2}
+              position={{ base: 'relative', lg: 'absolute' }}
+              bg={useColorModeValue('white', 'gray.400')}
+            >
+              <TableContainer>
+                <Table>
+                  <Tbody>
+                    {Object.values(data).map(item => {
+                      return <Tr>
+                        <Link to={`/admin/singleAdminProduct/${item._id}`}>
+                          <Td>{item.nom_com}</Td>
+                          <Td>{item.dosage}</Td>
+                          <Td textAlign={'start'}>{item.prix} FCFA</Td>
+                        </Link>
+                      </Tr>
+                    })
+                    }
+                  </Tbody>
+                </Table>
+              </TableContainer>
+            </Flex>
 
-              <TabPanel>
-                <ListeMédicaments items={medoc} />
-              </TabPanel>
+          </Box>
 
-              <TabPanel>
-                <ProdForm />
-              </TabPanel>
-
-              <TabPanel>
-                <CreerCategorie />
-              </TabPanel>
-
-              <TabPanel>
-                <Inventaire />
-              </TabPanel>
-
-            </TabPanels>
-          </Tabs>
         </Flex>
-      </Stack>
 
-    </Flex>
+        <Stack
+          ml={5}
+          mt={{ base: -19.5, lg: -0.5 }}
+          mr={'1rem'}
+        >
+          <Flex flexDir={'column'} w={'100%'}>
+            <Tabs colorScheme='blue' variant={'enclosed'}>
+              <TabList
+                position={'fixed'}
+                mt={{ base: '3rem', lg: '2rem' }}
+                ml={{ base: '-5', lg: '' }}
+                justifyItems={'center'}
+                alignItems={'center'}
+                w={{ base: '100%', lg: '90%' }}
+                flexDir={{ base: 'column', lg: 'row' }}
+                zIndex={3}
+              >
+                <Tab _selected={{ color: 'dark', bg: 'blue.300' }}>Médicaments en stock</Tab>
+                <Tab _selected={{ color: 'dark', bg: 'blue.300' }}>Opération d'entrée</Tab>
+                <Tab _selected={{ color: 'dark', bg: 'blue.300' }}>Catégories</Tab>
+                <Tab _selected={{ color: 'dark', bg: 'blue.300' }}>Inventaire</Tab>
+              </TabList>
+
+              <TabPanels mt={{ base: '13rem', lg: '4.5rem' }}>
+                <TabPanel>
+                  <ListeMédicaments items={medoc} />
+                </TabPanel>
+
+                <TabPanel>
+                  <ProdForm />
+                </TabPanel>
+
+                <TabPanel>
+                  <CreerCategorie />
+                </TabPanel>
+
+                <TabPanel>
+                  <Inventaire />
+                </TabPanel>
+
+              </TabPanels>
+            </Tabs>
+          </Flex>
+        </Stack>
+
+      </Flex>
+    </>
   )
 }
 export default Produit
 
 const ProdForm = () => {
-
-  const [produit, setProduit] = useState({
-    dosage: "",
-    nom_com: "",
-    description: "",
-    prix: "",
-    date_fab: "",
-    date_per: "",
-    qte_stock: "",
-    num_lot: "",
-  })
   const [cat, setCat] = useState([])
-
-  const handleChange = (e) => {
-    console.log(e.target.name, e.target.value)
-    setProduit({ ...produit, [e.target.name]: e.target.value })
-  }
-
-  const { getRootProps, getInputProps } = useDropzone({
-    accept: 'image/*',
-    onDrop: (acceptedFiles) => {
-      // Do something with the files
-    }
-  })
-
-  const ajoutProd = async () => {
-    try {
-      const resp = await httpClient.post("http://127.0.0.1:5000/registerProduct", { ...produit })
-      window.location.href = "../admin/produits"
-      setProduit({
-        dosage: "",
-        nom_com: "",
-        description: "",
-        prix: "",
-        date_fab: "",
-        date_per: "",
-        qte_stock: "",
-        num_lot: "",
-      })
-      console.log(resp.data)
-    } catch (error) {
-      if (error.response.status === 409) {
-        alert("La connexion a échouée. Réessayez plus tard!")
-      }
-    }
-  }
-
   useEffect(() => {
     fetch("http://localhost:5000/listCat")
       .then(res => res.json())
       .then(data => setCat(data))
-      .catch(error => console.log(error))
-  }, [])
-  console.log(cat)
+  }, [cat])
+
+  const num_lotInputRef = useRef()
+  const nom_comInputRef = useRef()
+  const dosageInputRef = useRef()
+  const qte_stockInputRef = useRef()
+  const prixInputRef = useRef()
+  const date_fabInputRef = useRef()
+  const date_perInputRef = useRef()
+  const categorieInputRef = useRef()
+  const descriptionInputRef = useRef()
+  const imageInputRef = useRef()
+
+  //utilisation du context
+  const productCtx = useContext(AuthContext)
+  //console.log(productCtx)
+  //gérer les erreurs
+  const [error, setError] = useState(null)
+  //isLoading,un text qui prévient que c'est en cours de chargement
+  const [isLoading, setIsLoading] = useState(false)
+  const [data, setData] = useState()
+  //Controler s'il ya erreur ou non
+  if (error) {
+    //console.log("true")
+  } else {
+    //console.log("false")
+  }
+  const submitHandler = (e) => {
+    e.preventDefault()
+
+    const enteredNum_lot = num_lotInputRef.current.value
+    const enteredNom_com = nom_comInputRef.current.value
+    const enteredDosage = dosageInputRef.current.value
+    const enteredQte_stock = qte_stockInputRef.current.value
+    const enteredPrix = prixInputRef.current.value
+    const enteredDate_fab = date_fabInputRef.current.value
+    const enteredDate_per = date_perInputRef.current.value
+    const enteredCategorie = categorieInputRef.current.value
+    const enteredDescription = descriptionInputRef.current.value
+    const enteredImage = imageInputRef.current.value
+
+    //execution de la requête api
+    const url = "http://127.0.0.1:5000/registerProduct"
+    //async function fetch
+    const fetchHandler = async () => {
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          body: JSON.stringify({
+            num_lot: enteredNum_lot,
+            nom_com: enteredNom_com,
+            dosage: enteredDosage,
+            qte_stock: enteredQte_stock,
+            prix: enteredPrix,
+            date_fab: enteredDate_fab,
+            date_per: enteredDate_per,
+            categorie: enteredCategorie,
+            description: enteredDescription,
+            image: enteredImage,
+            user: productCtx.userEmail
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${productCtx.token}`
+          }
+        });
+
+        const dataResponse = await response.json()
+        //le sever a repondu, le chargement a terminé
+        setIsLoading(false)
+
+        if (response.ok) {
+          setData(dataResponse)
+          console.log(dataResponse)
+          productCtx.addProduct(dataResponse.num_lot, dataResponse.image, dataResponse.categorie, dataResponse.nom_com, dataResponse.dosage, dataResponse.qte_stock, dataResponse.prix, dataResponse.date_fab, dataResponse.date_per, dataResponse.description)
+          //Rendre vide le formulaire
+          num_lotInputRef.current.value = ""
+          nom_comInputRef.current.value = ""
+          dosageInputRef.current.value = ""
+          qte_stockInputRef.current.value = ""
+          prixInputRef.current.value = ""
+          date_fabInputRef.current.value = ""
+          date_perInputRef.current.value = ""
+          categorieInputRef.current.value = ""
+          descriptionInputRef.current.value = ""
+          imageInputRef.current.value = ""
+        } else {
+          setError({
+            title: "Echec d'enregistrement!",
+            message: dataResponse.error
+          })
+        }
+        console.log(response)
+
+        setData(dataResponse)
+      } catch (error) {
+        console.log(error)
+      }
+    };
+
+    //message qui previent le chargement
+    setIsLoading(true)
+    fetchHandler()
+
+  }
+  const errorHandler = () => {
+    setError(null)
+  }
+  //console.log(data)
 
   return (
-    <Flex my={2} flexDir={'column'} zIndex={'-10'} >
-      <Flex
-        mt={{ base: '-3', lg: '-1rem' }}
-        mb={{ base: 8, lg: 0 }}
-        left={{ lg: '50%' }}
-        justify={'center'}
-        align={'center'}
+    <Wrapper>
+      {error &&
+        <ErrorModal
+          title={error.title}
+          message={error.message}
+          onConfirm={errorHandler}
+        />
+      }
+      <Box
         position={'fixed'}
+        w={'100%'}
+        h={'3vh'}
+        bg={useColorModeValue('white', 'black')}
+        zIndex={1}
       >
-        <Heading
-          fontSize={20}
-          mb={{ base: -5, lg: 5 }}
-        >
-          Ajouter un nouveau produit
-        </Heading>
-      </Flex>
+      </Box>
+      <Heading
+        pos={'fixed'}
+        fontSize={20}
+        left={{ base: '23%', lg: '50%' }}
+        zIndex={2}
+        w={'100%'}
+      >
+        Ajouter un nouveau produit
+      </Heading>
       <Flex
-        position={{ base: 'relative', lg: 'fixed' }}
+        position={{ base: 'relative', lg: 'relative', xl: 'fixed' }}
         my={2}
         align={'center'}
-        right={{ lg: '-8rem' }}
+        right={{ xl: '-8rem' }}
         mt={'3rem'}
         justify={'center'}
         w={'100%'}
       >
-        <form>
+        <form onSubmit={submitHandler}>
           <Flex
             align={'center'}
             justify={'center'}
@@ -274,9 +370,8 @@ const ProdForm = () => {
             <FormControl>
               <FormLabel>Numero_Lot</FormLabel>
               <Input
-                value={produit.num_lot}
+                ref={num_lotInputRef}
                 name='num_lot'
-                onChange={(e) => handleChange(e)}
                 type='text'
                 placeholder='Entrez le N° de lot svp!'
               />
@@ -284,9 +379,8 @@ const ProdForm = () => {
             <FormControl ml={{ base: 0, lg: 2 }}>
               <FormLabel>Nom commercial</FormLabel>
               <Input
-                value={produit.nom_com}
+                ref={nom_comInputRef}
                 name='nom_com'
-                onChange={(e) => handleChange(e)}
                 type='text'
                 placeholder='Entrez le nom svp!'
               />
@@ -294,9 +388,8 @@ const ProdForm = () => {
             <FormControl ml={{ base: 0, lg: 2 }}>
               <FormLabel>Dosage</FormLabel>
               <Input
-                value={produit.dosage}
+                ref={dosageInputRef}
                 name='dosage'
-                onChange={(e) => handleChange(e)}
                 type='text'
                 placeholder='Entrez le dosage svp!'
               />
@@ -304,9 +397,8 @@ const ProdForm = () => {
             <FormControl ml={{ base: 0, lg: 2 }}>
               <FormLabel>Quantité</FormLabel>
               <Input
-                value={produit.qte_stock}
+                ref={qte_stockInputRef}
                 name='qte_stock'
-                onChange={(e) => handleChange(e)}
                 type='number'
                 placeholder='Entrez la quantité svp!'
               />
@@ -320,27 +412,24 @@ const ProdForm = () => {
             <FormControl>
               <FormLabel>Date_Fab</FormLabel>
               <Input
-                value={produit.date_fab}
+                ref={date_fabInputRef}
                 name='date_fab'
-                onChange={(e) => handleChange(e)}
                 type='Date'
               />
             </FormControl>
             <FormControl ml={{ base: 0, lg: 2 }}>
               <FormLabel>Date_Exp</FormLabel>
               <Input
-                value={produit.date_per}
+                ref={date_perInputRef}
                 name='date_per'
-                onChange={(e) => handleChange(e)}
                 type='Date'
               />
             </FormControl>
             <FormControl ml={{ base: 0, lg: 2 }}>
               <FormLabel>Prix</FormLabel>
               <Input
-                value={produit.prix}
+                ref={prixInputRef}
                 name='prix'
-                onChange={(e) => handleChange(e)}
                 type='number'
                 placeholder='Entrez le prix svp!'
               />
@@ -349,8 +438,8 @@ const ProdForm = () => {
               <FormLabel>Catégorie</FormLabel>
 
               <Select
-                value={produit.cat}
-                placeholder='Catégorie'
+                ref={categorieInputRef}
+                placeholder='Choisir une catégorie'
                 name='cat'
               >
                 {cat.map(item => {
@@ -358,7 +447,23 @@ const ProdForm = () => {
                 })}
               </Select>
             </FormControl>
-            {/* <FormControl ml={{ base: 0, lg: 2 }} {...getRootProps()}>
+          </Flex>
+          <Flex
+            align={'center'}
+            justify={'center'}
+            flexDir={{ base: 'column', lg: 'row' }}
+          >
+            <FormControl ml={{ base: 0, lg: 1 }}>
+              <FormLabel>Description</FormLabel>
+              <Textarea
+                ref={descriptionInputRef}
+                name='description'
+                type='text'
+                placeholder='Veuillez donner la description svp !'
+              />
+            </FormControl>
+
+            <FormControl ml={{ base: 0, lg: 2 }} w={'20rem'}>
               <FormLabel>Image</FormLabel>
               <InputGroup _hover={{ cursor: 'pointer' }}>
                 <InputLeftElement
@@ -367,138 +472,139 @@ const ProdForm = () => {
                   color={'white'}
                   children={<FaFileImage />}
                 />
-                <Input {...getInputProps}
-                  value={produit.image}
+                <Input
+                  ref={imageInputRef}
                   name='image'
-                  onChange={(e) => handleChange(e)}
                   type='file'
+                  textAlign={'center'}
+                  w={'100%'}
+                  p={'0.3rem 0rem 1rem 1rem'}
                   _hover={{ cursor: 'pointer' }}
                 />
               </InputGroup>
-            </FormControl>*/}
+            </FormControl>
           </Flex>
-          <FormControl ml={{ base: 0, lg: 1 }}>
-            <FormLabel>Description</FormLabel>
-            <Textarea
-              value={produit.description}
-              name='description'
-              onChange={(e) => handleChange(e)}
-              type='text'
-              placeholder='Veuillez donner la description svp !'
-            />
-          </FormControl>
           <Stack align={'center'} justify={'center'} >
-            <Button
-              onClick={() => ajoutProd()}
-              _hover={{ bg: 'green.700' }}
-              bg={'green.600'}
-              borderRadius={5}
-              border={'2px solide black'}
-              color={'white'}
-              p={'0.5rem 2rem'}
-              mt={4}>
-              Enregistrer
-            </Button>
+            {!isLoading &&
+              <Button
+                type='submit'
+                _hover={{ bg: 'green.700' }}
+                bg={'green.600'}
+                borderRadius={5}
+                border={'2px solid green.600'}
+                color={'white'}
+                p={'0.5rem 2rem'}
+                mt={4}>
+                Enregistrer
+              </Button>
+            }
+            {isLoading && <Flex mt={5} p={'0.5rem'} justify={'center'} align={'center'} >
+              <Spinner
+                thickness='4px'
+                speed='0.65s'
+                emptyColor='gray.200'
+                color='blue.500'
+                size='lg'
+              />
+            </Flex>}
           </Stack>
         </form>
       </Flex>
-    </Flex>
+    </Wrapper>
   )
 }
 
 function ListeMédicaments({ items }) {
 
   return (
-    <Flex my={2} flexDir={'column'} zIndex={'-10'} >
-      <Flex
-        mt={{ base: '-3', lg: '-1rem' }}
-        mb={{ base: 8, lg: 0 }}
-        left={{ lg: '50%' }}
-        justify={'center'}
-        align={'center'}
+    <>
+      <Box
         position={'fixed'}
+        w={'100%'}
+        h={{ base: '3vh', xl: '6.5vh' }}
+        bg={useColorModeValue('white', 'black')}
       >
-        <Heading
-          fontSize={20}
-          mb={{ base: -5, lg: 5 }}
-        >
-          Liste des produits en stock
-        </Heading>
-      </Flex>
-      <Flex
-        my={2}
-        align={'center'}
-        mt={'3rem'}
-        justify={'center'}
+      </Box>
+      <Heading
+        mt={{ xl: '1.5rem' }}
+        pos={'fixed'}
+        fontSize={20}
+        left={{ base: '23%', lg: '50%' }}
+        zIndex={1}
         w={'100%'}
       >
-        <TableContainer>
-          <Table>
-            <Thead>
-              <Tr id='titre' bgColor={'gray.600'}>
-                <Th borderRightWidth={'1px'} fontWeight={'bold'} fontSize={15} color={'white'} textAlign={'center'}>N° lot</Th>
-                <Th borderRightWidth={'1px'} fontWeight={'bold'} fontSize={15} color={'white'} textAlign={'center'} w={'25rem'}>Nom com</Th>
-                <Th borderRightWidth={'1px'} fontWeight={'bold'} fontSize={15} color={'white'} textAlign={'center'}>Dosage</Th>
-                <Th borderRightWidth={'1px'} fontWeight={'bold'} fontSize={15} color={'white'} textAlign={'center'}>Prix(FCFA)</Th>
-                <Th borderRightWidth={'1px'} fontWeight={'bold'} fontSize={15} color={'white'} textAlign={'center'}>Quantite</Th>
-                <Th borderRightWidth={'1px'} fontWeight={'bold'} fontSize={15} color={'white'} textAlign={'center'}>prix total</Th>
-                <Th borderRightWidth={'1px'} fontWeight={'bold'} fontSize={15} color={'white'} textAlign={'center'}></Th>
-              </Tr>
-            </Thead>
-            <Tbody mt={'20rem'} >
-              {Object.values(items).map(item => {
-                if (item.qte_stock <= 15) {
-                  return <Tr bg={'yellow.400'}>
-                    <Td>{item.num_lot}</Td>
-                    <Td >{item.nom_com}</Td>
-                    <Td >{item.dosage}</Td>
-                    <Td >{item.prix}</Td>
-                    <Td >{item.qte_stock}</Td>
-                    <Td >{item.prix * item.qte_stock}</Td>
-                    <Td>
-                      <Link href={`/admin/editProduct/${item._id}`}>
-                        <IconButton
-                          icon={<FaEdit />}
-                          color={'green'}
-                        />
-                      </Link>
+        Liste des produits en stock
+      </Heading >
+
+      <TableContainer mt={{ base: '2rem', xl: '3.5rem' }} boxShadow={'md'}>
+        <Table>
+          <Thead boxShadow={'6px 2px 8px gray'} border={'1px solid white'}>
+            <Tr id='titre' bgColor={'blue.200'}>
+              <Th borderRightWidth={'1px'} fontWeight={'bold'} color={'dark'} fontSize={15} textAlign={'center'} w={'2rem'}>rayon</Th>
+              <Th borderRightWidth={'1px'} fontWeight={'bold'} color={'dark'} fontSize={15} textAlign={'center'}>Nom</Th>
+              <Th borderRightWidth={'1px'} fontWeight={'bold'} color={'dark'} fontSize={15} textAlign={'center'}>Dosage</Th>
+              <Th borderRightWidth={'1px'} fontWeight={'bold'} color={'dark'} fontSize={15} textAlign={'center'}>Prix(FCFA)</Th>
+              <Th borderRightWidth={'1px'} fontWeight={'bold'} color={'dark'} fontSize={15} textAlign={'center'}>Quantite</Th>
+              <Th borderRightWidth={'1px'} fontWeight={'bold'} color={'dark'} fontSize={15} textAlign={'center'}>prix total</Th>
+              <Th borderRightWidth={'1px'} fontWeight={'bold'} color={'dark'} fontSize={15} textAlign={'center'}>date Exp</Th>
+              <Th borderRightWidth={'1px'} fontWeight={'bold'} color={'dark'} fontSize={15} textAlign={'center'}> Actions</Th>
+            </Tr>
+          </Thead>
+          <Tbody mt={'5rem'}>
+            {Object.values(items).map(item => {
+              if (item.qte_stock <= 15) {
+                return <Tr bg={'yellow.400'}>
+                  <Td>{item.num_lot}</Td>
+                  <Td>{item.nom_com}</Td>
+                  <Td>{item.dosage}</Td>
+                  <Td textAlign={'right'}>{item.prix}</Td>
+                  <Td textAlign={'right'} >{item.qte_stock}</Td>
+                  <Td textAlign={'right'} >{item.prix * item.qte_stock}</Td>
+                  <Td>{item.date_per}</Td>
+                  <Td>
+                    <Link to={`/admin/editProduct/${item._id}`}>
                       <IconButton
-                        ml={2}
-                        icon={<FaTrash color={'red'} />}
-                        onClick={e => deleteProduct(item._id)}
+                        icon={<FaEdit />}
+                        color={'green'}
                       />
-                    </Td>
-                  </Tr>
-                } else {
-                  return <Tr>
-                    <Td>{item.num_lot}</Td>
-                    <Td >{item.nom_com}</Td>
-                    <Td >{item.dosage}</Td>
-                    <Td >{item.prix}</Td>
-                    <Td >{item.qte_stock}</Td>
-                    <Td bg={'gray.200'} color={'black'}>{item.prix * item.qte_stock}</Td>
-                    <Td>
-                      <Link href={`/admin/editProduct/${item._id}`}>
-                        <IconButton
-                          icon={<FaEdit />}
-                          color={'green'}
-                        />
-                      </Link>
+                    </Link>
+                    <IconButton
+                      ml={2}
+                      icon={<FaTrash color={'red'} />}
+                      onClick={e => deleteProduct(item._id)}
+                    />
+                  </Td>
+                </Tr>
+              } else {
+                return <Tr>
+                  <Td>{item.num_lot}</Td>
+                  <Td >{item.nom_com}</Td>
+                  <Td >{item.dosage}</Td>
+                  <Td textAlign={'right'} >{item.prix}</Td>
+                  <Td textAlign={'right'} >{item.qte_stock}</Td>
+                  <Td textAlign={'right'} bg={'gray.200'} color={'black'}>{item.prix * item.qte_stock}</Td>
+                  <Td>{item.date_per}</Td>
+                  <Td>
+                    <Link to={`/admin/editProduct/${item._id}`}>
                       <IconButton
-                        ml={2}
-                        icon={<FaTrash color={'red'} />}
-                        onClick={e => deleteProduct(item._id)}
+                        icon={<FaEdit />}
+                        color={'green'}
                       />
-                    </Td>
-                  </Tr>
-                }
-              })
+                    </Link>
+                    <IconButton
+                      ml={2}
+                      icon={<FaTrash color={'red'} />}
+                      onClick={e => deleteProduct(item._id)}
+                    />
+                  </Td>
+                </Tr>
               }
-            </Tbody>
-          </Table>
-        </TableContainer>
-      </Flex>
-    </Flex>
+            })
+            }
+          </Tbody>
+        </Table>
+      </TableContainer>
+    </>
   )
   function deleteProduct(id) {
     const conf = window.confirm(" Attention! Voulez-vous vraiment supprimer ce produit?")
@@ -515,188 +621,254 @@ function ListeMédicaments({ items }) {
 function Inventaire() {
 
   return (
-    <Flex my={2} flexDir={'column'} zIndex={'-10'}>
-      <Flex
-        mt={{ base: '-3', lg: '-1rem' }}
-        mb={{ base: 8, lg: 0 }}
-        left={{ lg: '52%' }}
-        justify={'center'}
-        align={'center'}
+    <>
+      <Box
         position={'fixed'}
+        w={'100%'}
+        h={{ base: '3vh', xl: '6.5vh' }}
+        bg={useColorModeValue('white', 'black')}
       >
-        <Heading
-          fontSize={20}
-          mb={{ base: -5, lg: 5 }}
-        >Inventaire du stock</Heading>
-      </Flex>
-      <Flex
-        my={2}
-        align={'center'}
-        mt={'3rem'}
-        justify={'center'}
+      </Box>
+      <Heading
+        mt={{ xl: '1.5rem' }}
+        pos={'fixed'}
+        fontSize={20}
+        left={{ base: '23%', lg: '50%' }}
+        zIndex={1}
         w={'100%'}
       >
-        <TableContainer>
-          <Table>
-            <Thead>
-              <Tr id='titre' bgColor={'gray.600'}>
-                <Th fontWeight={'bold'} fontSize={15} color={'white'}>N°</Th>
-                <Th fontWeight={'bold'} fontSize={15} color={'white'} w={'20rem'}>Désignation</Th>
-                <Th fontWeight={'bold'} fontSize={15} color={'white'}>Sortie</Th>
-                <Th fontWeight={'bold'} fontSize={15} color={'white'}>Reste</Th>
-                <Th fontWeight={'bold'} fontSize={15} color={'white'}>%</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
+        Inventaire du stock
+      </Heading>
+      <TableContainer mt={{ base: '2rem', xl: '3.5rem' }} boxShadow={'md'}>
+        <Table>
+          <Thead boxShadow={'6px 2px 8px gray'} border={'1px solid white'}>
+            <Tr id='titre' bgColor={'blue.200'}>
+              <Th borderRightWidth={'1px'} fontWeight={'bold'} color='dark' textAlign={'center'} fontSize={15} >N°</Th>
+              <Th borderRightWidth={'1px'} fontWeight={'bold'} color='dark' textAlign={'center'} fontSize={15} w={'20rem'}>Désignation</Th>
+              <Th borderRightWidth={'1px'} fontWeight={'bold'} color='dark' textAlign={'center'} fontSize={15} >Sortie</Th>
+              <Th borderRightWidth={'1px'} fontWeight={'bold'} color='dark' textAlign={'center'} fontSize={15} >Reste</Th>
+              <Th borderRightWidth={'1px'} fontWeight={'bold'} color='dark' textAlign={'center'} fontSize={15} >%</Th>
+            </Tr>
+          </Thead>
+          <Tbody mt={'5rem'}>
 
-            </Tbody>
-          </Table>
-        </TableContainer>
-      </Flex>
-    </Flex>
+          </Tbody>
+        </Table>
+      </TableContainer>
+    </>
   )
 }
 
 const CreerCategorie = () => {
   const [cat, setcat] = useState([])
-  const [cat2, setcat2] = useState({ nom: "" })
 
+  const nomInputRef = useRef()
+
+  const catCtx = useContext(AuthContext)
+
+  //gérer les erreurs
   const [error, setError] = useState(null)
+  //isLoading,un text qui prévient que c'est en cours de chargement
+  const [isLoading, setIsLoading] = useState(false)
+  const [data, setData] = useState()
+  //Controler s'il ya erreur ou non
+  if (error) {
+    //console.log("true")
+  } else {
+    //console.log("false")
+  }
+
+  const submitHandler = (e) => {
+    e.preventDefault()
+
+    const enteredNom = nomInputRef.current.value
+
+    const url = "http://127.0.0.1:5000/registerCat"
+
+    const fetchHandler = async () => {
+
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          body: JSON.stringify({
+            nom: enteredNom,
+            user: catCtx.userNom,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${catCtx.token}`,
+          }
+        });
+
+        const dataResponse = await response.json()
+
+        //Le chargement
+        setIsLoading(false)
+
+        if (response.ok) {
+          setData(dataResponse)
+          console.log(dataResponse)
+          catCtx.addCat(dataResponse.nom)
+
+          //rendre le formulaire vide
+          nomInputRef.current.value = " "
+        } else {
+          setError({
+            title: "Echec d'enregistrement",
+            message: dataResponse.error
+          })
+        }
+        console.log(response)
+
+        setData(dataResponse)
+
+      } catch (error) {
+        console.log(error)
+      }
+
+    }
+
+    setIsLoading(true)
+    fetchHandler()
+
+  }
   const errorHandler = () => {
     setError(null)
   }
-  const handleChange = (e) => {
-    console.log(e.target.name, e.target.value)
-    setcat2({ ...cat2, [e.target.name]: e.target.value })
-  }
-  const addCat = async () => {
-    try {
-      const resp = await axios.post("http://localhost:5000/registerCat", { ...cat2 })
-      setcat2({
-        nom: ""
-      })
-    } catch (eror) {
-      setError({
-        title: "Attention!",
-        message: "Cette catégorie existe déjà. Renseignez bien la nouvelle catégorie!"
-      })
-      if (eror.response.status === 408) {
-        return <ErrorModal
-          title={error.title}
-          message={error.message}
-          onConfirm={errorHandler}
-        />
-      }
-    }
-  }
+
+
   useEffect(() => {
-    fetch('http://localhost:5000/listCat')
+    fetch('http://localhost:5000/listCat', {
+      method: "GET",
+      headers: {
+        "Context-Type": "application/json",
+        Authorization: `Bearer ${catCtx.token}`
+      }
+    })
       .then(res => res.json())
       .then(data => setcat(data))
       .catch(error => console.log(error))
   }, [cat])
 
   return (
-    <Flex
-      flexDir={{ base: 'column', lg: 'row' }}
-      minH={'60vh'}
-      borderRadius={5}
-      my={{ base: 2, lg: 0 }}
-    >
+
+    <Wrapper>
+
+      {error &&
+        <ErrorModal
+          title={error.title}
+          message={error.message}
+          onConfirm={errorHandler}
+        />
+      }
       <Flex
-        mx={{ base: 3, lg: '3rem' }}
-        p={2}
-        position={'fixed'}
-        flexDir={'column'}
-      >
-        <Flex>
-          <form>
-            <Flex
-              align={'start'}
-              flexDir={{ base: 'column', lg: 'column' }}
-            >
-              <FormControl>
-                <FormLabel>Catégorie</FormLabel>
-                <Input
-                  value={cat2.nom}
-                  name='nom'
-                  onChange={(e) => handleChange(e)}
-                  type='text'
-                  placeholder='Entrez la catégorie!'
-                />
-              </FormControl>
-            </Flex>
-            <Stack >
-              <Button
-                onClick={() => addCat()}
-                _hover={{ bg: 'green.700' }}
-                bg={'green.600'}
-                borderRadius={5}
-                color={'white'}
-                w={'35%'}
-                mt={4}>
-                Ajouter
-              </Button>
-            </Stack>
-          </form>
-        </Flex>
-      </Flex>
-      <Spacer />
-      <Flex
-        display={{ base: 'none', lg: 'none', xl: 'flex' }}
-        boxShadow={'md'}
-        mx={{ base: 0, lg: 30 }}
-        mt={{ base: '9rem', lg: '10rem', xl: '0rem' }}
-        p={5}
-        flexDir={'column'}
+        flexDir={{ base: 'column', lg: 'row' }}
+        minH={'60vh'}
+        borderRadius={5}
+        my={{ base: 2, lg: 0 }}
       >
         <Flex
-          my={2}
-          align={'center'}
-          justify={'spacebetween'}
-          w={'100%'}
+          mt={{ xl: '1rem' }}
+          mx={{ base: 3, lg: '3rem' }}
+          p={2}
+          position={'fixed'}
+          flexDir={'column'}
         >
-          <TableContainer>
-            <Table variant='striped'>
-              <TableCaption>liste des catégories.</TableCaption>
-              <Thead >
-                <Tr
-                  id='titre'
-                  flexDirection={{ base: "column", lg: "row" }}
-                  bgColor={'gray.600'}
-                >
-                  <Th borderRightWidth={'1px'} fontWeight={'bold'} fontSize={15} color={'white'} textAlign={'center'}>N°</Th>
-                  <Th borderRightWidth={'1px'} fontWeight={'bold'} fontSize={15} color={'white'} textAlign={'center'} w={'30rem'} >Catégories</Th>
-                  <Th borderRightWidth={'1px'} fontWeight={'bold'} fontSize={15} color={'white'} textAlign={'center'}>actions</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {cat.map(item => {
-                  return <Tr>
-                    <Td>{item.id}</Td>
-                    <Td align='center' justifyContent={'center'}>{item.nom}</Td>
-                    <Td textAlign={'center'}>
-                      <IconButton
-                        onClick={() => deleteCat(item.id)}
-                        icon={<FaTrash color='red' />}
-                        bg={'transparent'}
-                      />
-                    </Td>
-                  </Tr>
-                })}
-              </Tbody>
-
-            </Table>
-          </TableContainer>
+          <Flex>
+            <form onSubmit={submitHandler}>
+              <Flex
+                align={'start'}
+                flexDir={{ base: 'column', lg: 'column' }}
+              >
+                <FormControl>
+                  <FormLabel>Catégorie</FormLabel>
+                  <Input
+                    ref={nomInputRef}
+                    name='nom'
+                    type='text'
+                    placeholder='Entrez la catégorie!'
+                  />
+                </FormControl>
+              </Flex>
+              <Stack >
+                <Button
+                  type='submit'
+                  _hover={{ bg: 'green.700' }}
+                  bg={'green.600'}
+                  borderRadius={5}
+                  color={'white'}
+                  w={'35%'}
+                  mt={4}>
+                  Ajouter
+                </Button>
+              </Stack>
+            </form>
+          </Flex>
         </Flex>
+
+        <Spacer />
+        <Flex
+          display={{ base: 'none', lg: 'none', xl: 'flex' }}
+          boxShadow={'md'}
+          mx={{ base: 0, lg: 30 }}
+          mt={{ base: '9rem', lg: '10rem', xl: '0rem' }}
+          p={5}
+          flexDir={'column'}
+        >
+          <Flex
+            my={2}
+            align={'center'}
+            justify={'spacebetween'}
+            w={'100%'}
+          >
+            <TableContainer>
+              <Table variant='striped'>
+                <TableCaption>liste des catégories.</TableCaption>
+                <Thead boxShadow={'6px 2px 8px gray'} border={'1px solid white'}>
+                  <Tr
+                    id='titre'
+                    bgColor={'blue.200'}
+                  >
+                    <Th borderRightWidth={'1px'} fontWeight={'bold'} fontSize={15} color='dark' textAlign={'center'}>N°</Th>
+                    <Th borderRightWidth={'1px'} fontWeight={'bold'} fontSize={15} color='dark' textAlign={'center'} w={'30rem'} >Catégories</Th>
+                    <Th borderRightWidth={'1px'} fontWeight={'bold'} fontSize={15} color='dark' textAlign={'center'}>actions</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {Object.values(cat).map(item => {
+                    return <Tr>
+                      <Td>{item.id}</Td>
+                      <Td align='center' justifyContent={'center'}>{item.nom}</Td>
+                      <Td textAlign={'center'}>
+                        <IconButton
+                          onClick={() => deleteCat(item.id)}
+                          icon={<FaTrash color='red' />}
+                          bg={'transparent'}
+                        />
+                      </Td>
+                    </Tr>
+                  })}
+                </Tbody>
+
+              </Table>
+            </TableContainer>
+          </Flex>
+        </Flex>
+
       </Flex>
 
-    </Flex>
+    </Wrapper>
   )
   function deleteCat(id) {
     const conf = window.confirm("Attention! Voulez-vous supprimer cette catégorie?")
     if (conf) {
-      axios.delete('http://localhost:5000/deleteCat/' + id)
+      axios.delete('http://localhost:5000/deleteCat/' + id, {
+        method: 'DELETE',
+        headers: {
+          "Context-Type": "application/json",
+          Authorization: `Bearer ${catCtx.token}`
+        }
+      })
         .then(res => {
           alert('La suppression a réussie!')
         }).catch(err => console.log(err))

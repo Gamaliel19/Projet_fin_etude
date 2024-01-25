@@ -1,6 +1,7 @@
 import React from 'react'
 import {
-    Drawer, DrawerBody, DrawerFooter, DrawerOverlay, DrawerContent, DrawerCloseButton, useDisclosure, Button,
+    Drawer, DrawerBody, DrawerFooter, DrawerOverlay, DrawerContent,
+    DrawerCloseButton, useDisclosure, Button,
     Text, Flex, Divider, Avatar, Heading, Link, DrawerHeader
 } from '@chakra-ui/react'
 import { VscListFlat } from 'react-icons/vsc'
@@ -15,8 +16,8 @@ export default function MobileNavMenu({ navSize, data }) {
 
     return (
         <>
-            <Button ref={btnRef} onClick={onOpen}>
-                <VscListFlat />
+            <Button ref={btnRef} onClick={onOpen} bg={'blue.400'} color={'white'}>
+                <VscListFlat fontSize={25} />
             </Button>
             <Drawer
                 isOpen={isOpen}
@@ -26,34 +27,27 @@ export default function MobileNavMenu({ navSize, data }) {
             >
                 <DrawerOverlay />
                 <DrawerContent>
-                    <DrawerHeader>
-                        <Flex
-                            p={"5%"}
-                            flexDir={"column"}
-                            w={"100%"}
-                            alignItems={navSize === "small" ? "center" : "flex-start"}
-                            mb={4}
-                        >
-                            <Flex mt={4} align={"center"}>
-                                <Avatar size={"md"} src={avatar} />
-                                <Flex flexDir={"column"} ml={4} display={navSize === "small" ? "none" : "flex"} >
-                                    <Heading as={"h3"} size={"sm"}>{data.userNom}</Heading>
-                                    <Text color={"gray"}>{data.userProfil}</Text>
-                                </Flex>
+                    <DrawerHeader bg={'blue.400'}>
+                        <Flex mt={2} align={"center"} justify={'center'}>
+                            <Avatar size={"md"} src={avatar} />
+                            <Flex flexDir={"column"} ml={4} display={navSize === "small" ? "none" : "flex"} >
+                                <Heading as={"h3"} size={"sm"} textColor={'white'}>{data.userEmail}</Heading>
+                                <Text>{data.userProfil}</Text>
                             </Flex>
                         </Flex>
 
                     </DrawerHeader>
                     <Divider display={navSize === "small" ? "none" : "flex"} />
                     <DrawerCloseButton />
-                    <DrawerBody>
+                    <DrawerBody bg={'gray.100'}>
 
-                        <Link href='/admin'>
+                        <Link href='/admin' _hover={{textDecor:'none'}}>
                             <Flex
                                 align={'center'}
                                 fontSize={22}
                                 flexDir={'row'}
                                 boxShadow={'lg'}
+                                borderRadius={'0.5rem'}
                                 p={'0.5rem'}
                                 _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
                             >
@@ -61,12 +55,13 @@ export default function MobileNavMenu({ navSize, data }) {
                                 <Text ml={2}>Ventes</Text>
                             </Flex>
                         </Link>
-                        <Link href='../admin/produits'>
+                        <Link href='../../admin/produits' _hover={{textDecor:'none'}}>
                             <Flex
                                 align={'center'}
                                 fontSize={22}
                                 flexDir={'row'}
                                 boxShadow={'lg'}
+                                borderRadius={'0.5rem'}
                                 p={'0.5rem'}
                                 _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
                             >
@@ -74,12 +69,13 @@ export default function MobileNavMenu({ navSize, data }) {
                                 <Text ml={2}>Médicaments</Text>
                             </Flex>
                         </Link>
-                        <Link href='../admin/notifications'>
+                        <Link href='../../admin/notifications' _hover={{textDecor:'none'}}>
                             <Flex
                                 align={'center'}
                                 fontSize={22}
                                 flexDir={'row'}
                                 boxShadow={'lg'}
+                                borderRadius={'0.5rem'}
                                 p={'0.5rem'}
                                 _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
                             >
@@ -87,12 +83,13 @@ export default function MobileNavMenu({ navSize, data }) {
                                 <Text ml={2}>Notifications</Text>
                             </Flex>
                         </Link>
-                        <Link href='../admin/utilisateurs'>
+                        <Link href='../../admin/utilisateurs' _hover={{textDecor:'none'}}>
                             <Flex
                                 align={'center'}
                                 fontSize={22}
                                 flexDir={'row'}
                                 boxShadow={'lg'}
+                                borderRadius={'0.5rem'}
                                 p={'0.5rem'}
                                 _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
                             >
@@ -100,12 +97,13 @@ export default function MobileNavMenu({ navSize, data }) {
                                 <Text ml={2}>Gestion des utilisateurs</Text>
                             </Flex>
                         </Link>
-                        <Link href='../admin/settings'>
+                        <Link href='../admin/settings' _hover={{textDecor:'none'}}>
                             <Flex
                                 align={'center'}
                                 fontSize={22}
                                 flexDir={'row'}
                                 boxShadow={'lg'}
+                                borderRadius={'0.5rem'}
                                 p={'0.5rem'}
                                 _hover={{ cursor: 'pointer', bgColor: 'transparent' }}
                             >
@@ -115,10 +113,10 @@ export default function MobileNavMenu({ navSize, data }) {
                         </Link>
 
                     </DrawerBody>
-                    <DrawerFooter>
+                    <DrawerFooter bg={'gray.100'}>
                         <Button
                             onClick={data.logout}
-                            colorScheme='green'
+                            colorScheme='white'
                             variant='outline'
                             borderRadius={10}
                             p={'0.5rem 2rem'}

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Flex, useColorModeValue } from '@chakra-ui/react'
+import { Container, Flex, useColorModeValue } from '@chakra-ui/react'
 
 function PanierClient() {
   return (
@@ -11,7 +11,7 @@ function PanierClient() {
       mx={'auto'}
       p={{ base: '2rem', lg: "4rem" }}
     >
-      Commandes
+      
     </Flex>
   )
 }
