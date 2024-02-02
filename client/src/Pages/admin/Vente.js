@@ -289,30 +289,6 @@ function VenteForm() {
   }
   //console.log(data)
 
-  //Récupération des ventes par utilisateur
-  const fetchHandler = async () => {
-    try {
-      const response = await fetch('', {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${venteCtx.token}`
-        }
-      });
-
-      const dataResponse = await response.json();
-      if (response.ok) {
-        console.log(dataResponse)
-      } else {
-        throw new Error(dataResponse.error)
-      }
-
-    } catch (error) {
-      console.log("Problème server. La requête n'est pas partie!")
-      console.log(error)
-    }
-  }
-  fetchHandler()
 
   useEffect(() => {
     axios.get('http://localhost:5000/venteParUser/' + venteCtx.userId)
@@ -334,7 +310,7 @@ function VenteForm() {
         />
       }
       <Flex
-        flexDir={{ base: 'column', lg: 'row' }}
+        flexDir={{ base: 'column', lg: 'column',xl:'row' }}
         borderRadius={5}
         my={{ base: 2, lg: 0 }}
       >
@@ -406,18 +382,12 @@ function VenteForm() {
 
         <Spacer />
         <Flex
-          display={{ base: 'none', lg: 'none', xl: 'flex' }}
+          display={{ base: 'none', lg: 'flex', xl: 'flex' }}
           mx={{ base: 0, lg: 30 }}
-          mt={{ base: '16rem', lg: '15+rem', xl: '-2rem' }}
+          mt={{ base: '16rem', lg: '15+rem', xl: '0rem' }}
           p={5}
           flexDir={'column'}
         >
-          { /*<Flex mb={{ base: 8, lg: 0 }} justify={'center'} align={'start'}>
-            <Heading fontSize={20} mb={{ base: -5, lg: 5 }} mt={5}>
-              Ventes éffectuées
-            </Heading>
-          </Flex>*/}
-
           <Flex my={2} align={'center'} justify={'center'} w={'100%'} boxShadow={'md'}>
             <TableContainer>
               <Table variant='striped'>
@@ -461,16 +431,6 @@ function VenteForm() {
                 </Tbody>
               </Table>
             </TableContainer>
-
-          </Flex>
-          <Flex flexDir={'row'}>
-            <Heading>Total:</Heading>
-            <Spacer />
-            {dataa.map(item => {
-              return <Heading >
-                {item.prix_total * taille}
-              </Heading>
-            })}
           </Flex>
         </Flex>
 

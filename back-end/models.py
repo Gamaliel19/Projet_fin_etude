@@ -16,7 +16,7 @@ class User(db.Model, UserMixin):
     profil= db.Column(db.String(30))
     password = db.Column(db.String(128), nullable=False)
 
-    utilisateur=db.relationship('Vente', backref='user', lazy=False)
+    ventes=db.relationship('Vente', backref='users', lazy=True)
     utilisateur=db.relationship('Commande', backref='user',lazy=False)
     utilisateur=db.relationship('Livraison', backref='user', lazy=False)
     def __init__(self, email, nom, prenom, profil,password,):
@@ -27,8 +27,6 @@ class User(db.Model, UserMixin):
         self.password = password
     def json(self):
         return {"email":self.email, "nom":self.nom, "prenom":self.prenom, "password":self.password, "profil":self.profil}
-
-
 class Categorie(db.Model):
     __tablename__='categories'
     id=db.Column(db.Integer, primary_key=True)
@@ -40,7 +38,7 @@ class Categorie(db.Model):
         return {"nom":self.nom}
 class Product(db.Model):
     __tablename__='produits'
-    product_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     dosage = db.Column(db.String(80))
     nom_com= db.Column(db.String(100))
     description = db.Column(db.String(1000))
@@ -48,14 +46,16 @@ class Product(db.Model):
     date_ajout = db.Column(db.DateTime, default=datetime.utcnow)
     date_fab = db.Column(db.Date)
     date_per=db.Column(db.Date)
-    qte_stock=db.Column(db.Integer)
+    qte_stock=db.Column(db.Integer, nullable=False)
     num_lot = db.Column(db.Integer)
-    #cat = db.Column(db.Categorie)
+    image = db.Column(db.LargeBinary)
+    
     produit=db.relationship('Commande', backref='produit', lazy=False)
-    produit=db.relationship('Inventaire', backref='produit', lazy=False)
+    inventaires=db.relationship('Inventaire', backref='produit', lazy=False)
+    ventes=db.relationship('Vente', backref='produits', lazy=True)
     #categorie_id=db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
 
-    def __init__(self, dosage, nom_com, description, prix, date_fab:datetime.date, date_per:datetime.date, qte_stock, num_lot):
+    def __init__(self, dosage, nom_com, description, prix, date_fab:datetime.date, date_per:datetime.date, qte_stock, num_lot, image):
         self.dosage=dosage
         self.nom_com=nom_com
         self.description=description
@@ -64,21 +64,22 @@ class Product(db.Model):
         self.date_per=date_per
         self.qte_stock=qte_stock
         self.num_lot=num_lot
+        self.image = image
         
     def json(self):
-        return {"dosage":self.dosage, "nom_com":self.nom_com, "prix":self.prix, "date_fab":self.date_fab,"date_per":self.date_per, "qte_stock":self.qte_stock, "num_lot":self.num_lot, "date_ajout":self.date_ajout}
-
-
+        return {"dosage":self.dosage, "nom_com":self.nom_com, "prix":self.prix, "date_fab":self.date_fab,"date_per":self.date_per, "qte_stock":self.qte_stock, "num_lot":self.num_lot, "date_ajout":self.date_ajout, "image":self.image.decode('utf-8')}
 class Vente(db.Model):
     __tablename__='ventes'
     id=db.Column(db.Integer, primary_key=True)
     date=db.Column(db.Date, default=datetime.utcnow)
+    nom_com = db.Column(db.String(1000))
+    dosage = db.Column(db.String(80))
+    prix= db.Column(db.Integer)
+    prix_total=db.Column(db.Integer)
+    email = db.Column(db.String(100))
     utilisateur_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    product_id = db.Column(db.Integer, db.ForeignKey('produits.product_id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('produits.id'), nullable=False)
     qte = db.Column(db.Integer)
-
-
-
 class Inventaire(db.Model):
     __tablename__='inventaires'
     id=db.Column(db.Integer, primary_key=True)
@@ -89,28 +90,21 @@ class Inventaire(db.Model):
     prix_achat=db.Column(db.Float)
     prix_vente=db.Column(db.Float)
     total_vendu=db.Column(db.Integer)
-    produit_id=db.Column(db.Integer, db.ForeignKey('produits.product_id'), nullable=False)
-
-
+    produit_id=db.Column(db.Integer, db.ForeignKey('produits.id'), nullable=False)
 class Commande(db.Model):
     __tablename__='commandes'
     id = db.Column(db.Integer, primary_key=True)
     numero = db.Column(db.Integer)
     qte = db.Column(db.Integer)
     utilisateur_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    prduit_id = db.Column(db.Integer, db.ForeignKey('produits.product_id'), nullable=False)
-
+    prduit_id = db.Column(db.Integer, db.ForeignKey('produits.id'), nullable=False)
 class Livraison(db.Model):
     __tablename__='livraisons'
     id=db.Column(db.Integer, primary_key=True)
     numero=db.Column(db.Integer)
     date=db.Column(db.Date)
     utilisateur_id= db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-
-
-
 class Panier(db.Model):
     __tablename__='paniers'
     id = db.Column(db.Integer, primary_key=True)
-    produit_id=db.Column(db.Integer, db.ForeignKey('produits.product_id'), nullable=False)
-    
+    produit_id=db.Column(db.Integer, db.ForeignKey('produits.id'), nullable=False)

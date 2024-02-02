@@ -60,13 +60,3 @@ export default function TopCategories() {
         </>
     )
 };
-
-export const TopCategoriesCard = () => {
-
-
-    return (
-        <>
-
-        </>
-    )
-}

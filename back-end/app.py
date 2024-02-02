@@ -1,31 +1,36 @@
 import os
-from flask import Flask,request,abort,jsonify,session,redirect,url_for
+from flask import Flask,request,abort,jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
 from flask_bcrypt import Bcrypt
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 from flask_session import Session
-from flask_login import UserMixin, LoginManager, login_required, logout_user, current_user, login_user
-from config import ApplicationConfig
+from flask_login import LoginManager, login_required, logout_user, current_user, login_user
+#from flask_uploads import UploadSet, configure_uploads, IMAGES
 from models import db, User, Product, Categorie, Vente
 from datetime import datetime, date
 from json_tricks import dumps, loads
 import re
+import jwt
+from functools import wraps
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 app= Flask(__name__)
 
 
-app.config["SECRET_KEY"] = "secret_key1234"
+app.config["SECRET_KEY"] = "WxJN3pke:HmtE9fat>sy:<9vfW7?N~Q=yvG>/f?sGrGx!jC_pk"
 app.config['SESSION_TYPE'] = 'filesystem'
-app.config['SQLALCHEMY_DATABASE_URI'] ='mysql://root:''@localhost/flask' #+ os.path.join(basedir, 'data.db')
+app.config['SQLALCHEMY_DATABASE_URI'] ='mysql://root:''@localhost/flaskdb' #+ os.path.join(basedir, 'data.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+#app.config['UPLOADED_IMAGES_DEST'] = ''
 #app.config.from_object(ApplicationConfig)
 
 bcrypt=Bcrypt(app)
 CORS(app, supports_credentials=True)
 server_session = Session(app)
 db.init_app(app)
+#images = UploadSet('images', IMAGES)
+#configure_uploads(app, images)
 login_manager = LoginManager()
 login_manager.init_app(app)
 with app.app_context():
@@ -45,13 +50,15 @@ def adminLogin():
         if bcrypt.check_password_hash(user.password, password):
             
             login_user(user)
+            token = jwt.encode({"email":user.email,"nom":user.nom, "prenom":user.prenom, "profil":user.profil}, app.config["SECRET_KEY"],algorithm="HS256")
+            return jsonify({"Message":"Connexion réussie!", "id":user.id, "token":token})
+            
             if profil=="admin":
                 return redirect(url_for('admin'))
-    
-            return redirect(url_for('/client'))
+
         return ({"message":"mot de passe incorrect, reessayez"})
     return ({"message":"ce utilisateur n\'existe pas, reessaye"})
-@app.route('/logout', methods=['POST'])
+@app.route('/logout')
 @login_required
 def logout():
     logout_user()
@@ -60,8 +67,45 @@ def logout():
 @app.route('/admin')
 @login_required
 def admin():
-    return 'l\'utilisateur actuel est' + current_user.email
 
+    return 'l\'utilisateur actuel est' ' '+ current_user.email
+
+def token_required(f):
+    @wraps(f)
+    def decorator(*args, **kwargs):
+        token=None
+        if not request.headers['Authorization']:
+            return jsonify({"message": "veillez vous authentifier"}),401
+        token=request.headers['Authorization'].split(' ')[1]
+        if not token:
+            return jsonify({"message":"pas de token"})
+        try:
+            data = jwt.decode(token, app.config['SECRET_KEY'], algorithm='HS256')
+            user_actuel = User.query.filter_by(email=data['email']).first()
+            if user_actuel:
+                return user_actuel
+        except:
+            return jsonify({'message':'token invalide'}),401
+        return f(user_actuel, *args, **kwargs)
+    return decorator
+
+'''@app.route('/loginUser', methods=["POST"])
+def login_user():
+    data=request.get_json()
+    email = request.json['email']
+    password=request.json["password"]
+    if not data['email'] or not data['password']:
+        return ({"authentification echouee!"})
+    user = User.query.filter_by(email=email).first()
+
+    if user is None:
+        return ({"error": "Echec de connexion! Cet utilisateur n\'existe pas."}), 401
+    
+    if not bcrypt.check_password_hash(user.password, password):
+        return ({"error":  "Echec de connexion! Votre mot de passe est incorrect"}), 401
+    
+    token = jwt.encode({"email":user.email,"nom":user.nom, "prenom":user.prenom, "profil":user.profil}, app.config["SECRET_KEY"],algorithm="HS256")
+    return jsonify({"Message":"Connexion réussie!","token":token})'''
 @app.route("/registerUser", methods=["POST"])
 def register_user():
     email = request.json['email']
@@ -94,9 +138,9 @@ def register_user():
      "Message": "Utilisateur créé avec succès!"
     })
 
-
 #liste des utilisateurs
 @app.route('/listUser', methods=["GET"])
+@token_required
 def list():
     users = User.query.all()
     liste=[]
@@ -118,6 +162,7 @@ def singleUser(id):
     if user:
         return user.json()
     return {'message': 'utilisateur non trouve'}
+
 #supprimer un utilisateur 
 @app.route('/deleteUser/<string:id>', methods=['DELETE'])
 def delete_user(id):
@@ -168,7 +213,9 @@ def update_password(id):
     return jsonify({'message': 'mot de passe modifie avec succes'})
 
 @app.route('/registerProduct', methods = ['POST'])
+#@login_required  
 def register_product():
+   
     data = request.get_json()
     dosage = request.json['dosage']
     nom_com = request.json['nom_com']
@@ -178,16 +225,17 @@ def register_product():
     date_per = request.json['date_per']
     qte_stock = request.json['qte_stock']
     num_lot = request.json['num_lot']
-    product = Product.query.filter_by(nom_com=nom_com).first()
+    image = data['image'].encode()
+    product = Product.query.filter_by(nom_com=nom_com,date_per=date_per, dosage=dosage).first()
+    #product = Product.query.filter_by(date_per=date_per)
     if product:
         product.qte_stock += qte_stock
     else:
-        product = Product(dosage=data['dosage'], nom_com=data['nom_com'], description=data['description'], prix=data['prix'], date_fab=datetime.strptime(data['date_fab'], '%Y-%m-%d').strftime('%Y/%m/%d'), date_per=datetime.strptime(data['date_per'], '%Y-%m-%d').strftime('%Y/%m/%d'), qte_stock=data['qte_stock'], num_lot=data['num_lot'])
+        product = Product(dosage=data['dosage'], nom_com=data['nom_com'], description=data['description'], prix=data['prix'], date_fab=datetime.strptime(data['date_fab'], '%Y-%m-%d').strftime('%Y/%m/%d'), date_per=datetime.strptime(data['date_per'], '%Y-%m-%d').strftime('%Y/%m/%d'), qte_stock=data['qte_stock'], num_lot=data['num_lot'], image=image)
     db.session.add(product)
-    db.session.commit()
+    db.session.commit()  
     return product.json(),201
-
-
+    
 @app.route('/deleteProduct/<string:id>', methods=['DELETE'])
 def delete_product(id):
     product = Product.query.filter_by(id=id).first()
@@ -221,8 +269,7 @@ def update_product(id):
     db.session.add(product)
     db.session.commit()
     return jsonify ({'message':'produit mis a jour avec succes'})
-
-
+@login_required
 @app.route('/listProduct', methods = ['GET'])
 def list_product():
 
@@ -234,9 +281,9 @@ def list_product():
         data['nom_com'] = product.nom_com
         data['description'] = product.description
         data['prix'] = product.prix
-        data['date_ajout'] = product.date_ajout
-        data['date_fab'] = product.date_fab
-        data['date_per'] = product.date_per
+        data['date_ajout'] = str(product.date_ajout)
+        data['date_fab'] = str(product.date_fab)
+        data['date_per'] = str(product.date_per)
         data['qte_stock'] = product.qte_stock
         data['num_lot'] = product.num_lot
 
@@ -250,20 +297,16 @@ def recherche_poduit(nom):
         return product.json()
     return {'message': 'produit non trouve'}
 
-@app.route('/product_counts')
-def product_counts():
-    product_counts = db.session.query(Product.nom_com, func.count(Product.id)).group_by(Product.nom_com).all()
-    product_counts_dict = {nom_com: count for nom_com, count in product_counts}
-    return product_counts_dict
+#liste des produits expires
+@app.route('/expired_products')
+def produits_expire():
+    date_du_jour = datetime.now()
+    produits = Product.query.filter(Product.date_per <= date_du_jour).all()
+    result = []
+    for produit in produits:
+        result.append({'nom': produit.nom_com, 'dosage':produit.dosage, 'date expiration': produit.date_per, 'id':produit.id})
+    return {'produits': result}
 
-@app.route('/register_cat', methods = ['POST'])
-def register_cat():
-    data = request.get_json()
-    new_cat= Categorie(nom=data['nom'])
-    db.session.add(new_cat)
-    db.session.commit()
-    db.session.flush()
-    return new_cat.json()
 
 @app.route('/rechercheP/<string:nom_com>', methods = ['GET'])
 def rechercheP(nom_com):
@@ -299,61 +342,83 @@ def rechercheP(nom_com):
 
     return {'message': 'produit non trouve'}'''
 
-
-
-
-
-
 #Enregistrement des ventes
-'''@app.route('/vente', methods=['POST'])
-def ajouter_vente():
+@app.route('/vendre', methods=['POST'])
+def vendre():
     data = request.get_json()
-    product_id = data["product_id"]
-    qte = data["qte"]
-    product = Product.query.filter_by(prduit_id = product_id).first
-    if product:
-        if product.qte_stock >= qte:
-            product.qte_stock -= qte
-            db.session.commit()
-            return "vente effectue avec succes"
-        else:
-            return "stock insuffisant pour effectuer la vente"
-    else:
-        return "produit non trouve"'''
-
-'''@app.route('/sell/<int:product_id>', methods=['POST'])
-def sell_product(product_id):
-    data = request.get_json()
-    qte = data['qte']
-    product = Product.query.get(product_id)
-    if not product:
-        return {"error": "Product not found"}, 404
-    if product.qte_stock < qte:
-        return {"error": "Out of stock"}, 400
-    product.qte_stock -= qte
-    db.session.commit()
-    return {"message": f" {qte} {product.nom_com} Vendus. Total price: {product.prix*qte}"}'''
-@app.route('/vente', methods = ['POST'])
-def create_sale():
-    utilisateur_id = request.json['utilisateur_id']
-    product_id = request.json['product_id']
-    qte = request.json['qte']
-    product = Product.query.get(product_id)
-    if product.qte_stock < qte:
-        return {"error": "pas assez de produit en stock"}
-    product.qte_stock -= qte
-    db.session.add(Vente(utilisateur_id=utilisateur_id, product_id=product_id, qte=qte))
-    db.session.commit()
-    return {'success': True}
-@app.route('/ventes/<int:utilisateur_id>', methods = ['GET'])
-def get_sales(utilisateur_id):
-    sales = Vente.query.filter_by(utilisateur_id).all()
-    total_prix = sum(vente.product.prix * vente.qte for vente in ventes)
-    return {"total_prix": total_prix}
-
+    date_test=datetime.now()
+    produit = Product.query.filter_by(nom_com=data['nom_com'], dosage=data['dosage']).first()
+    if produit is None:
+        return {"error":"produit non trouve"}, 404
+    if produit.qte_stock< data['qte']:
+        return {"error":"Quantite insuffisante en stock"},400
+    '''if produit.date_per<date_test:
+        return {"error":"le produit est expire et donc ne peut etre vendu"}'''
+    total = produit.prix * data['qte']
+    vente = Vente(product_id=produit.id, qte=data['qte'], nom_com=produit.nom_com,dosage=produit.dosage,utilisateur_id=data['utilisateur_id'], prix=produit.prix, prix_total=total)
+    produit.qte_stock -= data['qte']
     
-  
+    db.session.add(vente)
+    db.session.commit()
+    return {"id":produit.id, "nom du produit":produit.nom_com, "description":produit.description, "dosage":produit.dosage, "total": total}, 200
+@app.route('/ventes', methods = ['GET'])
+def get_ventes():
+    ventes = ventes = Vente.query.order_by(Vente.date.desc()).all()
+    return {"Ventes": [{"id":vente.id, "produit_id":vente.product_id, "qte":vente.qte, "date":vente.date} for vente in ventes]} 
 
+@app.route('/venteJr/<string:dateE>', methods=['GET'])
+def  venteJr(dateE):
+    ventesJr= Vente.query.filter_by(date=dateE).all()
+    if ventesJr:
+        return jsonify([{'id': vente.id, 'produit': vente.nom_com, 'quantite': vente.qte, 'date_enregistrement': vente.date} for vente in ventesJr])
+    else:
+        return jsonify({"message":"Aucune vente n'a ete effectuee a cette date"})
+
+@app.route('/quantite_vendue', methods=['GET'])
+def quantite_vendue():
+    date_ver=datetime.utcnow
+    venter=Vente.query.filter_by(date=date_ver).first
+    if venter:
+        ventes = db.session.query(Product.nom_com, Product.dosage, Product.date_per, db.func.sum(Vente.qte), Product.prix*db.func.sum(Vente.qte), Vente.date).join(Vente).group_by(Product.nom_com, Product.dosage, Product.date_per, Product.prix, Vente.date).all()
+        quantite_vendue = [{'nom_com': vente[0], 'dosage': vente[1], 'date_per': str(vente[2]), 'quantite': vente[3], 'prix_total': vente[4], 'date': str(vente[5])} for vente in ventes]
+        return jsonify(quantite_vendue)
+    else:
+        return "aucune vente"
+
+@app.route('/vente/<id>', methods=['PUT'])
+def update_vente(id):
+    data = request.get_json()
+    vente = Vente.query.get(id)
+    if data['nom_com']:
+        vente.nom_com = data['nom_com']
+        vente.qte = data['qte']
+        vente.dosage = data['dosage']
+        vente.prix = data['prix']
+    db.session.add(vente)
+    db.session.commit()
+
+    return jsonify({'message':"vente mis a jou avec succes"})
+
+
+@app.route('/ventes/<int:utilisateur_id>')
+def get_ventes_U(utilisateur_id):
+    ventes = Vente.query.filter_by(utilisateur_id=utilisateur_id).all()
+    return jsonify([{'id': vente.id, 'nom_com': vente.nom_com, 'quantite': vente.qte, 'prix':vente.prix, 'prix_total':vente.prix_total} for vente in ventes])
+
+
+
+@app.route('/ventes/grouped', methods=['GET'])
+def get_ventes_grouped():
+    #ventes = db.session.query(Vente.date, db.func.group_concat(Vente.nom_com), db.func.group_concat(Vente.qte), Product.prix*db.func.sum(Vente.prix)).group_by(Vente.date).all()
+    ventes = db.session.query(Vente.date, Product.nom_com, Product.dosage, Product.date_per, db.func.sum(Vente.qte), Product.prix*db.func.sum(Vente.qte)).join(Vente).group_by(Product.nom_com, Product.dosage, Product.date_per, Product.prix, Vente.date).all()
+    return jsonify([{'date':str(vente[0]), 'produit': vente[1],'dosage':vente[2], 'date_per': vente[3],'quantite': vente[4],'prix_total': vente[5]} for vente in ventes])
+
+
+@app.route('/ventes/somme_date', methods=['GET'])
+def get_somme_date():
+    prix_total = Vente.qte*Vente.prix
+    ventes = db.session.query(Vente.date, db.func.sum(prix_total)).group_by(Vente.date).all()
+    return jsonify([{'date': vente[0],'prix':vente[1]}for vente in ventes])
 
 if __name__=="__main__":
     

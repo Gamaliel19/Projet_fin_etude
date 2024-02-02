@@ -69,7 +69,7 @@ export const SingleVente = () => {
           p={'0rem 2rem'}
         >
           <Stack>
-            <Heading fontSize={'xl'}>Vendeur: {vente.user}</Heading>
+            <Heading fontSize={'xl'}>Vendeur: {vente.email}</Heading>
             <Text fontSize={'lg'}>Designation: {vente.designation}</Text>
             <Text fontSize={'lg'}>Dosage: {vente.dose}</Text>
             <Text fontSize={'lg'}>Prix: {vente.prix_unit}FCFA</Text>

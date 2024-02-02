@@ -442,6 +442,18 @@ def delete_vente(id):
 
     return jsonify({"message": "Suppression réussie!"})
 
+@app.route('/ventes/grouped', methods=['GET'])
+def get_ventes_grouped():
+    #ventes = db.session.query(Vente.date, db.func.group_concat(Vente.nom_com), db.func.group_concat(Vente.qte), Product.prix*db.func.sum(Vente.prix)).group_by(Vente.date).all()
+    ventes = db.session.query(Vente.date, Product.nom_com, Product.dosage, Product.date_per, db.func.sum(Vente.qte), Product.prix*db.func.sum(Vente.qte)).join(Vente).group_by(Product.nom_com, Product.dosage, Product.date_per, Product.prix, Vente.date).all()
+    return jsonify([{'date':str(vente[0]), 'produit': vente[1],'dosage':vente[2], 'date_per': vente[3],'quantite': vente[4],'prix_total': vente[5]} for vente in ventes])
+
+@app.route('/ventes/somme_date', methods=['GET'])
+def get_somme_date():
+    prix_total = Vente.qte*Vente.prix_unit
+    ventes = db.session.query(Vente.date, db.func.sum(prix_total)).group_by(Vente.date).all()
+    return jsonify([{'date': vente[0],'prix':vente[1]}for vente in ventes])
+
 #Commencent les routes pour la catégories
 @app.route("/registerCat", methods=["POST"])
 @jwt_required()
